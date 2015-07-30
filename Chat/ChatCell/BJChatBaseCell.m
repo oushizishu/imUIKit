@@ -215,6 +215,7 @@
 {
     if (_headImageView == nil) {
         _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(HEAD_PADDING, CELLPADDING, HEAD_SIZE, HEAD_SIZE)];
+        _headImageView.clipsToBounds = YES;
         _headImageView.userInteractionEnabled = YES;
         _headImageView.multipleTouchEnabled = YES;
         _headImageView.backgroundColor = [UIColor grayColor];

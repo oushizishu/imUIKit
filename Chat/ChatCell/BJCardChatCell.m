@@ -114,7 +114,7 @@
     [super setCellInfo:info indexPath:indexPath];
     self.titleLabel.text = self.message.cardTitle;
     self.contentLabel.text = self.message.cardContent;
-    [self.imageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.imageView.frame.size];
+    [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
     CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];

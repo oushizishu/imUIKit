@@ -129,10 +129,10 @@
     NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
     [self addNewMessages:array isForward:NO];
     
-    if ([array count] > 0 && self.conversation)
-    {
-        [[BJIMManager shareInstance] loadMessageFromMinMsgId:[[array objectAtIndex:0] msgId] inConversation:self.conversation];
-    }
+//    if ([array count] > 0 && self.conversation)
+//    {
+//        [[BJIMManager shareInstance] loadMessageFromMinMsgId:[[array objectAtIndex:0] msgId] inConversation:self.conversation];
+//    }
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
@@ -170,10 +170,10 @@
 */
 
 #pragma mark - 消息操作方法
-- (void)addNewMessages:(NSArray *)messages isForward:(BOOL)forward;
+- (NSInteger)addNewMessages:(NSArray *)messages isForward:(BOOL)forward;
 {
     if (messages.count <= 0) {
-        return;
+        return 0;
     }
     
     NSMutableArray *mutMessages = [[NSMutableArray alloc] initWithArray:messages];
@@ -193,6 +193,7 @@
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute );//两条消息的时间分单位间隔超过1，则加一个时间显示
             if (minute > 1) {
                 [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt] formattedTime] atIndex:[mutMessages indexOfObject:oneMessage]];
+                lastMessage = oneMessage;
             }
         }
         else
@@ -210,6 +211,7 @@
         [self.tableView reloadData];
         [self scrollViewToBottom:YES];
     }
+    return [mutMessages count];
 
 }
 
@@ -231,9 +233,9 @@
         }
     }
     NSArray *messageList = [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
-    [self addNewMessages:messageList isForward:YES];
+    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
     if (msgId != 0) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[messageList count] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
 }
 
@@ -372,7 +374,7 @@
 - (void)didLoadMessages:(NSArray *)messages conversation:(Conversation *)conversation hasMore:(BOOL)hasMore
 {
     if (conversation.rowid == self.conversation.rowid) {
-        [self addNewMessages:messages isForward:YES];
+//        [self addNewMessages:messages isForward:YES];
     }
 }
 
