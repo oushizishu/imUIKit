@@ -18,10 +18,9 @@ NSString *const kBJRouterEventUserInfoObject = @"kBJRouterEventUserInfoObject";
 NSString *const kBJRouterEventChatCellBubbleTapEventName = @"kBJRouterEventChatCellBubbleTapEventName";
 NSString *const kBJResendButtonTapEventName = @"kBJResendButtonTapEventName";
 
-NSString *const kSendNewMessageEventName = @"kSendNewMessageEventName";
 NSString *const kBJRouterEventLinkName = @"kBJRouterEventLinkName";
 
-@implementation UIResponder (Router)
+@implementation UIResponder (BJIMChatRouter)
 
 - (void)bjim_routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
 {
