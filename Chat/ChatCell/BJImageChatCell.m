@@ -12,6 +12,8 @@
 #import <PureLayout/PureLayout.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <UIImageView+Aliyun.h>
+#import "UIResponder+BJIMChatRouter.h"
+#import "BJChatUtilsMacro.h"
 
 @interface BJImageChatCell ()
 @property (strong, nonatomic) UIImageView *chatImageView;
@@ -75,7 +77,7 @@
 {
     [super setCellInfo:info indexPath:indexPath];
     CGSize size = [self calculateCellHeight];
-    @TODO("设置默认图片");
+    @IMTODO("设置默认图片");
     [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
     CGRect rect = self.chatImageView.frame;
     rect.size = size;

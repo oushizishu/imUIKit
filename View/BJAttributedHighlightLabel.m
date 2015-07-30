@@ -7,6 +7,7 @@
 //
 
 #import "BJAttributedHighlightLabel.h"
+#import "BJChatUtilsMacro.h"
 
 @implementation BJAttributedHighlightLabel
 
@@ -186,7 +187,7 @@
     
     float currentWidth;
     
-    // TODO: Add support for UILineBreakModeWordWrap, UILineBreakModeCharacterWrap to complete implementation
+    // IMTODO: Add support for UILineBreakModeWordWrap, UILineBreakModeCharacterWrap to complete implementation
     
     // Get the line number of the current letter
     // Get the contents of that line
@@ -351,7 +352,7 @@
 - (void)handleTouchEnded:(CGPoint)touchLocation
 {
     
-    @TODO("Tap手势 began不调用，后期优化");
+    @IMTODO("Tap手势 began不调用，后期优化");
     if (currentSelectedString == nil) {
         [self handleTouchBegan:touchLocation];
     }

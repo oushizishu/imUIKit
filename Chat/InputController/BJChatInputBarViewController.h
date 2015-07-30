@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BJChatInputBaseViewController.h"
-#import "XHMessageTextView.h"
+#import "BJMessageTextView.h"
 
 @interface BJChatInputBarViewController : BJChatInputBaseViewController
 /**

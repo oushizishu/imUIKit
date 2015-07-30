@@ -24,6 +24,8 @@
 #import "SRRefreshView.h"
 
 #import <NSDate+Category.h>
+#import "BJChatUtilsMacro.h"
+#import "UIResponder+BJIMChatRouter.h"
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate, IMReceiveNewMessageDelegate, IMLoadMessageDelegate,BJChatInputProtocol,BJSendMessageProtocol,IMDeliveredMessageDelegate>
 @property (strong, nonatomic) UITableView *tableView;
@@ -319,17 +321,17 @@
 
 - (void)showBigImageWithMessage:(IMMessage *)message
 {
-    @TODO("显示大图");
+    @IMTODO("显示大图");
 }
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
-    @TODO("点击跳转代码");
+    @IMTODO("点击跳转代码");
 }
 
 - (void)linkCellTapWithMessage:(NSString *)str
 {
-    @TODO("点击链接跳转代码");
+    @IMTODO("点击链接跳转代码");
 }
 
 - (void)audioCellTapWithMessage:(IMMessage *)message
@@ -342,7 +344,7 @@
     {
         [message markPlayed];
         [[BJChatAudioPlayerHelper sharedInstance] startPlayerWithMessage:message callback:^(NSError *error) {
-            @TODO("提示错误消息");
+            @IMTODO("提示错误消息");
             [weakSelf.tableView reloadData];
         }];
     }

@@ -9,6 +9,7 @@
 #import "BJChatAudioPlayerHelper.h"
 #import <BJAudioPlayer.h>
 #import "IMMessage+ViewModel.h"
+#import "BJChatUtilsMacro.h"
 
 @interface BJChatAudioPlayerHelper ()
 @property (strong, nonatomic) BJAudioPlayer *player;
@@ -30,7 +31,7 @@
 
 - (void)startPlayerWithMessage:(IMMessage *)message callback:(ChatAudioPlayerFinishCallback)callback;
 {
-    @TODO("播放并缓存数据");
+    @IMTODO("播放并缓存数据");
     self.callback = callback;
     self.message = message;
     [self.player startPlayWithUrl:message.audioURL];

@@ -17,7 +17,9 @@
 #import <IMMessage+DB.h>
 
 #import "BJChatAudioPlayerHelper.h"
-#import "MyFacialView.h"
+#import "BJFacialView.h"
+#import "BJChatUtilsMacro.h"
+
 
 
 @implementation IMMessage (ViewModel)
@@ -144,13 +146,13 @@
 
 - (NSURL *)emojiImageURL;
 {
-    NSString *gifLocal = [MyFacialView imageNamedWithEmoji:[self emojiMessageBody].name];
+    NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self emojiMessageBody].name];
     NSURL *gifURL = nil;
     if (gifLocal.length>0) {
         gifURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[gifLocal substringToIndex:gifLocal.length - gifLocal.pathExtension.length - 1] ofType:gifLocal.pathExtension]];
     }else
     {
-        @TODO("远程图片下载");
+        @IMTODO("远程图片下载");
     }
     return gifURL;
 }
@@ -225,7 +227,7 @@
 - (NSString *)gossipText;
 {
     IMMessageBody *body = self.messageBody;
-    @TODO("请添加这块的小道消息代码");
+    @IMTODO("请添加这块的小道消息代码");
     return @"请添加这块的小道消息代码";
 }
 

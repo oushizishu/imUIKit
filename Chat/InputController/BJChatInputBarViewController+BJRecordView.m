@@ -7,19 +7,20 @@
 //
 
 #import "BJChatInputBarViewController+BJRecordView.h"
-#import "DXRecordView.h"
+#import "BJRecordView.h"
 #import <BJAudioBufferRecorder.h>
 #import <JLMicrophonePermission.h>
 #import "BJChatLimitMacro.h"
+#import "BJChatUtilsMacro.h"
 
 static char BJRecordView_View;
 static char BJRecordView_Recorder;
 
-@interface BJChatInputBaseViewController ()<DXRecordViewDelegate>
+@interface BJChatInputBaseViewController ()<BJRecordViewDelegate>
 /**
  *  RecordView
  */
-@property (strong, nonatomic) DXRecordView *recordView;
+@property (strong, nonatomic) BJRecordView *recordView;
 @property (strong, nonatomic) BJAudioBufferRecorder *recorder;
 @end
 
@@ -79,14 +80,14 @@ static char BJRecordView_Recorder;
         }
         else if (timeLength<=BJChat_Audio_Min_Time)//录制时间不够
         {
-            @TODO("错误提示");
+            @IMTODO("错误提示");
         }
         else if (isSuc) {//录制成功，正在转mp3
-            @TODO("添加录音成功提示。");
+            @IMTODO("添加录音成功提示。");
         }
         else//失败，失败原因在message
         {
-            @TODO("添加提示。");
+            @IMTODO("添加提示。");
         }
     };
     self.recorder.remainingCallback = ^(CGFloat time){
@@ -112,10 +113,10 @@ static char BJRecordView_Recorder;
 }
 
 #pragma mark - set get
-- (DXRecordView *)recordView
+- (BJRecordView *)recordView
 {
     if (objc_getAssociatedObject(self, &BJRecordView_View) == nil) {
-        DXRecordView *view = [[DXRecordView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-140)/2, 130, 140, 140)];
+        BJRecordView *view = [[BJRecordView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-140)/2, 130, 140, 140)];
         view.delegate = self;
         [self setRecordView:view];
     }
@@ -123,7 +124,7 @@ static char BJRecordView_Recorder;
     return objc_getAssociatedObject(self, &BJRecordView_View);
 }
 
-- (void)setRecordView:(DXRecordView *)recordView
+- (void)setRecordView:(BJRecordView *)recordView
 {
     objc_setAssociatedObject(self, &BJRecordView_View, recordView, OBJC_ASSOCIATION_RETAIN);
 }

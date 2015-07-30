@@ -7,12 +7,12 @@
 //
 
 #import "BJChatInputEmojiViewController.h"
-#import "DXFaceView.h"
+#import "BJFaceView.h"
 #import <PureLayout.h>
 #import "BJSendMessageHelper.h"
 
-@interface BJChatInputEmojiViewController()<DXFaceDelegate>
-@property (strong, nonatomic) DXFaceView *faceView;
+@interface BJChatInputEmojiViewController()<BJFaceDelegate>
+@property (strong, nonatomic) BJFaceView *faceView;
 @end
 
 @implementation BJChatInputEmojiViewController
@@ -42,10 +42,10 @@
 }
 
 #pragma mark - set get
-- (DXFaceView *)faceView
+- (BJFaceView *)faceView
 {
     if (_faceView == nil) {
-        _faceView = [[DXFaceView alloc] initWithFrame:self.view.bounds];
+        _faceView = [[BJFaceView alloc] initWithFrame:self.view.bounds];
         _faceView.backgroundColor = [UIColor clearColor];
         _faceView.delegate = self;
     }

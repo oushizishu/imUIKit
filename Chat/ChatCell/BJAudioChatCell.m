@@ -11,6 +11,7 @@
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
 #import <BJAudioPlayer.h>
+#import "UIResponder+BJIMChatRouter.h"
 
 @interface BJAudioChatCell ()
 @property (strong, nonatomic) UIImageView *animationImageView; // 动画的ImageView

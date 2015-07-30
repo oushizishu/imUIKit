@@ -7,7 +7,7 @@
 //
 
 #import "BJChatInputBarViewController.h"
-#import "DXRecordView.h"
+#import "BJRecordView.h"
 @interface BJChatInputBarViewController (BJRecordView)
 
 - (void)bjrv_cancelTouchRecordView;

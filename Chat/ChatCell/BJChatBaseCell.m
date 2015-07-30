@@ -8,6 +8,7 @@
 
 #import "BJChatBaseCell.h"
 #import <UIImageView+Aliyun.h>
+#import "UIResponder+BJIMChatRouter.h"
 
 @implementation BJChatBaseCell
 

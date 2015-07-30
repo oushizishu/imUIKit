@@ -13,6 +13,7 @@
 #import "BJChatFileCacheManager.h"
 #import "UIImage+compressionSize.h"
 #import "BJChatLimitMacro.h"
+#import "BJChatUtilsMacro.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -57,7 +58,7 @@
         [self.delegate chatInputDidEndEdit];
     }
 #if TARGET_IPHONE_SIMULATOR
-    @TODO("模拟器不支持拍照");
+    @IMTODO("模拟器不支持拍照");
 #elif TARGET_OS_IPHONE
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
 //    self.imagePicker.allowsEditing = YES;

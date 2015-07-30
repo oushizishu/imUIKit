@@ -22,7 +22,7 @@
 /**
  *  用于输入文本消息的输入框
  */
-@property (strong, nonatomic) XHMessageTextView *inputTextView;
+@property (strong, nonatomic) BJMessageTextView *inputTextView;
 
 /**
  *  文字输入区域最大高度，必须 > KInputTextViewMinHeight(最小高度)并且 < KInputTextViewMaxHeight，否则设置无效
@@ -148,7 +148,7 @@
     // 输入框的高度和宽度
     CGFloat width = CGRectGetWidth(self.view.bounds) - (allButtonWidth ? allButtonWidth : (textViewLeftMargin * 2));
     // 初始化输入框
-    self.inputTextView = [[XHMessageTextView  alloc] initWithFrame:CGRectMake(textViewLeftMargin, kVerticalPadding, width, kInputTextViewMinHeight)];
+    self.inputTextView = [[BJMessageTextView  alloc] initWithFrame:CGRectMake(textViewLeftMargin, kVerticalPadding, width, kInputTextViewMinHeight)];
     self.inputTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     //    self.inputTextView.contentMode = UIViewContentModeCenter;
     self.inputTextView.scrollEnabled = YES;
