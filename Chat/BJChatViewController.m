@@ -128,13 +128,13 @@
     [[BJIMManager shareInstance] addDeliveryMessageDelegate:self];
     [self.conversation resetUnReadNum];
     
-    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
-    [self addNewMessages:array isForward:NO];
-    
-    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
-    {
-        [[BJIMManager shareInstance] loadMessageFromMinMsgId:[[array objectAtIndex:0] msgId] inConversation:self.conversation];
-    }
+//    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+//    [self addNewMessages:array isForward:NO];
+//    
+//    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
+//    {
+        [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+//    }
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
@@ -234,11 +234,11 @@
             }
         }
     }
-    NSArray *messageList = [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
-    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
-    if (msgId != 0) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    }
+    [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
+//    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
+//    if (msgId != 0) {
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+//    }
 }
 
 #pragma mark - observer 通知 进入前台，后台等
