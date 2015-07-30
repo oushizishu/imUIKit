@@ -78,7 +78,7 @@
 
 - (void)bubbleViewPressed:(id)sender
 {
-    [super routerEventWithName:kRouterEventAudioBubbleTapEventName userInfo:@{kRouterEventUserInfoObject:self.message}];
+    [super bjim_routerEventWithName:kBJRouterEventAudioBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
 #pragma mark - Protocol

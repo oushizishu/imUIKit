@@ -129,7 +129,7 @@
 #pragma mark public
 - (void)bubbleViewPressed:(id)sender
 {
-    [self routerEventWithName:kRouterEventChatCellBubbleTapEventName userInfo:@{kRouterEventUserInfoObject:self.message}];
+    [self bjim_routerEventWithName:kBJRouterEventChatCellBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
 - (UIImage *)bubbleImage
@@ -143,7 +143,7 @@
 #pragma mark - action
 - (void)retryButtonPressed
 {
-    [super routerEventWithName:kResendButtonTapEventName userInfo:@{kRouterEventUserInfoObject:self.message}];
+    [super bjim_routerEventWithName:kBJResendButtonTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
 #pragma mark - Protocol

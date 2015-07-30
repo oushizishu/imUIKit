@@ -22,7 +22,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 - (void)selectedLink:(NSString *)string;
 @end
 
-@interface AMAttributedHighlightLabel : UILabel {
+@interface BJAttributedHighlightLabel : UILabel {
     NSMutableArray *touchableWords;
     NSMutableArray *touchableWordsRange;
     NSMutableArray *touchableLocations;

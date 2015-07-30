@@ -12,16 +12,16 @@
 
 #import <UIKit/UIKit.h>
 
-NSString *const kRouterEventImageBubbleTapEventName;
-NSString *const kRouterEventAudioBubbleTapEventName;
-NSString *const kRouterEventCardEventName;
-NSString *const kRouterEventChatCellBubbleTapEventName;
-NSString *const kResendButtonTapEventName;
-NSString *const kRouterEventLinkName;
+NSString *const kBJRouterEventImageBubbleTapEventName;
+NSString *const kBJRouterEventAudioBubbleTapEventName;
+NSString *const kBJRouterEventCardEventName;
+NSString *const kBJRouterEventChatCellBubbleTapEventName;
+NSString *const kBJResendButtonTapEventName;
+NSString *const kBJRouterEventLinkName;
 
-NSString *const kRouterEventUserInfoObject;
+NSString *const kBJRouterEventUserInfoObject;
 
-@interface UIResponder (Router)
+@interface UIResponder (BJIMChatRouter)
 
 /**
  *  发送一个路由器消息, 对eventName感兴趣的 UIResponsder 可以对消息进行处理
@@ -30,6 +30,6 @@ NSString *const kRouterEventUserInfoObject;
  *  @param userInfo  传递消息时, 携带的数据, 数据传递过程中, 会有新的数据添加
  *
  */
-- (void)routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo;
+- (void)bjim_routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo;
 
 @end

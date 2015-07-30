@@ -414,27 +414,27 @@
 #pragma mark - UIResponder actions
 
 
-- (void)routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
+- (void)bjim_routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
 {
-    IMMessage *message = [userInfo objectForKey:kRouterEventUserInfoObject];
-    if ([eventName isEqualToString:kRouterEventImageBubbleTapEventName]){
+    IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
+    if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];
     }
-    else if ([eventName isEqualToString:kResendButtonTapEventName])
+    else if ([eventName isEqualToString:kBJResendButtonTapEventName])
     {
         [[BJIMManager shareInstance] retryMessage:message];
     }
-    else if ([eventName isEqualToString:kRouterEventAudioBubbleTapEventName])
+    else if ([eventName isEqualToString:kBJRouterEventAudioBubbleTapEventName])
     {
         [self audioCellTapWithMessage:message];
     }
-    else if ([eventName isEqualToString:kRouterEventCardEventName])
+    else if ([eventName isEqualToString:kBJRouterEventCardEventName])
     {
         [self cardCellTapWithMessage:message];
     }
-    else if ([eventName isEqualToString:kRouterEventLinkName])
+    else if ([eventName isEqualToString:kBJRouterEventLinkName])
     {
-        [self linkCellTapWithMessage:[userInfo objectForKey:kRouterEventUserInfoObject]];
+        [self linkCellTapWithMessage:[userInfo objectForKey:kBJRouterEventUserInfoObject]];
     }
 }
 

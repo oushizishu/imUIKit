@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Alexander Meiler. All rights reserved.
 //
 
-#import "AMAttributedHighlightLabel.h"
+#import "BJAttributedHighlightLabel.h"
 
-@implementation AMAttributedHighlightLabel
+@implementation BJAttributedHighlightLabel
 
 @synthesize textColor,mentionTextColor,hashtagTextColor,linkTextColor,selectedMentionTextColor,selectedHashtagTextColor,selectedLinkTextColor;
 @synthesize delegate;

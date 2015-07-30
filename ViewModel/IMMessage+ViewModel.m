@@ -69,7 +69,7 @@
         }
         case eUserRole_Kefu: {
             typeColor = BJChatColorFromRGB(0x94c678);
-            typeName = @"学生";
+            typeName = @"客服";
             break;
         }
         case eUserRole_Anonymous: {

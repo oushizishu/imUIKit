@@ -10,14 +10,14 @@
 #import "BJChatCellFactory.h"
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
-#import "AMAttributedHighlightLabel.h"
+#import "BJAttributedHighlightLabel.h"
 
 #define BUBBLE_PROGRESSVIEW_HEIGHT 10 // progressView 高度
 
 #define TEXTLABEL_MAX_WIDTH 200 // textLaebl 最大宽度
 
 @interface BJTextChatCell ()<AMAttributedHighlightLabelDelegate>
-@property (nonatomic, strong) AMAttributedHighlightLabel *contentLabel;
+@property (nonatomic, strong) BJAttributedHighlightLabel *contentLabel;
 @end
 
 @implementation BJTextChatCell
@@ -83,7 +83,7 @@
 #pragma mark - 
 - (void)selectedLink:(NSString *)string;
 {
-    [super routerEventWithName:kRouterEventLinkName userInfo:@{kRouterEventUserInfoObject:string}];
+    [super bjim_routerEventWithName:kBJRouterEventLinkName userInfo:@{kBJRouterEventUserInfoObject:string}];
 }
 
 #pragma mark - set get
@@ -91,7 +91,7 @@
 - (UILabel *)contentLabel
 {
     if (_contentLabel == nil) {
-        _contentLabel = [[AMAttributedHighlightLabel alloc] initWithFrame:CGRectZero];
+        _contentLabel = [[BJAttributedHighlightLabel alloc] initWithFrame:CGRectZero];
         _contentLabel.linkTextColor = [UIColor blueColor];
         _contentLabel.selectedLinkTextColor = [UIColor grayColor];
         _contentLabel.delegate = self;

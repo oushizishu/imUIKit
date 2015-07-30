@@ -53,7 +53,7 @@
 
 - (void)bubbleViewPressed:(id)sender
 {
-    [super routerEventWithName:kRouterEventImageBubbleTapEventName userInfo:@{kRouterEventUserInfoObject:self.message}];
+    [super bjim_routerEventWithName:kBJRouterEventImageBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
 #pragma mark - Protocol
