@@ -15,6 +15,9 @@
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatUtilsMacro.h"
 
+const float BJ_MAX_SIZE = 120; //　图片最大显示大小
+
+
 @interface BJImageChatCell ()
 @property (strong, nonatomic) UIImageView *chatImageView;
 @end
@@ -39,16 +42,16 @@
     CGSize retSize = self.message.imageSize;
     NSLog(@"calculateCellHeight,%@",NSStringFromCGSize(retSize));
     if (retSize.width == 0 || retSize.height == 0) {
-        retSize.width = MAX_SIZE;
-        retSize.height = MAX_SIZE;
+        retSize.width = BJ_MAX_SIZE;
+        retSize.height = BJ_MAX_SIZE;
     }else if (retSize.width > retSize.height) {
-        CGFloat height =  MAX_SIZE / retSize.width  *  retSize.height;
+        CGFloat height =  BJ_MAX_SIZE / retSize.width  *  retSize.height;
         retSize.height = height;
-        retSize.width = MAX_SIZE;
+        retSize.width = BJ_MAX_SIZE;
     }else {
-        CGFloat width = MAX_SIZE / retSize.height * retSize.width;
+        CGFloat width = BJ_MAX_SIZE / retSize.height * retSize.width;
         retSize.width = width;
-        retSize.height = MAX_SIZE;
+        retSize.height = BJ_MAX_SIZE;
     }
     return retSize;
 }

@@ -41,7 +41,7 @@
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJChatUnSupportCell class])];
     if (self) {
-        self.textLabel.font = [UIFont systemFontOfSize:NAME_LABEL_FONT_SIZE];
+        self.textLabel.font = [UIFont systemFontOfSize:BJ_NAME_LABEL_FONT_SIZE];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;

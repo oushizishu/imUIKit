@@ -10,6 +10,29 @@
 #import <UIImageView+Aliyun.h>
 #import "UIResponder+BJIMChatRouter.h"
 
+const float HEAD_SIZE = 40; // 头像大小
+const float HEAD_PADDING = 5; // 头像到cell的内间距和头像到bubble的间距
+
+
+const float NAME_LABEL_WIDTH = 180; // nameLabel宽度
+const float NAME_LABEL_HEIGHT = 20; // nameLabel 高度
+const float NAME_LABEL_PADDING = 0; // nameLabel间距
+
+
+const float SEND_STATUS_SIZE = 20; // 发送状态View的Size
+const float ACTIVTIYVIEW_BUBBLE_PADDING = 5; // 菊花和bubbleView之间的间距
+
+const float BUBBLE_RIGHT_LEFT_CAP_WIDTH = 5; // 文字在右侧时,bubble用于拉伸点的X坐标
+const float BUBBLE_RIGHT_TOP_CAP_HEIGHT = 35; // 文字在右侧时,bubble用于拉伸点的Y坐标
+
+const float BUBBLE_LEFT_LEFT_CAP_WIDTH = 35; // 文字在左侧时,bubble用于拉伸点的X坐标
+const float BUBBLE_LEFT_TOP_CAP_HEIGHT = 35; // 文字在左侧时,bubble用于拉伸点的Y坐标
+
+NSString *const BUBBLE_LEFT_IMAGE_NAME = @"bg_speech_nor"; // bubbleView 的背景图片
+NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
+
+
+
 @implementation BJChatBaseCell
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -190,12 +213,12 @@
     
     [cell setCellInfo:dic indexPath:indexPath];
     CGFloat height = CGRectGetMaxY(cell.bubbleContainerView.frame);
-    height -= CELLPADDING;
+    height -= BJ_CELLPADDING;
     if (height < cell.headImageView.frame.size.height) {
         height = cell.headImageView.frame.size.height;
     }
     NSLog(@"cellHeightWithInfo %f contaner:%@",height,NSStringFromCGRect(cell.bubbleContainerView.frame));
-    return height + CELLPADDING*2;
+    return height + BJ_CELLPADDING*2;
 }
 
 #pragma mark - set get
@@ -215,7 +238,7 @@
 - (UIImageView *)headImageView
 {
     if (_headImageView == nil) {
-        _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(HEAD_PADDING, CELLPADDING, HEAD_SIZE, HEAD_SIZE)];
+        _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(HEAD_PADDING, BJ_CELLPADDING, HEAD_SIZE, HEAD_SIZE)];
         _headImageView.clipsToBounds = YES;
         _headImageView.userInteractionEnabled = YES;
         _headImageView.multipleTouchEnabled = YES;

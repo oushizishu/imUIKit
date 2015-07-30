@@ -13,10 +13,10 @@
 #import <UIImageView+Aliyun.h>
 
 const float ImageWH = 60;
-#define Interval 10
-#define CardWidth 212
-#define CardHeight 130
-#define ContentWidth 130
+const float Interval = 10;
+const float CardWidth = 212;
+const float CardHeight = 130;
+const float ContentWidth = 130;
 
 @interface BJCardChatCell ()
 @property (strong, nonatomic) UIImageView *cardImageView;

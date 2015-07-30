@@ -14,6 +14,9 @@
 #import "YLGIFImage.h"
 #import "YLImageView.h"
 
+const float BJ_EMOJI_MAX_SIZE = 60;
+
+
 @interface BJEmojiChatCell ()
 @property (strong, nonatomic) YLImageView *emojiImageView;
 @end
@@ -37,16 +40,16 @@
 {
     CGSize retSize = self.message.emojiSize;
     if (retSize.width == 0 || retSize.height == 0) {
-        retSize.width = EMOJI_MAX_SIZE;
-        retSize.height = EMOJI_MAX_SIZE;
+        retSize.width = BJ_EMOJI_MAX_SIZE;
+        retSize.height = BJ_EMOJI_MAX_SIZE;
     }else if (retSize.width > retSize.height) {
-        CGFloat height =  EMOJI_MAX_SIZE / retSize.width  *  retSize.height;
+        CGFloat height =  BJ_EMOJI_MAX_SIZE / retSize.width  *  retSize.height;
         retSize.height = height;
-        retSize.width = EMOJI_MAX_SIZE;
+        retSize.width = BJ_EMOJI_MAX_SIZE;
     }else {
-        CGFloat width = EMOJI_MAX_SIZE / retSize.height * retSize.width;
+        CGFloat width = BJ_EMOJI_MAX_SIZE / retSize.height * retSize.width;
         retSize.width = width;
-        retSize.height = EMOJI_MAX_SIZE;
+        retSize.height = BJ_EMOJI_MAX_SIZE;
     }
     return retSize;
 }
@@ -86,7 +89,7 @@
 - (YLImageView *)emojiImageView
 {
     if (_emojiImageView == nil) {
-        _emojiImageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, EMOJI_MAX_SIZE, EMOJI_MAX_SIZE)];
+        _emojiImageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, BJ_EMOJI_MAX_SIZE, BJ_EMOJI_MAX_SIZE)];
         [self.bubbleContainerView addSubview:_emojiImageView];
 
     }

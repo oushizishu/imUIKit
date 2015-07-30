@@ -7,7 +7,6 @@
 //
 
 #import "BJChatBaseCell.h"
-#define MAX_SIZE 120 //　图片最大显示大小
 
 @interface BJImageChatCell : BJChatBaseCell
 

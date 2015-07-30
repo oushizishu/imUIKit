@@ -10,8 +10,8 @@
 #import "BJChatCellFactory.h"
 #import "BJChatBaseCell.h"
 
-#define Gossip_Content_Label_Max_Width 200
-#define Gossip_Content_Label_Height 18
+const float Gossip_Content_Label_Max_Width = 200;
+const float Gossip_Content_Label_Height = 18;
 
 @interface BJGossipTableViewCell ()
 @property (strong, nonatomic) UILabel *contentLabel;
@@ -39,7 +39,7 @@
 {
     [super layoutSubviews];
     CGRect rect = self.contentLabel.frame;
-    rect.origin.x = self.frame.size.width - rect.size.width - CELLPADDING;
+    rect.origin.x = self.frame.size.width - rect.size.width - BJ_CELLPADDING;
     self.contentLabel.frame = rect;
 }
 
@@ -74,7 +74,7 @@
 
 + (CGFloat)cellHeightWithInfo:(id)dic indexPath:(NSIndexPath *)indexPath;
 {
-    return Gossip_Content_Label_Height+CELLPADDING*2;
+    return Gossip_Content_Label_Height+BJ_CELLPADDING*2;
 }
 
 #pragma mark - set get
@@ -82,7 +82,7 @@
 {
     if (_contentLabel == nil) {
         _contentLabel = ({
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, CELLPADDING, Gossip_Content_Label_Max_Width, Gossip_Content_Label_Height)];
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, BJ_CELLPADDING, Gossip_Content_Label_Max_Width, Gossip_Content_Label_Height)];
             label.font = [UIFont systemFontOfSize:10];
             label.textAlignment = NSTextAlignmentCenter;
             label.backgroundColor = [UIColor grayColor];

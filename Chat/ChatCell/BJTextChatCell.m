@@ -14,9 +14,9 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 
-#define BUBBLE_PROGRESSVIEW_HEIGHT 10 // progressView 高度
+const float BUBBLE_PROGRESSVIEW_HEIGHT = 10; // progressView 高度
 
-#define TEXTLABEL_MAX_WIDTH 200 // textLaebl 最大宽度
+const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 
 @interface BJTextChatCell ()<AMAttributedHighlightLabelDelegate>
 @property (nonatomic, strong) BJAttributedHighlightLabel *contentLabel;
@@ -35,15 +35,15 @@
     [super layoutSubviews];
     
     CGRect frame = self.bubbleContainerView.bounds;
-    frame.size.width -= BUBBLE_ARROW_WIDTH;
-    frame = CGRectInset(frame, BUBBLE_VIEW_PADDING, BUBBLE_VIEW_PADDING);
+    frame.size.width -= BJ_BUBBLE_ARROW_WIDTH;
+    frame = CGRectInset(frame, BJ_BUBBLE_VIEW_PADDING, BJ_BUBBLE_VIEW_PADDING);
     if (self.message.isMySend) {
-        frame.origin.x = BUBBLE_VIEW_PADDING;
+        frame.origin.x = BJ_BUBBLE_VIEW_PADDING;
     }else{
-        frame.origin.x = BUBBLE_VIEW_PADDING + BUBBLE_ARROW_WIDTH;
+        frame.origin.x = BJ_BUBBLE_VIEW_PADDING + BJ_BUBBLE_ARROW_WIDTH;
     }
     
-    frame.origin.y = BUBBLE_VIEW_PADDING;
+    frame.origin.y = BJ_BUBBLE_VIEW_PADDING;
     [self.contentLabel setFrame:frame];
 }
 
@@ -75,8 +75,8 @@
     self.contentLabel.frame = contentRect;
     [self.contentLabel sizeToFit];
     contentRect = self.contentLabel.frame;
-    contentRect.size.width = contentRect.size.width + BUBBLE_VIEW_PADDING*2 + BUBBLE_ARROW_WIDTH;
-    contentRect.size.height = contentRect.size.height + BUBBLE_VIEW_PADDING*2;
+    contentRect.size.width = contentRect.size.width + BJ_BUBBLE_VIEW_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH;
+    contentRect.size.height = contentRect.size.height + BJ_BUBBLE_VIEW_PADDING*2;
     self.bubbleContainerView.frame = contentRect;
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -99,7 +99,7 @@
         _contentLabel.delegate = self;
         _contentLabel.numberOfLines = 0;
         _contentLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        _contentLabel.font = [UIFont systemFontOfSize:NAME_LABEL_FONT_SIZE];
+        _contentLabel.font = [UIFont systemFontOfSize:BJ_NAME_LABEL_FONT_SIZE];
         _contentLabel.userInteractionEnabled = YES;
         _contentLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_contentLabel];
