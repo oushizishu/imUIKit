@@ -131,10 +131,10 @@
     NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
     [self addNewMessages:array isForward:NO];
     
-//    if ([array count] > 0 && self.conversation)
-//    {
-//        [[BJIMManager shareInstance] loadMessageFromMinMsgId:[[array objectAtIndex:0] msgId] inConversation:self.conversation];
-//    }
+    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
+    {
+        [[BJIMManager shareInstance] loadMessageFromMinMsgId:[[array objectAtIndex:0] msgId] inConversation:self.conversation];
+    }
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
@@ -376,7 +376,7 @@
 - (void)didLoadMessages:(NSArray *)messages conversation:(Conversation *)conversation hasMore:(BOOL)hasMore
 {
     if (conversation.rowid == self.conversation.rowid) {
-//        [self addNewMessages:messages isForward:YES];
+        [self addNewMessages:messages isForward:YES];
     }
 }
 
