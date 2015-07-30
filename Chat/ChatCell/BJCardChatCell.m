@@ -12,7 +12,7 @@
 #import <PureLayout/PureLayout.h>
 #import <UIImageView+Aliyun.h>
 
-#define ImageWH 60
+const float ImageWH = 60;
 #define Interval 10
 #define CardWidth 212
 #define CardHeight 130

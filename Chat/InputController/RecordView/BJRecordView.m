@@ -96,7 +96,7 @@
 
 -(void)setVoiceImage {
     _recordAnimationView.image = [UIImage imageNamed:@"VoiceSearchFeedback001"];
-    float voiceSound = 0;
+    double voiceSound = 0;
     voiceSound = [self.delegate getAudioMeter];
     NSLog(@"setVoiceImage %f",voiceSound);
     if (0 < voiceSound <= 0.05) {

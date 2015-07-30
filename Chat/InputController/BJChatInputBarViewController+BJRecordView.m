@@ -107,9 +107,9 @@ static char BJRecordView_Recorder;
 }
 
 #pragma mark - DXRecordViewDelegate
-- (float)getAudioMeter;
+- (double)getAudioMeter;
 {
-    return self.recorder.peakPower;
+    return self.recorder.audioMeter;
 }
 
 #pragma mark - set get

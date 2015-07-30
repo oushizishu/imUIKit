@@ -14,7 +14,7 @@
 
 @protocol BJRecordViewDelegate <NSObject>
 @required
-- (float)getAudioMeter;
+- (double)getAudioMeter;
 
 @end
 
