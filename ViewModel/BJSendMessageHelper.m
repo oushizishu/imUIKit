@@ -12,6 +12,7 @@
 #import <IMImgMessageBody.h>
 #import <IMEmojiMessageBody.h>
 #import "BJChatInfo.h"
+#import "CardSimpleItem.h"
 @implementation BJSendMessageHelper
 
 + (instancetype)sharedInstance
@@ -94,6 +95,26 @@
     message.createAt = [NSDate date].timeIntervalSince1970;
     message.chat_t = chatInfo.chat_t;
     message.msg_t = eMessageType_EMOJI;
+    message.receiver = chatInfo.getToId;
+    message.receiverRole = chatInfo.getToRole;
+    [BJSendMessageHelper sendMessage:message];
+    return message;
+}
+
++ (IMMessage *)sendCardMessage:(CardSimpleItem *)card
+                      chatInfo:(BJChatInfo *)chatInfo;
+{
+    IMCardMessageBody *messageBody = [[IMCardMessageBody alloc] init];
+    messageBody.title = card.title;
+    messageBody.content = card.content;
+    messageBody.url = card.url;
+    messageBody.thumb = card.thumb;
+    
+    IMMessage *message = [[IMMessage alloc] init];
+    message.messageBody = messageBody;
+    message.createAt = [NSDate date].timeIntervalSince1970;
+    message.chat_t = chatInfo.chat_t;
+    message.msg_t = eMessageType_CARD;
     message.receiver = chatInfo.getToId;
     message.receiverRole = chatInfo.getToRole;
     [BJSendMessageHelper sendMessage:message];

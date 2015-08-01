@@ -30,7 +30,7 @@
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate, IMReceiveNewMessageDelegate, IMLoadMessageDelegate,BJChatInputProtocol,BJSendMessageProtocol,IMDeliveredMessageDelegate>
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *messageList;
-@property (strong, nonatomic) BJChatInfo *chatInfo;
+
 @property (strong, nonatomic) Conversation *conversation;
 
 @property (strong, nonatomic) NSMutableDictionary *messageHeightDic;

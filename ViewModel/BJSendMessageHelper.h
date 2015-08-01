@@ -14,6 +14,8 @@
 
 #import "BJChatInfo.h"
 
+@class CardSimpleItem;
+
 @protocol BJSendMessageProtocol <NSObject>
 
 - (void)willSendMessage:(IMMessage *)message;
@@ -36,4 +38,7 @@
 + (IMMessage *)sendImageMessage:(NSString *)filePath imageSize:(CGSize)size chatInfo:(BJChatInfo *)chatInfo;
 
 + (IMMessage *)sendEmojiMessage:(NSString *)emoji chatInfo:(BJChatInfo *)chatInfo;
+
++ (IMMessage *)sendCardMessage:(CardSimpleItem *)card
+                      chatInfo:(BJChatInfo *)chatInfo;
 @end

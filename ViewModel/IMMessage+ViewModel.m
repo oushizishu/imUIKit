@@ -144,6 +144,11 @@
     return CGSizeMake(60, 60);
 }
 
+- (NSString *)emojiName;
+{
+    return [self emojiMessageBody].name;
+}
+
 - (NSURL *)emojiImageURL;
 {
     NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self emojiMessageBody].name];

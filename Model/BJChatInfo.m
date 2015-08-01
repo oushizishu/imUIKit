@@ -9,6 +9,7 @@
 #import "BJChatInfo.h"
 #import <BJIMConstants.h>
 #import <Conversation+DB.h>
+#import "ExchangeImModel.h"
 @implementation BJChatInfo
 
 - (instancetype)initWithUser:(User *)user
@@ -27,6 +28,28 @@
     if (self) {
         _chat_t = eChatType_GroupChat;
         _chatToGroup = group;
+    }
+    return self;
+}
+
+- (instancetype)initWithContact:(id<BJContactInfoProtocol>)contact;
+{
+    if ([contact isKindOfClass:[User class]]) {
+        self = [self initWithUser:(User *)contact];
+    }
+    else if ([contact isKindOfClass:[Group class]])
+    {
+        self = [self initWithGroup:(Group *)contact];
+    }
+    else
+    {
+        if ([contact getContactType] == Contact_Group) {
+            self = [self initWithGroup:[ExchangeImModel groupWithContact:contact]];
+        }
+        else
+        {
+            self = [self initWithUser:[ExchangeImModel userWithContact:contact]];
+        }
     }
     return self;
 }
@@ -61,6 +84,15 @@
     }
     else
         return eUserRole_Anonymous;
+}
+
+- (NSString *)getToName;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return self.chatToUser.name;
+    }
+    else
+        return self.chatToGroup.groupName;
 }
 
 @end
