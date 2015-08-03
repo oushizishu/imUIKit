@@ -19,4 +19,11 @@ typedef void (^ChatAudioPlayerFinishCallback)(NSError *error);
  */
 - (void)stopPlayer;
 - (BOOL)isPlayerWithMessage:(IMMessage *)message;
+
+/**
+ *  把消息的音频文件下载到本地
+ *
+ *  @param message
+ */
+- (void)downLoadAudioWithMessage:(IMMessage *)message;
 @end

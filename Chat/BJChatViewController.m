@@ -316,8 +316,14 @@
 
 - (void)reloadWithMessage:(IMMessage *)message
 {
-    NSInteger index = [self.messageList indexOfObject:message];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    if (message.msg_t == eMessageType_CARD) {
+        [self.tableView reloadData];
+    }
+    else
+    {
+        NSInteger index = [self.messageList indexOfObject:message];
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 

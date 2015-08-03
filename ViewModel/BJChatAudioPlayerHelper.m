@@ -10,11 +10,18 @@
 #import <BJAudioPlayer.h>
 #import "IMMessage+ViewModel.h"
 #import "BJChatUtilsMacro.h"
+#import <BJChatFileCacheManager.h>
+#import <BJNetworkUtil.h>
+#import <BJCommonProxy.h>
 
 @interface BJChatAudioPlayerHelper ()
 @property (strong, nonatomic) BJAudioPlayer *player;
+/**
+ *  有标识作用，如果播放完毕，会赋值nil
+ */
 @property (strong, nonatomic) IMMessage *message;
 @property (copy, nonatomic) ChatAudioPlayerFinishCallback callback;
+@property (strong, nonatomic) NSMutableDictionary *downloadAudioDic;
 @end
 
 @implementation BJChatAudioPlayerHelper
@@ -29,21 +36,41 @@
     return _sharedInstance;
 }
 
-- (void)startPlayerWithMessage:(IMMessage *)message callback:(ChatAudioPlayerFinishCallback)callback;
+- (NSString *)downKeyStrWithMessage:(IMMessage *)message
 {
-    @IMTODO("播放并缓存数据");
-    self.callback = callback;
-    self.message = message;
-    [self.player startPlayWithUrl:message.audioURL];
+    return [NSString stringWithFormat:@"%ld",(long)message.rowid];
 }
 
-/**
- *  停止当前的播放
- */
-- (void)stopPlayer;
+- (NSString *)localFilePathWithMessage:(IMMessage *)message
 {
-    [self.player stopPlay];
-    self.message = nil;
+    NSString *localPath = [BJChatFileCacheManager audioCachePathWithName:[self downKeyStrWithMessage:message]];
+    return [localPath stringByAppendingPathExtension:@"mp3"];
+}
+
+#pragma mark - Public
+
+- (void)startPlayerWithMessage:(IMMessage *)message callback:(ChatAudioPlayerFinishCallback)callback;
+{
+    if (message.msg_t != eMessageType_AUDIO) {
+        return;
+    }
+    self.callback = callback;
+    self.message = message;
+    if ([message.audioURL isFileURL]) {
+        [self.player startPlayWithUrl:message.audioURL];
+    }
+    else
+    {
+        NSString *localPath = [self localFilePathWithMessage:message];
+        if ([BJFileManagerTool isFileExisted:nil path:localPath]) {
+            [self.player startPlayWithUrl:[NSURL fileURLWithPath:localPath]];
+        }
+        else
+        {
+            [self downLoadAudioWithMessage:message];
+            
+        }
+    }
 }
 
 - (void)stopPlayerWithMessage:(IMMessage *)message;
@@ -55,7 +82,44 @@
 
 - (BOOL)isPlayerWithMessage:(IMMessage *)message;
 {
-    return [self.player isPlayerWithUrl:message.audioURL];
+    return [self.message isEqual:message];
+}
+
+/**
+ *  停止当前的播放
+ */
+- (void)stopPlayer;
+{
+    [self.player stopPlay];
+    self.message = nil;
+}
+
+#pragma mark - 下载
+- (void)downLoadAudioWithMessage:(IMMessage *)message
+{
+    if (message.msg_t != eMessageType_AUDIO) {
+        return;
+    }
+    
+    if ([self.downloadAudioDic objectForKey:[self downKeyStrWithMessage:message]]) {
+        return;
+    }
+    WS(weakSelf);
+    [self.downloadAudioDic setObject:message forKey:[self downKeyStrWithMessage:message]];
+    RequestParams *params = [[RequestParams alloc] initWithUrl:[message.audioURL absoluteString]];
+    [BJCommonProxyInstance.networkUtil doDownloadResource:params fileDownPath:[self localFilePathWithMessage:message] success:^(id response, NSDictionary *responseHeaders, RequestParams *params) {
+        if ([weakSelf.message isEqual:message]) {
+            [weakSelf startPlayerWithMessage:message callback:weakSelf.callback];
+        }
+    } failure:^(NSError *error, RequestParams *params) {
+        if ([weakSelf.message isEqual:message]) {
+            if (weakSelf.callback) {
+                weakSelf.callback(error);
+            }
+        }
+    } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpected) {
+        
+    }];
 }
 
 #pragma mark - set get
@@ -70,11 +134,20 @@
                 if (message.length>0) {
                     error = [NSError errorWithDomain:@"BJChat" code:100 userInfo:@{NSLocalizedFailureReasonErrorKey:message}];
                 }
+                weakSelf.message = nil;
                 weakSelf.callback(error);
             }
         };
     }
     return _player;
+}
+
+- (NSMutableDictionary *)downloadAudioDic
+{
+    if (_downloadAudioDic == nil) {
+        _downloadAudioDic = [[NSMutableDictionary alloc] initWithCapacity:0];
+    }
+    return _downloadAudioDic;
 }
 
 @end
