@@ -9,7 +9,7 @@
 #import "BJChatInfo.h"
 #import <BJIMConstants.h>
 #import <Conversation+DB.h>
-#import "ExchangeImModel.h"
+#import "BJExchangeIMModel.h"
 @implementation BJChatInfo
 
 - (instancetype)initWithUser:(User *)user
@@ -44,11 +44,11 @@
     else
     {
         if ([contact getContactType] == Contact_Group) {
-            self = [self initWithGroup:[ExchangeImModel groupWithContact:contact]];
+            self = [self initWithGroup:[BJExchangeIMModel groupWithContact:contact]];
         }
         else
         {
-            self = [self initWithUser:[ExchangeImModel userWithContact:contact]];
+            self = [self initWithUser:[BJExchangeIMModel userWithContact:contact]];
         }
     }
     return self;
