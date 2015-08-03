@@ -30,7 +30,7 @@
     return nil;
 }
 
-- (ContactType)getContactType;
+- (BJContactType)getContactType;
 {
     return self.userRole;
 }

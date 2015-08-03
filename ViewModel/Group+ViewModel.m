@@ -29,9 +29,9 @@
     return nil;
 }
 
-- (ContactType)getContactType;
+- (BJContactType)getContactType;
 {
-    return Contact_Group;
+    return BJContact_Group;
 }
 
 - (long long)getContactId;
