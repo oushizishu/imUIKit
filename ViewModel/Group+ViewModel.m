@@ -7,6 +7,7 @@
 //
 
 #import "Group+ViewModel.h"
+#import "BJChatUtilsMacro.h"
 
 @implementation Group (ViewModel)
 - (NSString *)getContactName;
@@ -41,7 +42,7 @@
 
 - (NSString *)getContactHeader;
 {
-    @TODO("返回head数据");
+    @IMTODO("返回head数据");
     return @"";
 }
 
