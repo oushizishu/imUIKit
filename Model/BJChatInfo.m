@@ -43,7 +43,7 @@
     }
     else
     {
-        if ([contact getContactType] == Contact_Group) {
+        if ([contact getContactType] == BJContact_Group) {
             self = [self initWithGroup:[BJExchangeIMModel groupWithContact:contact]];
         }
         else

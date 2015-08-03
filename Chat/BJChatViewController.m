@@ -110,7 +110,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.isScrollToBottom = YES;
-   
+      [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil]; 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -122,6 +122,9 @@
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
+    
+//    self.view.autoresizesSubviews = NO;
+//    self.view.autoresizingMask = UIViewAutoresizingNone;
     
     [[BJIMManager shareInstance] addReceiveNewMessageDelegate:self];
     [[BJIMManager shareInstance] addLoadMoreMessagesDelegate:self];
@@ -143,7 +146,6 @@
     [self updateSubViewFrame];
     [self.tableView addSubview:self.slimeView];
  
-    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
 //    {
 //        IMMessage *cardMessage = [[IMMessage alloc] init];
 //        cardMessage.chat_t = eChatType_GroupChat;
