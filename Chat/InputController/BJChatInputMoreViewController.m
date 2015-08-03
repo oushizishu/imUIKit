@@ -30,6 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    @TODO("发送优惠券");
     self.editList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
     self.view.autoresizingMask = UIViewAutoresizingNone;
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);

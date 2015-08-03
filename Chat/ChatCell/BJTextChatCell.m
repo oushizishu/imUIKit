@@ -68,7 +68,6 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     
     self.backImageView.image = [self bubbleImage];
   
-    @IMTODO("文字超链接情况");
     [self.contentLabel setString:self.message.msg_t==eMessageType_TXT?self.message.content:@"当前版本暂不支持查看此消息,请升级新版本"];
     CGRect contentRect = self.contentLabel.frame;
     contentRect.size.width = TEXTLABEL_MAX_WIDTH;
