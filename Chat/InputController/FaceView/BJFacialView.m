@@ -17,29 +17,18 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _faces = @[
-                   [YLGIFImage imageNamed:@"emoji_appearance.gif"],
-                   [YLGIFImage imageNamed:@"emoji_cry.gif"],
-                   [YLGIFImage imageNamed:@"emoji_doubt.gif"],
-                   [YLGIFImage imageNamed:@"emoji_embarrassed.gif"],
-                   [YLGIFImage imageNamed:@"emoji_exhausted.gif"],
-                   [YLGIFImage imageNamed:@"emoji_giggle.gif"],
-                   [YLGIFImage imageNamed:@"emoji_heartstopper.gif"],
-                   [YLGIFImage imageNamed:@"emoji_naughty.gif"],
-                   //[UIImage imageNamed:@"emoji_owl"],
-                   [YLGIFImage imageNamed:@"emoji_powerful.gif"],
-                   [YLGIFImage imageNamed:@"emoji_proud.gif"],
-                   [YLGIFImage imageNamed:@"emoji_smile.gif"],
-                   [YLGIFImage imageNamed:@"emoji_speechless.gif"],
-                   [YLGIFImage imageNamed:@"emoji_struggle.gif"],
-                   [YLGIFImage imageNamed:@"emoji_surprise.gif"],
-                   [YLGIFImage imageNamed:@"emoji_weighs.gif"],
-                   [YLGIFImage imageNamed:@"emoji_worship.gif"],
-                   ];
-        _emojiTexts =  @[@"(*色*)", @"(*大哭*)", @"(*疑问*)", @"(*撇嘴*)", @"(*好困*)", @"(*憨笑*)", @"(*衰*)", @"(*调皮*)",
-          @"(*厉害*)", @"(*得意*)", @"(*微笑*)", @"(*无语*)", @"(*奋战*)", @"(*惊讶*)", @"(*晕*)", @"(*崇拜*)"];
-        _emojiTitles = @[@"(色)", @"(大哭)", @"(疑问)", @"(撇嘴)", @"(好困)", @"(憨笑)", @"(衰)", @"(调皮)",
-                        @"(厉害)", @"(得意)", @"(微笑)", @"(无语)", @"(奋战)", @"(惊讶)", @"(晕)", @"(崇拜)"];
+        NSArray *emjList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emj" ofType:@"plist"]];
+        NSMutableArray *faces = [[NSMutableArray alloc] initWithCapacity:0];
+        NSMutableArray *emojiTexts = [[NSMutableArray alloc] initWithCapacity:0];
+        NSMutableArray *emojiTitles = [[NSMutableArray alloc] initWithCapacity:0];
+        for (NSDictionary *oneDic in emjList) {
+            [faces addObject:[YLGIFImage imageNamed:[oneDic objectForKey:@"GifName"]]];
+             [emojiTexts addObject:[oneDic objectForKey:@"DisplayCode"]];
+            [emojiTitles addObject:[oneDic objectForKey:@"DisplayCode"]];
+        }
+        _faces = [faces copy];
+        _emojiTexts =  [emojiTexts copy];
+        _emojiTitles = [emojiTitles copy];
         self.pagingEnabled = true;
         self.showsHorizontalScrollIndicator = false;
     }
@@ -132,31 +121,19 @@
 
 + (NSString *)imageNamedWithEmoji:(NSString *)emoji
 {
-    NSArray *emojis = @[@"(*色*)", @"(*大哭*)", @"(*疑问*)", @"(*撇嘴*)", @"(*好困*)", @"(*憨笑*)", @"(*衰*)", @"(*调皮*)",
-                        @"(*厉害*)", @"(*得意*)", @"(*微笑*)", @"(*无语*)", @"(*奋战*)", @"(*惊讶*)", @"(*晕*)", @"(*崇拜*)"];
-    NSArray *faces =  @[
-                        @"emoji_appearance.gif",
-                        @"emoji_cry.gif",
-                        @"emoji_doubt.gif",
-                        @"emoji_embarrassed.gif",
-                        @"emoji_exhausted.gif",
-                        @"emoji_giggle.gif",
-                        @"emoji_heartstopper.gif",
-                        @"emoji_naughty.gif",
-                        @"emoji_powerful.gif",
-                        @"emoji_proud.gif",
-                        @"emoji_smile.gif",
-                        @"emoji_speechless.gif",
-                        @"emoji_struggle.gif",
-                        @"emoji_surprise.gif",
-                        @"emoji_weighs.gif",
-                        @"emoji_worship.gif",
-                        ];
+    NSArray *emjList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emj" ofType:@"plist"]];
+    NSMutableArray *faces = [[NSMutableArray alloc] initWithCapacity:0];
+    NSMutableArray *emojiTexts = [[NSMutableArray alloc] initWithCapacity:0];
+
+    for (NSDictionary *oneDic in emjList) {
+        [faces addObject:[oneDic objectForKey:@"GifName"]];
+        [emojiTexts addObject:[oneDic objectForKey:@"DisplayCode"]];
+    }
     
     NSInteger index = -1;
-    for (NSInteger i = 0; i < [emojis count]; ++ i)
+    for (NSInteger i = 0; i < [emojiTexts count]; ++ i)
     {
-        if ([emojis[i] isEqualToString:emoji])
+        if ([emojiTexts[i] isEqualToString:emoji])
         {
             index = i;
             break;
@@ -167,17 +144,29 @@
     return faces[index];
 }
 
-+ (BOOL)checkTextIsEmoji:(NSString *)emoji
++ (NSString *)imageUrlWithEmoji:(NSString *)emoji;
 {
-    NSArray *emojis = @[@"(*色*)", @"(*大哭*)", @"(*疑问*)", @"(*撇嘴*)", @"(*好困*)", @"(*憨笑*)", @"(*衰*)", @"(*调皮*)",
-                        @"(*厉害*)", @"(*得意*)", @"(*微笑*)", @"(*无语*)", @"(*奋战*)", @"(*惊讶*)", @"(*晕*)", @"(*崇拜*)"];
-    for (NSString *_emoji in emojis) {
-        if ([_emoji isEqualToString:emoji])
+    NSArray *emjList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emj" ofType:@"plist"]];
+    NSMutableArray *faces = [[NSMutableArray alloc] initWithCapacity:0];
+    NSMutableArray *emojiTexts = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    for (NSDictionary *oneDic in emjList) {
+        [faces addObject:[oneDic objectForKey:@"PngUrl"]];
+        [emojiTexts addObject:[oneDic objectForKey:@"DisplayCode"]];
+    }
+    
+    NSInteger index = -1;
+    for (NSInteger i = 0; i < [emojiTexts count]; ++ i)
+    {
+        if ([emojiTexts[i] isEqualToString:emoji])
         {
-            return YES;
+            index = i;
+            break;
         }
     }
-    return NO;
+    
+    if (index < 0) return nil;
+    return faces[index];
 }
 
 @end

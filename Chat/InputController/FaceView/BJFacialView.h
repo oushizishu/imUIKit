@@ -24,6 +24,6 @@
 -(void)loadFacialView:(int)page size:(CGSize)size;
 
 + (NSString *)imageNamedWithEmoji:(NSString *)emoji;
-+ (BOOL)checkTextIsEmoji:(NSString *)emoji;
++ (NSString *)imageUrlWithEmoji:(NSString *)emoji;
 
 @end

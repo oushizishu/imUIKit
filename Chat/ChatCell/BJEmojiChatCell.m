@@ -13,6 +13,7 @@
 
 #import "YLGIFImage.h"
 #import "YLImageView.h"
+#import "BJFacialView.h"
 
 const float BJ_EMOJI_MAX_SIZE = 60;
 
@@ -73,7 +74,16 @@ const float BJ_EMOJI_MAX_SIZE = 60;
 {
     [super setCellInfo:info indexPath:indexPath];
     CGSize size = [self calculateCellHeight];
-    self.emojiImageView.image = [YLGIFImage imageWithContentsOfFile:[self.message.emojiImageURL relativePath]];
+    NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self.message emojiName]];
+    if (gifLocal.length>0) {
+        self.emojiImageView.image = [YLGIFImage imageNamed:gifLocal];
+    }
+    else
+    {
+        @TODO("表情的默认图片");
+        [self.emojiImageView sd_setImageWithURL:[self.message emojiImageURL] placeholderImage:nil];
+    }
+
     CGRect rect = self.emojiImageView.frame;
     rect.size = size;
     self.emojiImageView.frame = rect;

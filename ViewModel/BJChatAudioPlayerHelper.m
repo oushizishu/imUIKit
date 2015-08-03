@@ -10,7 +10,7 @@
 #import <BJAudioPlayer.h>
 #import "IMMessage+ViewModel.h"
 #import "BJChatUtilsMacro.h"
-#import <BJChatFileCacheManager.h>
+#import "BJChatFileCacheManager.h"
 #import <BJNetworkUtil.h>
 #import <BJCommonProxy.h>
 

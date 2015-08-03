@@ -84,10 +84,11 @@
     return message;
 }
 
-+ (IMMessage *)sendEmojiMessage:(NSString *)emoji chatInfo:(BJChatInfo *)chatInfo;
++ (IMMessage *)sendEmojiMessage:(NSString *)emoji content:(NSString *)content chatInfo:(BJChatInfo *)chatInfo;
 {
     IMEmojiMessageBody *messageBody = [[IMEmojiMessageBody alloc] init];
     messageBody.name = emoji;
+    messageBody.content = content;
     messageBody.type = EmojiContent_GIF;
     
     IMMessage *message = [[IMMessage alloc] init];
@@ -104,21 +105,23 @@
 + (IMMessage *)sendCardMessage:(CardSimpleItem *)card
                       chatInfo:(BJChatInfo *)chatInfo;
 {
-    IMCardMessageBody *messageBody = [[IMCardMessageBody alloc] init];
-    messageBody.title = card.title;
-    messageBody.content = card.content;
-    messageBody.url = card.url;
-    messageBody.thumb = card.thumb;
-    
-    IMMessage *message = [[IMMessage alloc] init];
-    message.messageBody = messageBody;
-    message.createAt = [NSDate date].timeIntervalSince1970;
-    message.chat_t = chatInfo.chat_t;
-    message.msg_t = eMessageType_CARD;
-    message.receiver = chatInfo.getToId;
-    message.receiverRole = chatInfo.getToRole;
-    [BJSendMessageHelper sendMessage:message];
-    return message;
+    return [BJSendMessageHelper sendTextMessage:card.url chatInfo:chatInfo];
+//    
+//    IMCardMessageBody *messageBody = [[IMCardMessageBody alloc] init];
+//    messageBody.title = card.title;
+//    messageBody.content = card.content;
+//    messageBody.url = card.url;
+//    messageBody.thumb = card.thumb;
+//    
+//    IMMessage *message = [[IMMessage alloc] init];
+//    message.messageBody = messageBody;
+//    message.createAt = [NSDate date].timeIntervalSince1970;
+//    message.chat_t = chatInfo.chat_t;
+//    message.msg_t = eMessageType_CARD;
+//    message.receiver = chatInfo.getToId;
+//    message.receiverRole = chatInfo.getToRole;
+//    [BJSendMessageHelper sendMessage:message];
+//    return message;
 }
 
 @end

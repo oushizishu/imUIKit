@@ -37,7 +37,7 @@
 + (IMMessage *)sendAudioMessage:(NSString *)filePath duration:(NSInteger)duration chatInfo:(BJChatInfo *)chatInfo;
 + (IMMessage *)sendImageMessage:(NSString *)filePath imageSize:(CGSize)size chatInfo:(BJChatInfo *)chatInfo;
 
-+ (IMMessage *)sendEmojiMessage:(NSString *)emoji chatInfo:(BJChatInfo *)chatInfo;
++ (IMMessage *)sendEmojiMessage:(NSString *)emoji content:(NSString *)content chatInfo:(BJChatInfo *)chatInfo;
 
 + (IMMessage *)sendCardMessage:(CardSimpleItem *)card
                       chatInfo:(BJChatInfo *)chatInfo;

@@ -151,15 +151,7 @@
 
 - (NSURL *)emojiImageURL;
 {
-    NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self emojiMessageBody].name];
-    NSURL *gifURL = nil;
-    if (gifLocal.length>0) {
-        gifURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[gifLocal substringToIndex:gifLocal.length - gifLocal.pathExtension.length - 1] ofType:gifLocal.pathExtension]];
-    }else
-    {
-        @IMTODO("远程图片下载");
-    }
-    return gifURL;
+    return [NSURL URLWithString:[self emojiMessageBody].content];
 }
 
 #pragma mark - Audio

@@ -8,6 +8,7 @@
 
 #import "BJChatInputEmojiViewController.h"
 #import "BJFaceView.h"
+#import "BJFacialView.h"
 #import <PureLayout.h>
 #import "BJSendMessageHelper.h"
 
@@ -30,7 +31,7 @@
 #pragma mark - action
 - (void)sendFaceMessage:(NSString *)str
 {
-    [BJSendMessageHelper sendEmojiMessage:str chatInfo:self.chatInfo];
+    [BJSendMessageHelper sendEmojiMessage:str content:[BJFacialView imageUrlWithEmoji:str] chatInfo:self.chatInfo];
 }
 
 #pragma mark - DXFaceDelegate
