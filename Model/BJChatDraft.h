@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import <CoreData+MagicalRecord.h>
+#import "CoreData+MagicalRecord.h"
 
 @interface BJChatDraft : NSManagedObject
 
