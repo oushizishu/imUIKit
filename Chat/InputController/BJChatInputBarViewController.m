@@ -13,6 +13,8 @@
 
 #import "BJChatUtilsMacro.h"
 #import "BJChatLimitMacro.h"
+#import "BJChatDraft.h"
+#import <IMEnvironment.h>
 
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
@@ -59,7 +61,7 @@
 /**
  *草稿
  */
-//@property (strong, nonatomic) ConversationDraft *draft;
+@property (strong, nonatomic) BJChatDraft *draft;
 @end
 
 @implementation BJChatInputBarViewController
@@ -92,6 +94,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
+    self.draft = [BJChatDraft conversationDraftForUserId:self.chatInfo.getToId andUserRole:self.chatInfo.getToRole];
+    self.inputTextView.text = self.draft?self.draft.content:@"";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -334,7 +338,7 @@
     [self cancelTouchRecord];
     
     //保存草稿
-//    [self saveToDraft:self.chatToolBar.inputTextView];
+    [self saveToDraftWithContent:self.inputTextView.text];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
@@ -540,22 +544,22 @@
 }
 
 #pragma mark - 草稿
-//- (void)saveToDraft:(XHMessageTextView *)messageInputTextView
-//{
-//    if ([messageInputTextView.text length] == 0){
-//        if (draft){
-//            [draft MR_deleteEntity];
-//            [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
-//            draft = nil;
-//        }
-//    } else {
-//        if (draft){
-//            [draft updateContent:messageInputTextView.text];
-//        } else {
-//            draft = [ConversationDraft persistNewDraftForStudent:_conversation.chatter andUserId:CommonInstance.mainAccount.personId content:messageInputTextView.text];
-//        }
-//    }
-//}
+- (void)saveToDraftWithContent:(NSString *)content
+{
+    if ([content length] == 0){
+        if (self.draft){
+            [self.draft MR_deleteEntity];
+            [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+            self.draft = nil;
+        }
+    } else {
+        if (self.draft){
+            [self.draft updateContent:content];
+        } else {
+            self.draft = [BJChatDraft persistNewDraftForUserId:[self.chatInfo getToId] andUserRole:[self.chatInfo getToRole] content:content];
+        }
+    }
+}
 
 #pragma mark - UITextViewDelegate
 
@@ -575,6 +579,8 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     [textView resignFirstResponder];
+    //保存草稿
+    [self saveToDraftWithContent:self.inputTextView.text];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
