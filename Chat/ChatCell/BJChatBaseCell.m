@@ -217,7 +217,6 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
     if (height < cell.headImageView.frame.size.height) {
         height = cell.headImageView.frame.size.height;
     }
-    NSLog(@"cellHeightWithInfo %f contaner:%@",height,NSStringFromCGRect(cell.bubbleContainerView.frame));
     return height + BJ_CELLPADDING*2;
 }
 
