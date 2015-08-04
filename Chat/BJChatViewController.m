@@ -26,6 +26,7 @@
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
+#import "BJChatImageBrowserHelper.h"
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate, IMReceiveNewMessageDelegate, IMLoadMessageDelegate,BJChatInputProtocol,BJSendMessageProtocol,IMDeliveredMessageDelegate>
 @property (strong, nonatomic) UITableView *tableView;
@@ -329,7 +330,8 @@
 
 - (void)showBigImageWithMessage:(IMMessage *)message
 {
-    @IMTODO("显示大图");
+    [self.inputController endEditing:YES];
+    [[BJChatImageBrowserHelper shareInstance] showBrowserWithImages:@[message.imageURL]];
 }
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
