@@ -10,6 +10,9 @@
 #import "BJChatInputBarViewController+BJRecordView.h"
 #import "BJChatInputMoreViewController.h"
 #import "BJChatInputEmojiViewController.h"
+
+#import "BJChatUtilsMacro.h"
+
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
 #define kHorizontalPadding 4
@@ -577,9 +580,18 @@
 {
     
     if ([text isEqualToString:@"\n"]) {
-        [BJSendMessageHelper sendTextMessage:textView.text chatInfo:self.chatInfo];
-        self.inputTextView.text = @"";
-        [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
+        NSString *content = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (content.length>0) {
+            [BJSendMessageHelper sendTextMessage:textView.text chatInfo:self.chatInfo];
+            self.inputTextView.text = @"";
+            [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
+        }
+        else
+        {
+            self.inputTextView.text = @"";
+            @IMTODO("不能发送空白消息");
+        }
+
         
         return NO;
     }
