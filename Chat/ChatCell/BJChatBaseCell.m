@@ -65,7 +65,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
 - (void)setupConfigure
 {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewPressed:)];
-    [self addGestureRecognizer:tap];
+    [self.bubbleContainerView addGestureRecognizer:tap];
     self.backgroundColor = [UIColor clearColor];
 }
 
