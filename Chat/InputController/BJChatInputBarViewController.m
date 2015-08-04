@@ -12,6 +12,7 @@
 #import "BJChatInputEmojiViewController.h"
 
 #import "BJChatUtilsMacro.h"
+#import "BJChatLimitMacro.h"
 
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
@@ -581,15 +582,21 @@
     
     if ([text isEqualToString:@"\n"]) {
         NSString *content = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (content.length>0) {
-            [BJSendMessageHelper sendTextMessage:textView.text chatInfo:self.chatInfo];
-            self.inputTextView.text = @"";
-            [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
+
+        if (content.length>BJChat_Text_Max_Length)
+        {
+            @IMTODO("消息太长");
         }
-        else
+        else if (content.length<=0)
         {
             self.inputTextView.text = @"";
             @IMTODO("不能发送空白消息");
+        }
+        else
+        {
+            [BJSendMessageHelper sendTextMessage:content chatInfo:self.chatInfo];
+            self.inputTextView.text = @"";
+            [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
         }
 
         

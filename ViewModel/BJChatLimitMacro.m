@@ -13,6 +13,8 @@ const int BJChat_Audio_Min_Time = 1;
 
 const int BJChat_Image_Max_SizeM = 2;
 
+const int BJChat_Text_Max_Length = 2000;
+
 @implementation BJChatLimitMacro
 
 @end

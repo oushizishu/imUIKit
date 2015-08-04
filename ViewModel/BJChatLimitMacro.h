@@ -14,6 +14,9 @@ const int BJChat_Audio_Min_Time;
 //图片上传的最大size 单位 m
 const int BJChat_Image_Max_SizeM;
 
+//发送
+const int BJChat_Text_Max_Length;
+
 @interface BJChatLimitMacro : NSObject
 
 
