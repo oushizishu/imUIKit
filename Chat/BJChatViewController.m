@@ -29,6 +29,10 @@
 #import "BJChatImageBrowserHelper.h"
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate, IMReceiveNewMessageDelegate, IMLoadMessageDelegate,BJChatInputProtocol,BJSendMessageProtocol,IMDeliveredMessageDelegate>
+{
+    BOOL _isFirstAppear; //生命周期第一次判断
+}
+
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *messageList;
 
@@ -40,8 +44,6 @@
  *  输入区域的控制
  */
 @property (strong, nonatomic) BJChatInputBarViewController *inputController;
-
-@property (nonatomic) BOOL isScrollToBottom;
 
 @property (strong, nonatomic) SRRefreshView *slimeView;
 
@@ -63,7 +65,7 @@
     self = [super init];
     if (self) {
         _chatInfo = chatInfo;
-        _isScrollToBottom = YES;
+        _isFirstAppear = YES;
         [BJSendMessageHelper sharedInstance].deledate = self;
     }
     return self;
@@ -83,18 +85,16 @@
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = NO;
     }
+    
+    if (_isFirstAppear) {
+        _isFirstAppear = NO;
+        [self viewWillAppearFirstHandle];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (self.isScrollToBottom) {
-        [self scrollViewToBottom:YES];
-
-    }
-    else{
-        self.isScrollToBottom = YES;
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -108,9 +108,14 @@
     }
 }
 
+//第一次调用viewWillAppear
+- (void)viewWillAppearFirstHandle
+{
+    [self scrollViewToBottom:NO];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.isScrollToBottom = YES;
       [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil]; 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
