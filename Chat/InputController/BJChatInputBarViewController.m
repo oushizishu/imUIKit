@@ -51,6 +51,11 @@
  */
 @property (strong, nonatomic) BJChatInputEmojiViewController *emojiViewController;
 @property (strong, nonatomic) BJChatInputMoreViewController *moreViewController;
+
+/**
+ *草稿
+ */
+//@property (strong, nonatomic) ConversationDraft *draft;
 @end
 
 @implementation BJChatInputBarViewController
@@ -529,6 +534,24 @@
 {
     [self endEditing:YES];
 }
+
+#pragma mark - 草稿
+//- (void)saveToDraft:(XHMessageTextView *)messageInputTextView
+//{
+//    if ([messageInputTextView.text length] == 0){
+//        if (draft){
+//            [draft MR_deleteEntity];
+//            [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
+//            draft = nil;
+//        }
+//    } else {
+//        if (draft){
+//            [draft updateContent:messageInputTextView.text];
+//        } else {
+//            draft = [ConversationDraft persistNewDraftForStudent:_conversation.chatter andUserId:CommonInstance.mainAccount.personId content:messageInputTextView.text];
+//        }
+//    }
+//}
 
 #pragma mark - UITextViewDelegate
 
