@@ -7,7 +7,6 @@
 //
 
 #import "BJChatDraft.h"
-#import "Common.h"
 #import <IMEnvironment.h>
 
 @implementation BJChatDraft
