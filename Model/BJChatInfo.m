@@ -43,6 +43,10 @@
     {
         self = [self initWithGroup:(Group *)contact];
     }
+    else if ([contact isKindOfClass:[Conversation class]])
+    {
+        self = [self initWithConversation:(Conversation *)contact];
+    }
     else
     {
         if ([contact getContactType] == BJContact_Group) {

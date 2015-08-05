@@ -122,51 +122,29 @@
 + (NSString *)imageNamedWithEmoji:(NSString *)emoji
 {
     NSArray *emjList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emj" ofType:@"plist"]];
-    NSMutableArray *faces = [[NSMutableArray alloc] initWithCapacity:0];
-    NSMutableArray *emojiTexts = [[NSMutableArray alloc] initWithCapacity:0];
-
-    for (NSDictionary *oneDic in emjList) {
-        [faces addObject:[oneDic objectForKey:@"GifName"]];
-        [emojiTexts addObject:[oneDic objectForKey:@"DisplayCode"]];
-    }
-    
-    NSInteger index = -1;
-    for (NSInteger i = 0; i < [emojiTexts count]; ++ i)
-    {
-        if ([emojiTexts[i] isEqualToString:emoji])
+    NSString *imageName = nil;
+    for (NSDictionary *dic in emjList) {
+        NSString *disPlayName = [dic valueForKey:@"DisplayCode"];
+        if([emoji rangeOfString:disPlayName].location !=NSNotFound)
         {
-            index = i;
-            break;
+            imageName = [dic valueForKey:@"GifName"];
         }
     }
-    
-    if (index < 0) return nil;
-    return faces[index];
+    return imageName;
 }
 
 + (NSString *)imageUrlWithEmoji:(NSString *)emoji;
 {
     NSArray *emjList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"emj" ofType:@"plist"]];
-    NSMutableArray *faces = [[NSMutableArray alloc] initWithCapacity:0];
-    NSMutableArray *emojiTexts = [[NSMutableArray alloc] initWithCapacity:0];
-    
-    for (NSDictionary *oneDic in emjList) {
-        [faces addObject:[oneDic objectForKey:@"PngUrl"]];
-        [emojiTexts addObject:[oneDic objectForKey:@"DisplayCode"]];
-    }
-    
-    NSInteger index = -1;
-    for (NSInteger i = 0; i < [emojiTexts count]; ++ i)
-    {
-        if ([emojiTexts[i] isEqualToString:emoji])
+    NSString *imageName = nil;
+    for (NSDictionary *dic in emjList) {
+        NSString *disPlayName = [dic valueForKey:@"DisplayCode"];
+        if([emoji rangeOfString:disPlayName].location !=NSNotFound)
         {
-            index = i;
-            break;
+            imageName = [dic valueForKey:@"PngUrl"];
         }
     }
-    
-    if (index < 0) return nil;
-    return faces[index];
+    return imageName;
 }
 
 @end
