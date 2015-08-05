@@ -113,6 +113,7 @@ const float IntervalTitleWithImage = 5;
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     [super setCellInfo:info indexPath:indexPath];
+    self.cardImageView.image = nil;
     self.titleLabel.text = self.message.cardTitle;
     self.contentLabel.text = self.message.cardContent;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
