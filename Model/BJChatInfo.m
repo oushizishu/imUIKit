@@ -10,6 +10,8 @@
 #import <BJIMConstants.h>
 #import <Conversation+DB.h>
 #import "BJExchangeIMModel.h"
+#import "User+ViewModel.h"
+#import "Group+ViewModel.h"
 @implementation BJChatInfo
 
 - (instancetype)initWithUser:(User *)user
@@ -93,6 +95,84 @@
     }
     else
         return self.chatToGroup.groupName;
+}
+
+#pragma mark -BJContactInfoProtocol
+
+- (NSString *)getContactName;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactName];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return [self.chatToGroup getContactName];
+    }
+    else
+    {
+        return @"";
+    }
+}
+
+- (NSString *)getContactAvatar;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactAvatar];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return [self.chatToGroup getContactAvatar];
+    }
+    else
+    {
+        return @"";
+    }
+}
+
+- (BJContactType)getContactType;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactType];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return [self.chatToGroup getContactType];
+    }
+    return BJContact_Unkonwn;
+}
+
+- (long long)getContactId;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return self.chatToUser.userId;
+    }
+    else
+        return self.chatToGroup.groupId;
+}
+
+- (long long)getContactTime;
+{
+    return 0;
+}
+
+- (NSAttributedString *)getContactContentAttr;
+{
+    return nil;
+}
+
+- (NSString *)getContactHeader;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactHeader];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return [self.chatToGroup getContactHeader];
+    }
+    else
+    {
+        return @"";
+    }
 }
 
 @end

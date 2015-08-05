@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BJIMConstants.h"
+#import <BJIMConstants.h>
 #import <User.h>
 #import <Group.h>
 #import <Conversation.h>
 #import "BJContactInfoProtocol.h"
-@interface BJChatInfo : NSObject
+@interface BJChatInfo : NSObject<BJContactInfoProtocol>
 @property (nonatomic, strong) User *chatToUser;
 @property (nonatomic, strong) Group *chatToGroup;
 @property (nonatomic, assign) IMChatType chat_t;
