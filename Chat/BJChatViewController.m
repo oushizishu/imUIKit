@@ -28,7 +28,16 @@
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
 
-@interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate, IMReceiveNewMessageDelegate, IMLoadMessageDelegate,BJChatInputProtocol,BJSendMessageProtocol,IMDeliveredMessageDelegate>
+const int BJ_Chat_Time_Interval = 5;
+
+@interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
+    IMReceiveNewMessageDelegate,
+    IMLoadMessageDelegate,
+    BJChatInputProtocol,
+    BJSendMessageProtocol,
+    IMDeliveredMessageDelegate,
+    IMGroupProfileChangedDelegate,
+    IMUserInfoChangedDelegate>
 {
     BOOL _isFirstAppear; //生命周期第一次判断
 }
@@ -138,6 +147,10 @@
     [[BJIMManager shareInstance] addReceiveNewMessageDelegate:self];
     [[BJIMManager shareInstance] addLoadMoreMessagesDelegate:self];
     [[BJIMManager shareInstance] addDeliveryMessageDelegate:self];
+    if ([self.chatInfo getContactType] == BJContact_Group) {
+        [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
+    }
+        [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
     [self.conversation resetUnReadNum];
     
 //    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
@@ -204,7 +217,7 @@
         [oneMessage markRead];
         if (lastMessage) {
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute );//两条消息的时间分单位间隔超过1，则加一个时间显示
-            if (minute > 1) {
+            if (minute > BJ_Chat_Time_Interval) {
                 [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt] formattedTime] atIndex:[mutMessages indexOfObject:oneMessage]];
                 lastMessage = oneMessage;
             }
@@ -415,6 +428,20 @@
     [self addNewMessages:@[message] isForward:NO];
 }
 
+- (void)didUserInfoChanged:(User *)user;
+{
+    if ([self.chatInfo.chatToUser isEqual:user]) {
+        [self.tableView reloadData];
+    }
+}
+
+- (void)didGroupProfileChanged:(Group *)group;
+{
+    if ([self.chatInfo.chatToGroup isEqual:group]) {
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - BJChatInputProtocol
 /**
  *  高度变到toHeight
@@ -432,8 +459,6 @@
 }
 
 #pragma mark - UIResponder actions
-
-
 - (void)bjim_routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
 {
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];

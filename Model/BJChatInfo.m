@@ -98,6 +98,35 @@
 }
 
 #pragma mark -BJContactInfoProtocol
+- (NSString *)getContactNickName;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactNickName];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return @"";
+    }
+    else
+    {
+        return @"";
+    }
+}
+
+- (NSString *)getContactRemarkName;
+{
+    if (self.chat_t == eChatType_Chat) {
+        return [self.chatToUser getContactRemarkName];
+    }
+    else if (self.chat_t == eChatType_GroupChat)
+    {
+        return @"";
+    }
+    else
+    {
+        return @"";
+    }
+}
 
 - (NSString *)getContactName;
 {
@@ -106,7 +135,7 @@
     }
     else if (self.chat_t == eChatType_GroupChat)
     {
-        return [self.chatToGroup getContactName];
+        return @"";
     }
     else
     {
