@@ -216,8 +216,8 @@ const int BJ_Chat_Time_Interval = 5;
     for (IMMessage *oneMessage in messages) {
         [oneMessage markRead];
         if (lastMessage) {
-            long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute );//两条消息的时间分单位间隔超过1，则加一个时间显示
-            if (minute > BJ_Chat_Time_Interval) {
+            long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
+            if (minute > 0) {
                 [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt] formattedTime] atIndex:[mutMessages indexOfObject:oneMessage]];
                 lastMessage = oneMessage;
             }

@@ -23,7 +23,7 @@ typedef NS_ENUM (NSInteger, BJContactType)
     BJContact_Students = 2,
     BJContact_Organization = 6,
     BJContact_KeFu = 7,
-    BJContact_Admin = 1000,
+    BJContact_Admin = 100,
     BJContact_Group = 1001,
     BJContact_Unkonwn = 1002,
 };

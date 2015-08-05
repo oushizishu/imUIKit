@@ -13,6 +13,13 @@
 
 - (NSString *)getContactNickName;
 {
+    if (self.userRole == eUserRole_System) {
+        return @"跟谁学小秘书";
+    }
+    else if (self.userRole == eUserRole_Kefu)
+    {
+        return @"在线客服";
+    }
     return self.name;
 }
 
@@ -26,7 +33,7 @@
     if (self.remarkName.length>0) {
         return self.remarkName;
     }
-    return self.name;
+    return [self getContactNickName];
 }
 
 - (NSString *)getContactAvatar;
@@ -46,7 +53,7 @@
 
 - (BJContactType)getContactType;
 {
-    return self.userRole;
+    return (BJContactType)self.userRole;
 }
 
 - (long long)getContactId;
