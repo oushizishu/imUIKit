@@ -79,6 +79,9 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     [super setCellInfo:info indexPath:indexPath];
+
+    self.chatImageView.image = nil;
+    
     CGSize size = [self calculateCellHeight];
     @IMTODO("设置默认图片");
     [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];

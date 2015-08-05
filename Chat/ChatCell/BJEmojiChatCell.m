@@ -75,6 +75,7 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     [super setCellInfo:info indexPath:indexPath];
     CGSize size = [self calculateCellHeight];
     NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self.message emojiName]];
+    self.emojiImageView.image = nil;
     if (gifLocal.length>0) {
         self.emojiImageView.image = [YLGIFImage imageNamed:gifLocal];
     }
