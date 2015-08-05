@@ -93,6 +93,9 @@
 
 - (NSString *)content;//text
 {
+    if (self.messageBody == nil) {
+        return @"";
+    }
     if ([self.messageBody isKindOfClass:[IMTxtMessageBody class]]) {
         IMTxtMessageBody *body = (IMTxtMessageBody *)self.messageBody;
         return body.content;
@@ -105,7 +108,7 @@
 #pragma mark - image
 - (IMImgMessageBody*)imgMessageBody;
 {
-    if ([self.messageBody isKindOfClass:[IMImgMessageBody class]]) {
+    if (!self.messageBody || [self.messageBody isKindOfClass:[IMImgMessageBody class]]) {
         IMImgMessageBody *body = (IMImgMessageBody *)self.messageBody;
         return body;
     }
@@ -223,9 +226,17 @@
 #pragma mark - gossip 通知和cmd显示消息
 - (NSString *)gossipText;
 {
-    IMMessageBody *body = self.messageBody;
-    @IMTODO("请添加这块的小道消息代码");
-    return @"请添加这块的小道消息代码";
+    if (self.msg_t == eMessageType_NOTIFICATION) {
+        IMNotificationMessageBody *body = (IMNotificationMessageBody *)self.messageBody;
+        return body.content;
+    }
+    else if (self.msg_t == eMessageType_CMD)
+    {
+        IMCmdMessageBody *body = (IMCmdMessageBody *)self.messageBody;
+        NSString *text = [body.payload objectForKey:@"text"];
+        return text?text:@"";
+    }
+    return @"未知消息";
 }
 
 @end

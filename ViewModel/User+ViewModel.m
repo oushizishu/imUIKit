@@ -13,6 +13,9 @@
 
 - (NSString *)getContactName;
 {
+    if (self.remarkName.length>0) {
+        return self.remarkName;
+    }
     return self.name;
 }
 
@@ -43,8 +46,10 @@
 
 - (NSString *)getContactHeader;
 {
-    @IMTODO("返回head数据");
-    return @"";
+    if (self.remarkName.length>0) {
+        return self.remarkHeader;
+    }
+    return self.nameHeader;
 }
 
 @end

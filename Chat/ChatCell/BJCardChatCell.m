@@ -17,6 +17,7 @@ const float Interval = 10;
 const float CardWidth = 212;
 const float CardHeight = 130;
 const float ContentWidth = 130;
+const float IntervalTitleWithImage = 5;
 
 @interface BJCardChatCell ()
 @property (strong, nonatomic) UIImageView *cardImageView;
@@ -43,7 +44,7 @@ const float ContentWidth = 130;
     if (self.message.cardThumb.length<=0) {
         [self.cardImageView setHidden:YES];
         frame = self.contentLabel.frame;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+5;
+        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
         frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, CardHeight-35)];
         frame.origin.x = Interval;
         self.contentLabel.frame = frame;
@@ -51,7 +52,7 @@ const float ContentWidth = 130;
     {
         [self.cardImageView setHidden:NO];
         frame = self.contentLabel.frame;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+5;
+        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
         frame.size = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-35)];
         frame.origin.x = Interval+ImageWH+5;
         self.contentLabel.frame = frame;
@@ -59,7 +60,7 @@ const float ContentWidth = 130;
     
     if (!self.message.isMySend) {
         CGRect frame = self.cardImageView.frame;
-        frame.origin.y = frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+5;
+        frame.origin.y = frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
         frame.origin.x = CardWidth-ImageWH;
         self.cardImageView.frame = frame;
         
@@ -76,7 +77,7 @@ const float ContentWidth = 130;
     {
         CGRect frame = self.cardImageView.frame;
         frame.origin.x = Interval;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+5;
+        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
         self.cardImageView.frame = frame;
         
         frame = self.titleLabel.frame;
@@ -121,7 +122,10 @@ const float ContentWidth = 130;
     CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
     [self.contentLabel sizeToFit];
     CGRect rect = self.bubbleContainerView.frame;
-    rect.size.height = titleSize.height + contentSize.height + Interval*2;
+    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
+    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
+        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
+    }
     self.bubbleContainerView.frame = rect;
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -150,6 +154,15 @@ const float ContentWidth = 130;
         [self.bubbleContainerView addSubview:_contentLabel];
     }
     return _contentLabel;
+}
+
+- (UIImageView *)cardImageView
+{
+    if (_cardImageView == nil) {
+        _cardImageView = [[UIImageView alloc] initWithFrame:CGRectMake(Interval, Interval, ImageWH, ImageWH)];
+        [self.bubbleContainerView addSubview:_cardImageView];
+    }
+    return _cardImageView;
 }
 
 @end

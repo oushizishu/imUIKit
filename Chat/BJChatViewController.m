@@ -51,11 +51,14 @@
 
 - (void)dealloc
 {
+    [[BJIMManager shareInstance] stopChat];
+    [[BJChatAudioPlayerHelper sharedInstance] stopPlayer];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"frame"];
     [BJSendMessageHelper sharedInstance].deledate = nil;
     _slimeView.delegate = nil;
     _slimeView = nil;
+    
 }
 
 - (instancetype)initWithChatInfo:(BJChatInfo *)chatInfo;
