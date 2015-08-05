@@ -100,6 +100,7 @@ const float BJ_EMOJI_MAX_SIZE = 60;
 {
     if (_emojiImageView == nil) {
         _emojiImageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, BJ_EMOJI_MAX_SIZE, BJ_EMOJI_MAX_SIZE)];
+        _emojiImageView.runLoopMode = NSDefaultRunLoopMode;
         [self.bubbleContainerView addSubview:_emojiImageView];
 
     }

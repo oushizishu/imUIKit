@@ -19,7 +19,7 @@ const float NAME_LABEL_HEIGHT = 20; // nameLabel 高度
 const float NAME_LABEL_PADDING = 0; // nameLabel间距
 
 
-const float SEND_STATUS_SIZE = 20; // 发送状态View的Size
+const float SEND_STATUS_SIZE = 30; // 发送状态View的Size
 const float ACTIVTIYVIEW_BUBBLE_PADDING = 5; // 菊花和bubbleView之间的间距
 
 const float BUBBLE_RIGHT_LEFT_CAP_WIDTH = 5; // 文字在右侧时,bubble用于拉伸点的X坐标

@@ -11,6 +11,16 @@
 
 @implementation User (ViewModel)
 
+- (NSString *)getContactNickName;
+{
+    return self.name;
+}
+
+- (NSString *)getContactRemarkName;
+{
+    return self.remarkName;
+}
+
 - (NSString *)getContactName;
 {
     if (self.remarkName.length>0) {

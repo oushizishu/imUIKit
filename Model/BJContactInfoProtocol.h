@@ -12,10 +12,15 @@
 @protocol BJContactInfoProtocol <NSObject>
 @required
 - (NSString *)getContactName;
+
 - (NSString *)getContactAvatar;
 - (long long)getContactTime;
 - (NSAttributedString *)getContactContentAttr;
 - (BJContactType)getContactType;
 - (long long)getContactId;
 - (NSString *)getContactHeader;
+
+@optional
+- (NSString *)getContactNickName;
+- (NSString *)getContactRemarkName;
 @end

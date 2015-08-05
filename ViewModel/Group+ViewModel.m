@@ -42,8 +42,7 @@
 
 - (NSString *)getContactHeader;
 {
-    @IMTODO("返回head数据");
-    return @"";
+    return self.nameHeader;
 }
 
 @end
