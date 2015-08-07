@@ -14,11 +14,11 @@
 - (NSString *)getContactNickName;
 {
     if (self.userRole == eUserRole_System) {
-        return @"跟谁学小秘书";
+        return @"系统通知";
     }
     else if (self.userRole == eUserRole_Kefu)
     {
-        return @"在线客服";
+        return @"跟谁学客服";
     }
     return self.name;
 }

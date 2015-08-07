@@ -18,5 +18,13 @@
 		<key>icon</key>
 		<string>ic_camera_normal</string>
 	</dict>
+	<dict>
+		<key>key</key>
+		<string>coupon</string>
+		<key>name</key>
+		<string>优惠券</string>
+		<key>icon</key>
+		<string>ic_coupon_chat_normal</string>
+	</dict>
 </array>
 </plist>

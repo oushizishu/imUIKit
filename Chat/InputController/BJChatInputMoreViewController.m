@@ -14,6 +14,7 @@
 #import "UIImage+compressionSize.h"
 #import "BJChatLimitMacro.h"
 #import "BJChatUtilsMacro.h"
+#import "CouponTableViewController.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -30,7 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    @TODO("发送优惠券");
+
     self.editList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
     self.view.autoresizingMask = UIViewAutoresizingNone;
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);
@@ -79,6 +80,23 @@
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 }
 
+- (void)showCouponView
+{
+    if ([self.delegate respondsToSelector:@selector(chatInputDidEndEdit)]) {
+        [self.delegate chatInputDidEndEdit];
+    }
+
+    CouponTableViewController *couponController = [[CouponTableViewController alloc] init];
+    couponController.showCouponType = ShowCouponValid;
+    couponController.isSingleChat = self.chatInfo.chat_t == eChatType_Chat ? YES : NO;
+    if (couponController.isSingleChat) {
+        couponController.dicContactInfo = self.chatInfo.chatToUser;
+    } else {
+        couponController.dicContactInfo = self.chatInfo.chatToGroup;
+    }
+    [self.navigationController pushViewController:couponController animated:YES];
+}
+
 - (void)didSelectWithKey:(NSString *)key;
 {
     if ([key isEqualToString:@"picture"]) {
@@ -87,6 +105,10 @@
     else if ([key isEqualToString:@"camera"])
     {
         [self showCameraView];
+    }
+    else if ([key isEqualToString:@"coupon"])
+    {
+        [self showCouponView];
     }
 }
 
