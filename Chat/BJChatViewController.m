@@ -79,6 +79,7 @@ const int BJ_Chat_Time_Interval = 5;
         _chatInfo = chatInfo;
         _isFirstAppear = YES;
         [BJSendMessageHelper sharedInstance].deledate = self;
+        _isCanDeliveryMessage = YES;
     }
     return self;
 }
@@ -296,9 +297,10 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)updateSubViewFrame
 {
-    CGRect rect = self.inputController.view.frame;
-    rect.origin.y = self.view.bounds.size.height - rect.size.height;
-    self.inputController.view.frame = rect;
+    CGRect rect = CGRectZero;
+        rect = self.inputController.view.frame;
+        rect.origin.y = self.view.bounds.size.height - rect.size.height;
+        self.inputController.view.frame = rect;
     
     rect = self.view.bounds;
     rect.size.height -= self.inputController.view.frame.size.height;
@@ -648,7 +650,7 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (BJChatInputBarViewController *)inputController
 {
-    if (_inputController == nil) {
+    if (_inputController == nil && _isCanDeliveryMessage) {
         _inputController = [[BJChatInputBarViewController alloc] initWithChatInfo:self.chatInfo];
         _inputController.delegate = self;
     }
