@@ -359,10 +359,8 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
-    @IMTODO("点击跳转代码");
-    NSString *url = message.ext[@"url"];
     WebPageViewControllerEx *web = [[WebPageViewControllerEx alloc] init];
-    web.urlPath = url;
+    web.urlPath = [message cardUrl];
     [self.navigationController pushViewController:web animated:YES];
 }
 
