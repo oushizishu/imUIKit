@@ -14,6 +14,7 @@
 #import "YLGIFImage.h"
 #import "YLImageView.h"
 #import "BJFacialView.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 const float BJ_EMOJI_MAX_SIZE = 60;
 
@@ -81,7 +82,6 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     }
     else
     {
-        @TODO("表情的默认图片");
         [self.emojiImageView sd_setImageWithURL:[self.message emojiImageURL] placeholderImage:nil];
     }
 

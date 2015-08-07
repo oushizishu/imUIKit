@@ -31,7 +31,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     self.editList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
     self.view.autoresizingMask = UIViewAutoresizingNone;
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);
