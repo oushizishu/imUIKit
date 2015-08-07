@@ -129,7 +129,12 @@
 #pragma mark - UICollectionView delegate
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    return self.editList.count;
+    if ([self.chatInfo getToRole] == eUserRole_Teacher ||
+        [self.chatInfo getToRole] == eUserRole_Kefu ) {
+        return self.editList.count - 1;                 //对方为老师或客服不能发送优惠券
+    } else {
+        return self.editList.count;
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
