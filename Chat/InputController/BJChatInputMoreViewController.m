@@ -16,7 +16,10 @@
 #import "BJChatUtilsMacro.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
-
+#import "MBProgressHUD+Simple.h"
+#import "SendCourseListViewController.h"
+#import "BJCouponManagerViewController.h"
+#import "CardSimpleItem.h"
 
 @interface BJChatInputMoreViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -30,12 +33,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    @TODO("发送优惠券");
+    @IMTODO("发送优惠券");
     self.editList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
     self.view.autoresizingMask = UIViewAutoresizingNone;
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);
     [self.view addSubview:self.collectionView];
     [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([BJActionCollectionViewCell class]) bundle:nil] forCellWithReuseIdentifier:NSStringFromClass([BJActionCollectionViewCell class])];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendCouponMessage:) name:@"sendCouponNotification" object:nil];
 }
 
 
@@ -79,6 +83,35 @@
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 }
 
+- (void)showMyCardView{
+//    if (![Profile currentProfile].canSearched) {
+//        [MBProgressHUD showWindowMessageThenHide:@"审核上线后才能拥有名片哦"];
+//        return;
+//    }
+    CardSimpleItem * item = [[CardSimpleItem alloc] init];
+    item.url = [NSString stringWithFormat:@"%@/%lld", [BJDeployEnv sharedInstance].baseMAPIURLStr, CommonInstance.mainAccount.personId];
+    [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+}
+
+- (void)showCourseView{
+    SendCourseListViewController *send = [[SendCourseListViewController alloc] init];
+    WS(weakSelf)
+    send.selectCallback = ^(NSDictionary *dic){
+        NSString *url = dic[@"detail_url"];
+        [weakSelf sendCourseViewWithURL:url];
+    };
+    [self.navigationController pushViewController:send animated:YES];
+}
+
+- (void)showCouponView{
+    IMChatType type = self.chatInfo.chat_t;
+    WS(weakSelf);
+    BJCouponManagerViewController *controller = [[BJCouponManagerViewController alloc]initWithState:BJCouponManagerControllerState_sendCoupon withSendCouponClick:^(NSString *searialNumber,NSString *url) {
+        [weakSelf sendCouponViewWithURL:url money:0];
+    } chatType:type?BJChatFromType_group:BJChatFromType_sigle];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (void)didSelectWithKey:(NSString *)key;
 {
     if ([key isEqualToString:@"picture"]) {
@@ -87,9 +120,33 @@
     else if ([key isEqualToString:@"camera"])
     {
         [self showCameraView];
+    }else if ([key isEqualToString:@"card"]){
+        [self showMyCardView];
+    }else if ([key isEqualToString:@"course"]){
+        [self showCourseView];
+    }else if ([key isEqualToString:@"coupon"]){
+        [self showCouponView];
     }
 }
 
+- (void)sendCourseViewWithURL:(NSString *)url{
+    CardSimpleItem * item = [[CardSimpleItem alloc] init];
+    item.url = url;
+    [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+}
+
+- (void)sendCouponViewWithURL:(NSString *)url money:(NSString *)money{
+    CardSimpleItem * item = [[CardSimpleItem alloc] init];
+    item.url = url;
+    item.money = [money integerValue];
+    [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+}
+
+- (void)sendCouponMessage:(NSNotification*)notification{
+    NSString *url = [[notification userInfo] stringValueForKey:@"url" defaultValue:@""];
+    NSString *number = [[notification userInfo] stringValueForKey:@"number" defaultValue:@""];
+    [self sendCouponViewWithURL:url money:number];
+}
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
