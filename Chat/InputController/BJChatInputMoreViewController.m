@@ -20,10 +20,12 @@
 #import "SendCourseListViewController.h"
 #import "BJCouponManagerViewController.h"
 #import "CardSimpleItem.h"
+#import <User.h>
+
 
 @interface BJChatInputMoreViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
-@property (strong, nonatomic) NSArray *editList;
+@property (strong, nonatomic) NSMutableArray *editList;
 @property (strong, nonatomic) UIImagePickerController *imagePicker;
 @end
 
@@ -34,7 +36,22 @@
 {
     [super viewDidLoad];
     @IMTODO("发送优惠券");
-    self.editList = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
+    self.editList = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
+    User * user = self.chatInfo.chatToUser;
+    if (user) {
+        if ([user.name isEqualToString:@"跟谁学客服"]) {
+            NSArray * arr = [NSArray arrayWithObjects:[self.editList firstObject],[self.editList objectAtIndex:1], nil];
+            [self.editList removeAllObjects];
+            [self.editList addObjectsFromArray:arr];
+        }
+    }
+    if ([Profile currentProfile].isOrganization) {
+        for (NSDictionary * dic in self.editList) {
+            if ([[dic objectForKey:@"key"] isEqualToString:@"coupon"]) {
+                [self.editList removeObject:dic];
+            }
+        }
+    }
     self.view.autoresizingMask = UIViewAutoresizingNone;
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);
     [self.view addSubview:self.collectionView];
