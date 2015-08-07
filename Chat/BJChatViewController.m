@@ -18,7 +18,7 @@
 #import "IMMessage+ViewModel.h"
 #import <BJIMManager.h>
 #import <IMMessage+DB.h>
-
+#import "WebPageViewControllerEx.h"
 #import "BJChatTimeCell.h"
 
 #import "SRRefreshView.h"
@@ -358,11 +358,17 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
     @IMTODO("点击跳转代码");
+    NSString *url = message.ext[@"url"];
+    WebPageViewControllerEx *web = [[WebPageViewControllerEx alloc] init];
+    web.urlPath = url;
+    [self.navigationController pushViewController:web animated:YES];
 }
 
 - (void)linkCellTapWithMessage:(NSString *)str
 {
-    @IMTODO("点击链接跳转代码");
+    WebPageViewControllerEx *web = [[WebPageViewControllerEx alloc] init];
+    web.urlPath = str;
+    [self.navigationController pushViewController:web animated:YES];
 }
 
 - (void)audioCellTapWithMessage:(IMMessage *)message
