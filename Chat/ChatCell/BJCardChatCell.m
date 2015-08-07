@@ -11,7 +11,7 @@
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
 #import <UIImageView+Aliyun.h>
-
+#import "UIResponder+BJIMChatRouter.h"
 const float ImageWH = 60;
 const float Interval = 10;
 const float CardWidth = 212;
@@ -130,6 +130,11 @@ const float IntervalTitleWithImage = 5;
     self.bubbleContainerView.frame = rect;
     [self setNeedsLayout];
     [self layoutIfNeeded];
+}
+
+- (void)bubbleViewPressed:(id)sender
+{
+    [super bjim_routerEventWithName:kBJRouterEventCardEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}]; 
 }
 
 #pragma mark - set get
