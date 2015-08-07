@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BJChatInfo.h"
 @interface BJChatViewController : UIViewController
+@property (assign, nonatomic) BOOL isCanDeliveryMessage;
 @property (strong, nonatomic, readonly) BJChatInfo *chatInfo;
 - (instancetype)initWithChatInfo:(BJChatInfo *)chatInfo;
 @end
