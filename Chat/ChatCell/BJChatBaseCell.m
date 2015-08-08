@@ -70,6 +70,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     [self.headImageView addGestureRecognizer:headTap];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewPressed:)];
     [self.bubbleContainerView addGestureRecognizer:tap];
+    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewLongPressed:)];
+    [self.bubbleContainerView addGestureRecognizer:recognizer];
     self.backgroundColor = [UIColor clearColor];
 }
 
@@ -163,6 +165,11 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
 - (void)bubbleViewPressed:(id)sender
 {
     [self bjim_routerEventWithName:kBJRouterEventChatCellBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
+}
+
+- (void)bubbleViewLongPressed:(id)sender
+{
+    //[self bjim_routerEventWithName:kBJRouterEventChatCellBubbleLongTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
 - (UIImage *)bubbleImage
