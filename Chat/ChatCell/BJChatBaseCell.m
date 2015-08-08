@@ -10,7 +10,7 @@
 #import <UIImageView+Aliyun.h>
 #import "UIResponder+BJIMChatRouter.h"
 
-const float HEAD_SIZE = 40; // 头像大小
+const float HEAD_SIZE = 37; // 头像大小
 const float HEAD_PADDING = 5; // 头像到cell的内间距和头像到bubble的间距
 
 
@@ -25,11 +25,13 @@ const float ACTIVTIYVIEW_BUBBLE_PADDING = 5; // 菊花和bubbleView之间的间�
 const float BUBBLE_RIGHT_LEFT_CAP_WIDTH = 5; // 文字在右侧时,bubble用于拉伸点的X坐标
 const float BUBBLE_RIGHT_TOP_CAP_HEIGHT = 35; // 文字在右侧时,bubble用于拉伸点的Y坐标
 
-const float BUBBLE_LEFT_LEFT_CAP_WIDTH = 35; // 文字在左侧时,bubble用于拉伸点的X坐标
+const float BUBBLE_LEFT_LEFT_CAP_WIDTH = 15; // 文字在左侧时,bubble用于拉伸点的X坐标
 const float BUBBLE_LEFT_TOP_CAP_HEIGHT = 35; // 文字在左侧时,bubble用于拉伸点的Y坐标
 
 NSString *const BUBBLE_LEFT_IMAGE_NAME = @"bg_speech_nor"; // bubbleView 的背景图片
+NSString *const BUBBLE_LEFT_IMAGE_NAME_NEW = @"bg_messages_gray_n"; //
 NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
+NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
 
 
 
@@ -68,6 +70,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
     [self.headImageView addGestureRecognizer:headTap];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewPressed:)];
     [self.bubbleContainerView addGestureRecognizer:tap];
+    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewLongPressed:)];
+    [self.bubbleContainerView addGestureRecognizer:recognizer];
     self.backgroundColor = [UIColor clearColor];
 }
 
@@ -163,9 +167,14 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
     [self bjim_routerEventWithName:kBJRouterEventChatCellBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
 }
 
+- (void)bubbleViewLongPressed:(id)sender
+{
+    //[self bjim_routerEventWithName:kBJRouterEventChatCellBubbleLongTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
+}
+
 - (UIImage *)bubbleImage
 {
-    NSString *imageName = !self.message.isMySend ? BUBBLE_LEFT_IMAGE_NAME : BUBBLE_RIGHT_IMAGE_NAME;
+    NSString *imageName = !self.message.isMySend ? BUBBLE_LEFT_IMAGE_NAME_NEW : BUBBLE_RIGHT_IMAGE_NAME_NEW;
     NSInteger leftCapWidth = !self.message.isMySend?BUBBLE_LEFT_LEFT_CAP_WIDTH:BUBBLE_RIGHT_LEFT_CAP_WIDTH;
     NSInteger topCapHeight =  !self.message.isMySend?BUBBLE_LEFT_TOP_CAP_HEIGHT:BUBBLE_RIGHT_TOP_CAP_HEIGHT;
     return [[UIImage imageNamed:imageName] stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];

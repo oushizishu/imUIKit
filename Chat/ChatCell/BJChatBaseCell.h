@@ -34,6 +34,7 @@
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath NS_REQUIRES_SUPER;
 - (void)headViewPressed:(id)sender;
 - (void)bubbleViewPressed:(id)sender;
+- (void)bubbleViewLongPressed:(id)sender;
 
 - (UIImage *)bubbleImage;
 @end
