@@ -15,6 +15,7 @@
 NSString *const kBJRouterEventImageBubbleTapEventName;
 NSString *const kBJRouterEventAudioBubbleTapEventName;
 NSString *const kBJRouterEventCardEventName;
+NSString *const kBJRouterEventChatCellHeadTapEventName;
 NSString *const kBJRouterEventChatCellBubbleTapEventName;
 NSString *const kBJResendButtonTapEventName;
 NSString *const kBJRouterEventLinkName;
