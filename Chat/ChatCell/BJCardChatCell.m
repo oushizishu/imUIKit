@@ -11,7 +11,7 @@
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
 #import <UIImageView+Aliyun.h>
-
+#import "UIResponder+BJIMChatRouter.h"
 const float ImageWH = 60;
 const float Interval = 10;
 const float CardWidth = 212;
@@ -132,6 +132,11 @@ const float IntervalTitleWithImage = 5;
     [self layoutIfNeeded];
 }
 
+- (void)bubbleViewPressed:(id)sender
+{
+    [super bjim_routerEventWithName:kBJRouterEventCardEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}]; 
+}
+
 #pragma mark - set get
 
 - (UILabel *)titleLabel
@@ -161,6 +166,7 @@ const float IntervalTitleWithImage = 5;
 {
     if (_cardImageView == nil) {
         _cardImageView = [[UIImageView alloc] initWithFrame:CGRectMake(Interval, Interval, ImageWH, ImageWH)];
+        _cardImageView.clipsToBounds = YES;
         [self.bubbleContainerView addSubview:_cardImageView];
     }
     return _cardImageView;
