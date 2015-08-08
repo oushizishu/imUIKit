@@ -64,6 +64,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
 
 - (void)setupConfigure
 {
+    UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headViewPressed:)];
+    [self.headImageView addGestureRecognizer:headTap];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleViewPressed:)];
     [self.bubbleContainerView addGestureRecognizer:tap];
     self.backgroundColor = [UIColor clearColor];
@@ -151,6 +153,11 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
 }
 
 #pragma mark public
+- (void)headViewPressed:(id)sender
+{
+    [self bjim_routerEventWithName:kBJRouterEventChatCellHeadTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
+}
+
 - (void)bubbleViewPressed:(id)sender
 {
     [self bjim_routerEventWithName:kBJRouterEventChatCellBubbleTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];

@@ -40,6 +40,7 @@ const int BJ_Chat_Time_Interval = 5;
     IMUserInfoChangedDelegate>
 {
     BOOL _isFirstAppear; //生命周期第一次判断
+    BOOL _hasPreparedMessages;
 }
 
 @property (strong, nonatomic) UITableView *tableView;
@@ -404,9 +405,22 @@ const int BJ_Chat_Time_Interval = 5;
     }
 }
 
+- (void)didPreLoadMessages:(NSArray *)preMessages conversation:(Conversation *)conversation
+{
+    if (conversation.rowid == self.conversation.rowid) {
+        [self addNewMessages:preMessages isForward:YES];
+        _hasPreparedMessages = YES;
+    }
+}
+
 - (void)didLoadMessages:(NSArray *)messages conversation:(Conversation *)conversation hasMore:(BOOL)hasMore
 {
     if (conversation.rowid == self.conversation.rowid) {
+        if (_hasPreparedMessages)
+        {
+            [self.messageList removeAllObjects];
+            _hasPreparedMessages = NO;
+        }
         [self addNewMessages:messages isForward:YES];
     }
 }
@@ -462,7 +476,9 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)bjim_routerEventWithName:(NSString *)eventName userInfo:(NSDictionary *)userInfo
 {
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
-    if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
+    if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
+        //点击头像，添加响应操作
+    }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];
     }
     else if ([eventName isEqualToString:kBJResendButtonTapEventName])
