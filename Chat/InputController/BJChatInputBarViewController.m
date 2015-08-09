@@ -15,6 +15,7 @@
 #import "BJChatLimitMacro.h"
 #import "BJChatDraft.h"
 #import <IMEnvironment.h>
+#import "BJFaceView.h"
 
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
@@ -599,7 +600,13 @@
             self.inputTextView.text = @"";
             @IMTODO("不能发送空白消息");
         }
-        else
+        else if([self ifEmoji:content])
+        {
+            NSString *emojiName = [self getEmoji:content];
+            [BJSendMessageHelper sendEmojiMessage:emojiName content:[BJFacialView imageUrlWithEmoji:emojiName] chatInfo:self.chatInfo];
+            self.inputTextView.text = @"";
+            [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
+        }else
         {
             [BJSendMessageHelper sendTextMessage:content chatInfo:self.chatInfo];
             self.inputTextView.text = @"";
@@ -610,6 +617,29 @@
         return NO;
     }
     return YES;
+}
+
+//判断是否是文字图形
+-(BOOL)ifEmoji:(NSString*)text
+{
+    if (text!=nil && [text length]>5) {
+        if ([[text substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"(*"]
+            && [[text substringWithRange:NSMakeRange([text length]-2, 2)] isEqualToString:@"*)"]) {
+            if ([BJFacialView imageUrlWithEmoji:[text substringWithRange:NSMakeRange(2, [text length]-4)]]!=nil) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+//获取文字图形名字
+-(NSString*)getEmoji:(NSString*)text
+{
+    if (text!=nil && [text length]>5) {
+        return [text substringWithRange:NSMakeRange(2, [text length]-4)];
+    }
+    return nil;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
