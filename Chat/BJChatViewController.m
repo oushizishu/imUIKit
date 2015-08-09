@@ -27,7 +27,9 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
-
+#import "IMMessage+ViewModel.h"
+#import "MBProgressHUD+Simple.h"
+#import  <NSError+BJIM.h>
 const int BJ_Chat_Time_Interval = 5;
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
@@ -358,12 +360,17 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
-    @IMTODO("点击跳转代码");
+    NSString *url = [message cardUrl];
+    if (self.openURL != nil) {
+        self.openURL(url);
+    }
 }
 
 - (void)linkCellTapWithMessage:(NSString *)str
 {
-    @IMTODO("点击链接跳转代码");
+    if (self.openURL != nil) {
+        self.openURL(str);
+    }
 }
 
 - (void)audioCellTapWithMessage:(IMMessage *)message
@@ -376,7 +383,9 @@ const int BJ_Chat_Time_Interval = 5;
     {
         [message markPlayed];
         [[BJChatAudioPlayerHelper sharedInstance] startPlayerWithMessage:message callback:^(NSError *error) {
-            @IMTODO("提示错误消息");
+            if (error !=nil) {
+                [MBProgressHUD showErrorThenHide:[error bjim_Reason] toView:weakSelf.view onHide:nil];
+            }
             [weakSelf.tableView reloadData];
         }];
     }
