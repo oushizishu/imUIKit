@@ -8,6 +8,10 @@
 
 #import "BJChatBaseCell.h"
 
+#define BJ_TEXTCHARCELL_FONTSIZE 14
+#define BJ_TEXTCHATCELL_FONTCOLOR @"#3c3d3d"
+#define BJ_TEXTCHATCELL_PADDING 13
+
 @interface BJTextChatCell : BJChatBaseCell
 
 @end

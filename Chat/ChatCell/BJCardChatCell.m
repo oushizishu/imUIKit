@@ -166,6 +166,7 @@ const float IntervalTitleWithImage = 5;
 {
     if (_cardImageView == nil) {
         _cardImageView = [[UIImageView alloc] initWithFrame:CGRectMake(Interval, Interval, ImageWH, ImageWH)];
+        _cardImageView.clipsToBounds = YES;
         [self.bubbleContainerView addSubview:_cardImageView];
     }
     return _cardImageView;

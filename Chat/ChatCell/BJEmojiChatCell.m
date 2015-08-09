@@ -56,6 +56,7 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     return retSize;
 }
 
+
 #pragma mark - Protocol
 /**
  *  实现初始化方法，外部只调用此方法
