@@ -13,6 +13,7 @@
 #import "BJAttributedHighlightLabel.h"
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 const float BUBBLE_PROGRESSVIEW_HEIGHT = 10; // progressView 高度
 
