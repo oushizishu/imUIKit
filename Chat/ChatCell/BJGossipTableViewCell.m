@@ -9,6 +9,7 @@
 #import "BJGossipTableViewCell.h"
 #import "BJChatCellFactory.h"
 #import "BJChatBaseCell.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 const float Gossip_Content_Label_Max_Width = 200;
 const float Gossip_Content_Label_Height = 18;
