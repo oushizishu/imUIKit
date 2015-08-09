@@ -408,7 +408,7 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)didPreLoadMessages:(NSArray *)preMessages conversation:(Conversation *)conversation
 {
     if (conversation.rowid == self.conversation.rowid) {
-        [self addNewMessages:preMessages isForward:YES];
+        [self addNewMessages:preMessages isForward:NO];
         _hasPreparedMessages = YES;
     }
 }
