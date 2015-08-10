@@ -547,6 +547,7 @@
 #pragma mark - 草稿
 - (void)saveToDraftWithContent:(NSString *)content
 {
+    content = [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if ([content length] == 0){
         if (self.draft){
             [self.draft MR_deleteEntity];

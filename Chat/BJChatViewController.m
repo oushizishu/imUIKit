@@ -213,7 +213,7 @@ const int BJ_Chat_Time_Interval = 5;
     else if (forward || self.messageList.count<=0)
     {
         IMMessage *firstMessage = messages.firstObject;
-        [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:firstMessage.createAt] formattedTime] atIndex:0];
+        [mutMessages insertObject:[self customformattedTime:[NSDate dateWithTimeIntervalSince1970:firstMessage.createAt]] atIndex:0];
     }
     
     for (IMMessage *oneMessage in messages) {
@@ -221,7 +221,7 @@ const int BJ_Chat_Time_Interval = 5;
         if (lastMessage) {
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
             if (minute > 0) {
-                [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt] formattedTime] atIndex:[mutMessages indexOfObject:oneMessage]];
+                [mutMessages insertObject:[self customformattedTime:[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt]] atIndex:[mutMessages indexOfObject:oneMessage]];
                 lastMessage = oneMessage;
             }
         }
@@ -242,6 +242,86 @@ const int BJ_Chat_Time_Interval = 5;
     }
     return [mutMessages count];
 
+}
+
+//时间处理函数
+-(NSString*)customformattedTime:(NSDate*)time
+{
+    NSDateFormatter* formatter = [NSDateFormatter dateFormatter];
+    [formatter setDateFormat:@"YYYYMMdd"];
+    NSString * dateNow = [formatter stringFromDate:[NSDate date]];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    [components setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]];
+    [components setMonth:[[dateNow substringWithRange:NSMakeRange(4,2)] intValue]];
+    [components setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *date = [gregorian dateFromComponents:components]; //今天 0点时间
+    
+    NSInteger hour = [time hoursAfterDate:date];
+    NSDateFormatter *dateFormatter = nil;
+    NSString *ret = @"";
+    
+    if(hour>=0)
+    {
+        if (hour<6) {
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨HH:mm"];
+        }else if(hour<12){
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午HH:mm"];
+        }else if(hour<18){
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午HH:mm"];
+        }else{
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
+        }
+    }else
+    {
+        NSDateComponents *yComponents = [[NSDateComponents alloc] init];
+        [yComponents setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]-1];
+        [yComponents setMonth:[[dateNow substringWithRange:NSMakeRange(4,2)] intValue]];
+        [yComponents setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
+        NSDate *yDate = [gregorian dateFromComponents:yComponents]; //昨天 0点时间
+        
+        hour = [time hoursAfterDate:yDate];
+        if (hour>=0) {
+            if (hour<6) {
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
+            }else if(hour<12){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 上午HH:mm"];
+            }else if(hour<18){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 下午HH:mm"];
+            }else{
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 晚上HH:mm"];
+            }
+        }else
+        {
+            NSString *curDate = [formatter stringFromDate:time];
+            NSDateComponents *cComponents = [[NSDateComponents alloc] init];
+            [cComponents setDay:[[curDate substringWithRange:NSMakeRange(6,2)] intValue]];
+            [cComponents setMonth:[[curDate substringWithRange:NSMakeRange(4,2)] intValue]];
+            [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
+            NSDate *cDate = [gregorian dateFromComponents:yComponents]; //当天 0点时间
+            
+            hour = [time hoursAfterDate:yDate];
+            if (hour<6) {
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
+            }else if(hour<12){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
+            }else if(hour<18){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
+            }else{
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
+            }
+        }
+    }
+    
+    /*
+     保留代码(获取当前系统时间设置，是否是24小时制)
+    NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
+    NSRange containsA = [formatStringForHours rangeOfString:@"a"];
+    BOOL hasAMPM = containsA.location != NSNotFound;
+    */
+    
+    ret = [dateFormatter stringFromDate:time];
+    return ret;
 }
 
 - (void)loadMoreMessages
