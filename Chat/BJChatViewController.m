@@ -237,7 +237,7 @@ const int BJ_Chat_Time_Interval = 5;
     else
     {
         [self.messageList addObjectsFromArray:mutMessages];
-        [self.tableView reloadData];
+        [self.tableView reloadData]; 
         [self scrollViewToBottom:YES];
     }
     return [mutMessages count];

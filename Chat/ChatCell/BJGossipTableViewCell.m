@@ -9,11 +9,13 @@
 #import "BJGossipTableViewCell.h"
 #import "BJChatCellFactory.h"
 #import "BJChatBaseCell.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 const float Gossip_Content_Label_Max_Width = 200;
 const float Gossip_Content_Label_Height = 18;
 
 @interface BJGossipTableViewCell ()
+@property (strong ,nonatomic) UIView *gossipView;
 @property (strong, nonatomic) UILabel *contentLabel;
 @end
 
@@ -38,9 +40,6 @@ const float Gossip_Content_Label_Height = 18;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    CGRect rect = self.contentLabel.frame;
-    rect.origin.x = self.frame.size.width - rect.size.width - BJ_CELLPADDING;
-    self.contentLabel.frame = rect;
 }
 
 #pragma mark - Protocol
@@ -61,20 +60,37 @@ const float Gossip_Content_Label_Height = 18;
 {
     self.message = info;
     self.indexPath = indexPath;
-    self.contentLabel.text = self.message.gossipText;
-    CGSize size = [self.contentLabel sizeThatFits:CGSizeMake(Gossip_Content_Label_Max_Width-14, Gossip_Content_Label_Height)];
-    size.width+=14;
-    size.height = Gossip_Content_Label_Height;
-    CGRect rect = self.contentLabel.frame;
-    rect.size = size;
-    self.contentLabel.frame = rect;
+    NSString *showMsg = self.message.gossipText;
+    self.contentLabel.text = showMsg;
+    UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
+    CGSize size = [showMsg sizeWithFont:font];
+    
+    CGFloat textW = BJ_GOSSIP_TEXTMAXWIDTH;
+    
+    if (textW > size.width) {
+        textW = size.width;
+    }
+    
+    CGFloat screenW = [[UIScreen mainScreen] bounds].size.width;
+    self.contentView.frame = CGRectMake(0, 0, screenW, self.frame.size.height);
+    
+    self.contentLabel.frame = CGRectMake(BJ_GOSSIP_MARGIN, BJ_GOSSIP_MARGIN, textW , BJ_GOSSIP_FONTSIZE);
+    self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-(textW+BJ_GOSSIP_MARGIN*2))/2, (self.contentView.frame.size.height-(BJ_GOSSIP_FONTSIZE+BJ_GOSSIP_MARGIN*2))/2, textW+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE+BJ_GOSSIP_MARGIN*2);
+    
+    NSLog(@"contentLabel frame x=%f,y=%f,w=%f,h=%f",self.contentLabel.frame.origin.x,self.contentLabel.frame.origin.y,self.contentLabel.frame.size.width,self.contentLabel.frame.size.height);
+    
+    NSLog(@"gossipView frame x=%f,y=%f,w=%f,h=%f",self.gossipView.frame.origin.x,self.gossipView.frame.origin.y,self.gossipView.frame.size.width,self.gossipView.frame.size.height);
+    
+    NSLog(@"contentView frame x=%f,y=%f,w=%f,h=%f",self.contentView.frame.origin.x,self.contentView.frame.origin.y,self.contentView.frame.size.width,self.contentView.frame.size.height);
+    
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
 
 + (CGFloat)cellHeightWithInfo:(id)dic indexPath:(NSIndexPath *)indexPath;
 {
-    return Gossip_Content_Label_Height+BJ_CELLPADDING*2;
+    return 44;
+    //return BJ_GOSSIP_FONTSIZE+BJ_GOSSIP_MARGIN*2;
 }
 
 #pragma mark - set get
@@ -82,16 +98,21 @@ const float Gossip_Content_Label_Height = 18;
 {
     if (_contentLabel == nil) {
         _contentLabel = ({
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, BJ_CELLPADDING, Gossip_Content_Label_Max_Width, Gossip_Content_Label_Height)];
-            label.font = [UIFont systemFontOfSize:10];
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+            label.font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
             label.textAlignment = NSTextAlignmentCenter;
-            label.backgroundColor = [UIColor grayColor];
-            label.textColor = [UIColor whiteColor];
-            label.layer.cornerRadius = Gossip_Content_Label_Height / 2;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = [UIColor colorWithHexString:BJ_GOSSIP_FONTCOLOR];
             label.clipsToBounds = YES;
             label;
         });
-        [self.contentView addSubview:self.contentLabel];
+        if (_gossipView == nil) {
+            _gossipView = [[UIView alloc] initWithFrame:CGRectZero];
+            _gossipView.backgroundColor = [UIColor colorWithHexString:BJ_GOOSIP_BACKCOLOR];
+            _gossipView.layer.cornerRadius = 2;
+        }
+        [self.gossipView addSubview:self.contentLabel];
+        [self.contentView addSubview:self.gossipView];
     }
     return _contentLabel;
 }

@@ -17,6 +17,7 @@ NSString *const kBJRouterEventCardEventName = @"kRouterEventChatCellBubbleCardEv
 NSString *const kBJRouterEventUserInfoObject = @"kBJRouterEventUserInfoObject";
 NSString *const kBJRouterEventChatCellHeadTapEventName = @"kBJRouterEventChatCellHeadTapEventName";
 NSString *const kBJRouterEventChatCellBubbleTapEventName = @"kBJRouterEventChatCellBubbleTapEventName";
+NSString *const kBJRouterEventChatCellBubbleLongTapEventName = @"kBJRouterEventChatCellBubbleLongTapEventName";
 NSString *const kBJResendButtonTapEventName = @"kBJResendButtonTapEventName";
 
 NSString *const kBJRouterEventLinkName = @"kBJRouterEventLinkName";
