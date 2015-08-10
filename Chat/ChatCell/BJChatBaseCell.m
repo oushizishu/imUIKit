@@ -256,6 +256,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
 {
     if (_headImageView == nil) {
         _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(HEAD_PADDING, BJ_CELLPADDING, HEAD_SIZE, HEAD_SIZE)];
+        [_headImageView.layer setCornerRadius:HEAD_SIZE/2];
         _headImageView.clipsToBounds = YES;
         _headImageView.userInteractionEnabled = YES;
         _headImageView.multipleTouchEnabled = YES;
