@@ -46,6 +46,11 @@
 - (NSURL *)headImageURL;
 {
     User *senderUser = [self getSenderUser];
+    if (![senderUser.avatar hasPrefix:@"http"]) {
+        if (senderUser.userRole == eUserRole_Kefu || senderUser.userRole == eUserRole_System) {
+            return [NSURL fileURLWithPath:senderUser.avatar];
+        }
+    }
     return [NSURL URLWithString:senderUser.avatar];
 }
 
@@ -125,7 +130,7 @@
     IMImgMessageBody *imgMessage = [self imgMessageBody];
     if (imgMessage.file.length>0) {
         NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
-        if ([BJFileManagerTool isFileExisted:nil path:imgMessage.file]) {
+        if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
             return [NSURL fileURLWithPath:imgMessage.file];
         }
     }
