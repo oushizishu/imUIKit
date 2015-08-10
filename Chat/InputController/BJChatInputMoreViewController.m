@@ -39,7 +39,7 @@
     self.editList = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"ChatInputMore" ofType:@"plist"]];
     User * user = self.chatInfo.chatToUser;
     if (user) {
-        if ([user.name isEqualToString:@"跟谁学客服"]) {
+        if ([user.name isEqualToString:@"跟谁学客服"]||[user.name isEqualToString:@"客服"]) {
             NSArray * arr = [NSArray arrayWithObjects:[self.editList firstObject],[self.editList objectAtIndex:1], nil];
             [self.editList removeAllObjects];
             [self.editList addObjectsFromArray:arr];
