@@ -20,7 +20,7 @@
 #import "BJFacialView.h"
 #import "BJChatUtilsMacro.h"
 
-
+#import "BJChatFileCacheManager.h"
 
 @implementation IMMessage (ViewModel)
 
@@ -124,6 +124,7 @@
 {
     IMImgMessageBody *imgMessage = [self imgMessageBody];
     if (imgMessage.file.length>0) {
+        NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
         if ([BJFileManagerTool isFileExisted:nil path:imgMessage.file]) {
             return [NSURL fileURLWithPath:imgMessage.file];
         }

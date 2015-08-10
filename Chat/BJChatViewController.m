@@ -27,6 +27,7 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
+#import <NSDateFormatter+Category.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
