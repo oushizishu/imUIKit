@@ -90,7 +90,7 @@
 #elif TARGET_OS_IPHONE
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
 //    self.imagePicker.allowsEditing = YES;
-    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
+    self.imagePicker.mediaTypes = @[(NSString *)KUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 #endif
 }
@@ -102,7 +102,7 @@
     }
 //    self.imagePicker.allowsEditing = YES;
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
+    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 }
 

@@ -30,6 +30,8 @@
 #import "IMMessage+ViewModel.h"
 #import "MBProgressHUD+Simple.h"
 #import  <NSError+BJIM.h>
+#import <NSDateFormatter+Category.h>
+
 const int BJ_Chat_Time_Interval = 5;
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
