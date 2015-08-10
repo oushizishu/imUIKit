@@ -101,7 +101,9 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     frame.origin.x = self.message.isMySend ? (self.bounds.size.width - self.headImageView.frame.size.width - HEAD_PADDING) : HEAD_PADDING;
     self.headImageView.frame = frame;
     
-    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), (self.bounds.size.width - (CGRectGetMaxX(self.headImageView.frame)+5)*2), NAME_LABEL_HEIGHT);
+//    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), (self.bounds.size.width - (CGRectGetMaxX(self.headImageView.frame)+5)*2), NAME_LABEL_HEIGHT);
+    //固定宽度
+    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     CGRect bubbleFrame = self.bubbleContainerView.frame;
     if ([self shouldShowName]) {
