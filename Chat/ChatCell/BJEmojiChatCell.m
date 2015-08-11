@@ -56,6 +56,35 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     return retSize;
 }
 
+- (void)bubbleViewLongPressed:(id)sender
+{
+    //[self bjim_routerEventWithName:kBJRouterEventChatCellBubbleLongTapEventName userInfo:@{kBJRouterEventUserInfoObject:self.message}];
+    
+    UIMenuItem *copy = [[UIMenuItem alloc] initWithTitle:@"复制"action:@selector(scopy:)];
+    
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    [menuController setTargetRect:CGRectMake(self.frame.origin.x+self.bubbleContainerView.frame.origin.x, self.frame.origin.y+self.bubbleContainerView.frame.origin.y, self.bubbleContainerView.frame.size.width, self.bubbleContainerView.frame.size.height) inView:self.superview];
+    [menuController setMenuItems:[NSArray arrayWithObjects:copy, nil]];
+    [menuController setMenuVisible:YES animated:YES];
+    [self becomeFirstResponder];
+}
+
+-(BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if (action == @selector(scopy:)) {
+        return YES;
+    }
+    return NO; //隐藏系统默认的菜单项
+}
+
+- (void)scopy:(id)sender
+{
+    [[UIPasteboard generalPasteboard] setString:[NSString stringWithFormat:@"(*%@*)",[self.message emojiName]]];
+}
+
 
 #pragma mark - Protocol
 /**
