@@ -238,7 +238,6 @@ const int BJ_Chat_Time_Interval = 5;
     {
         [self.messageList addObjectsFromArray:mutMessages];
         [self.tableView reloadData]; 
-        [self scrollViewToBottom:YES];
     }
     return [mutMessages count];
 
@@ -484,6 +483,7 @@ const int BJ_Chat_Time_Interval = 5;
         if (msg.conversationId == self.conversation.rowid)
         {
             [self addNewMessages:@[msg] isForward:NO];
+            [self scrollViewToBottom:YES];
         }
     }
 }
@@ -492,6 +492,7 @@ const int BJ_Chat_Time_Interval = 5;
 {
     if (conversation.rowid == self.conversation.rowid) {
         [self addNewMessages:preMessages isForward:NO];
+        [self scrollViewToBottom:NO];
         _hasPreparedMessages = YES;
     }
 }
@@ -508,7 +509,10 @@ const int BJ_Chat_Time_Interval = 5;
         [self addNewMessages:messages isForward:YES];
         }
         else
-        [self addNewMessages:messages isForward:NO];
+        {
+            [self scrollViewToBottom:NO];
+            [self addNewMessages:messages isForward:NO];
+        }
     }
 }
 
