@@ -30,6 +30,8 @@
 #import "StudentSettingsViewController.h"
 #import "TeacherSettingsViewController.h"
 #import <NSDateFormatter+Category.h>
+#import <UIView+Basic.h>
+#import <UIColor+Util.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -59,6 +61,8 @@ const int BJ_Chat_Time_Interval = 5;
 @property (strong, nonatomic) BJChatInputBarViewController *inputController;
 
 @property (strong, nonatomic) SRRefreshView *slimeView;
+
+@property (strong, nonatomic) UILabel *nonRecordLable;
 
 @property (assign, nonatomic) BOOL isLoadMore;
 
@@ -326,6 +330,11 @@ const int BJ_Chat_Time_Interval = 5;
     return ret;
 }
 
+- (void)hiddenGetMoreView
+{
+    [self.slimeView removeFromSuperview];
+}
+
 - (void)loadMoreMessages
 {
     self.isLoadMore = YES;
@@ -522,6 +531,9 @@ const int BJ_Chat_Time_Interval = 5;
             [self addNewMessages:messages isForward:NO];
             [self scrollViewToBottom:NO];
         }
+        if (!hasMore) {
+            [self hiddenGetMoreView];
+        }
     }
 }
 
@@ -539,7 +551,17 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)willSendMessage:(IMMessage *)message;
 {
-    [self addNewMessages:@[message] isForward:NO];
+    if (message.chat_t == eChatType_Chat) {
+        if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
+    else if (message.chat_t == eChatType_GroupChat)
+    {
+        if (message.receiver == self.chatInfo.getToId) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
 }
 
 - (void)didUserInfoChanged:(User *)user;
@@ -638,6 +660,7 @@ const int BJ_Chat_Time_Interval = 5;
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    [self checkOutRecords];
     return self.messageList.count;
 }
 
@@ -773,4 +796,34 @@ const int BJ_Chat_Time_Interval = 5;
     return _inputController;
 }
 
+- (UILabel *)nonRecordLable
+{
+    if (!_nonRecordLable) {
+        _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.current_w, 30)];
+        [_nonRecordLable setBackgroundColor:[UIColor clearColor]];
+        [_nonRecordLable setTextAlignment:NSTextAlignmentCenter];
+        [_nonRecordLable setTextColor:[UIColor colorWithHexString:@"#6d6d6e"]];
+        [_nonRecordLable setText:@"暂无聊天消息"];
+        [_nonRecordLable setFont:[UIFont systemFontOfSize:16]];
+    }
+    return _nonRecordLable;
+}
+
+
+#pragma mark - Internal Helpers
+/*!
+ *  @author Mrlu, 15-08-11 12:08
+ *
+ *  @brief 检测是否有消息
+ */
+- (void)checkOutRecords
+{
+    if ([self.messageList count]==0) {
+        if (!self.nonRecordLable.superview) {
+            [self.tableView addSubview:self.nonRecordLable];
+        }
+    } else {
+        [self.nonRecordLable removeFromSuperview];
+    }
+}
 @end
