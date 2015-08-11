@@ -28,6 +28,8 @@
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
 #import <NSDateFormatter+Category.h>
+#import <UIView+Basic.h>
+#import <UIColor+Util.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -784,9 +786,9 @@ const int BJ_Chat_Time_Interval = 5;
         _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.current_w, 30)];
         [_nonRecordLable setBackgroundColor:[UIColor clearColor]];
         [_nonRecordLable setTextAlignment:NSTextAlignmentCenter];
-        [_nonRecordLable setTextColor:[UIColor bj_grey_500]];
+        [_nonRecordLable setTextColor:[UIColor colorWithHexString:@"#6d6d6e"]];
         [_nonRecordLable setText:@"暂无聊天消息"];
-        [_nonRecordLable setFont:UIFont_Font(16)];
+        [_nonRecordLable setFont:[UIFont systemFontOfSize:16]];
     }
     return _nonRecordLable;
 }
