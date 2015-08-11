@@ -517,12 +517,14 @@ const int BJ_Chat_Time_Interval = 5;
         {
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
-            [self.tableView reloadData];
         }
         if (self.isLoadMore) {
             NSUInteger lastCount = self.messageList.count;
             [self addNewMessages:messages isForward:YES];
-            NSUInteger index = lastCount - self.messageList.count;
+            NSUInteger index = self.messageList.count- lastCount - 1;
+            if (index>=self.messageList.count) {
+                index = self.messageList.count - 1;
+            }
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         else
@@ -533,6 +535,7 @@ const int BJ_Chat_Time_Interval = 5;
         if (!hasMore) {
             [self hiddenGetMoreView];
         }
+        [self.slimeView endRefresh];
     }
 }
 
