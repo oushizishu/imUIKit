@@ -87,15 +87,15 @@
         if ([tappableWord length] > 0)
         {
             NSRange matchRange = [string rangeOfString:word options:NSLiteralSearch range:wordSearchRange];
-            if ([tappableWord hasPrefix:@"@"])
-            {
-                [attrString addAttribute:NSForegroundColorAttributeName value:mentionTextColor range:matchRange];
-            }
-            else if ([tappableWord hasPrefix:@"#"])
-            {
-                [attrString addAttribute:NSForegroundColorAttributeName value:hashtagTextColor range:matchRange];
-            }
-            else if ([tappableWord hasPrefix:@"http://"])
+//            if ([tappableWord hasPrefix:@"@"])
+//            {
+//                [attrString addAttribute:NSForegroundColorAttributeName value:mentionTextColor range:matchRange];
+//            }
+//            else if ([tappableWord hasPrefix:@"#"])
+//            {
+//                [attrString addAttribute:NSForegroundColorAttributeName value:hashtagTextColor range:matchRange];
+//            }
+            if ([tappableWord hasPrefix:@"http://"])
             {
                 [attrString addAttribute:NSForegroundColorAttributeName value:linkTextColor range:matchRange];
             }

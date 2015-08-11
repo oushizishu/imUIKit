@@ -27,6 +27,8 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
+#import "StudentSettingsViewController.h"
+#import "TeacherSettingsViewController.h"
 #import <NSDateFormatter+Category.h>
 #import "BJAudioShowCalculation.h"
 #import <UIView+Basic.h>
@@ -602,6 +604,14 @@ const int BJ_Chat_Time_Interval = 5;
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
     if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
         //点击头像，添加响应操作
+        if (message.senderRole == eUserRole_Teacher) {
+            TeacherSettingsViewController *vc  = [[TeacherSettingsViewController alloc] initWithContactItem:self.chatInfo];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else if (message.senderRole == eUserRole_Student) {
+            StudentSettingsViewController *vc = [[StudentSettingsViewController alloc] initWithContactItem:self.chatInfo];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];
     }

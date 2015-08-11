@@ -46,12 +46,13 @@
 - (NSURL *)headImageURL;
 {
     User *senderUser = [self getSenderUser];
-    if (![senderUser.avatar hasPrefix:@"http"]) {
+    NSString *avatar = [senderUser getContactAvatar];
+    if (![avatar hasPrefix:@"http"]) {
         if (senderUser.userRole == eUserRole_Kefu || senderUser.userRole == eUserRole_System) {
-            return [NSURL fileURLWithPath:senderUser.avatar];
+            return [NSURL fileURLWithPath:[senderUser getContactAvatar]];
         }
     }
-    return [NSURL URLWithString:senderUser.avatar];
+    return [NSURL URLWithString:avatar];
 }
 
 - (NSAttributedString *)nickNameAttri
