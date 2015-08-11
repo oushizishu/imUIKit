@@ -131,7 +131,7 @@
     if (imgMessage.file.length>0) {
         NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
         if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
-            return [NSURL fileURLWithPath:imgMessage.file];
+            return [NSURL fileURLWithPath:fileStr];
         }
     }
     return [NSURL URLWithString:[self imgMessageBody].url];

@@ -563,7 +563,7 @@ const int BJ_Chat_Time_Interval = 5;
     {
         if (message.receiver == self.chatInfo.getToId) {
             [self addNewMessages:@[message] isForward:NO];
-            [self scrollViewToBottom:YES];            
+            [self scrollViewToBottom:YES];
         }
     }
 }
