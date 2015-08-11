@@ -611,11 +611,15 @@ const int BJ_Chat_Time_Interval = 5;
     if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
         //点击头像，添加响应操作
         if (message.senderRole == eUserRole_Teacher) {
-            TeacherSettingsViewController *vc  = [[TeacherSettingsViewController alloc] initWithContactItem:self.chatInfo];
+            User *user = [[BJIMManager shareInstance] getUser:message.sender role:message.senderRole];
+            BJChatInfo *contact = [[BJChatInfo alloc] initWithUser:user];
+            TeacherSettingsViewController *vc  = [[TeacherSettingsViewController alloc] initWithContactItem:contact];
             [self.navigationController pushViewController:vc animated:YES];
         }
         else if (message.senderRole == eUserRole_Student) {
-            StudentSettingsViewController *vc = [[StudentSettingsViewController alloc] initWithContactItem:self.chatInfo];
+            User *user = [[BJIMManager shareInstance] getUser:message.sender role:message.senderRole];
+            BJChatInfo *contact = [[BJChatInfo alloc] initWithUser:user];
+            StudentSettingsViewController *vc = [[StudentSettingsViewController alloc] initWithContactItem:contact];
             [self.navigationController pushViewController:vc animated:YES];
         }
     }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
