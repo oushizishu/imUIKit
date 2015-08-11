@@ -30,6 +30,7 @@
 #import "StudentSettingsViewController.h"
 #import "TeacherSettingsViewController.h"
 #import <NSDateFormatter+Category.h>
+#import "BJAudioShowCalculation.h"
 #import <UIView+Basic.h>
 #import <UIColor+Util.h>
 
@@ -170,6 +171,9 @@ const int BJ_Chat_Time_Interval = 5;
 //    {
         [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
 //    }
+    
+    //重置音频计算单位
+    [[BJAudioShowCalculation sharedInstance] reset];
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
