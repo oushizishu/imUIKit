@@ -662,6 +662,11 @@
     if (_toolbarView == nil) {
         _toolbarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, [BJChatInputBarViewController defaultHeight])];
         _toolbarView.backgroundColor = [UIColor clearColor];
+        
+        //增加背景照片
+        UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];
+        backgroundImageView.image = [[UIImage imageNamed:@"messageToolbarBg"] stretchableImageWithLeftCapWidth:0.5 topCapHeight:10];
+        [_toolbarView addSubview:backgroundImageView];
     }
     
     return _toolbarView;
