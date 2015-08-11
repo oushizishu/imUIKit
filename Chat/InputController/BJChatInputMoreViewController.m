@@ -47,9 +47,15 @@
         NSString *filePath = [BJChatFileCacheManager imageCachePathWithName:[BJChatFileCacheManager generateJpgImageName]];
         NSAssert(filePath.length>0, @"文件路径不能为空");
         //JEPG格式
-        NSData *data = [image bj_jpgDataWithCompressionSize:BJChat_Image_Max_SizeM];
-        [data writeToFile:filePath atomically:YES];
-        [BJSendMessageHelper sendImageMessage:filePath imageSize:image.size chatInfo:self.chatInfo];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // 处理耗时操作的代码块...
+            NSData *data = [image bj_jpgDataWithCompressionSize:BJChat_Image_Max_SizeM];
+            [data writeToFile:filePath atomically:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //通知主线程刷新
+                [BJSendMessageHelper sendImageMessage:filePath imageSize:image.size chatInfo:self.chatInfo];
+            });
+        });
     }
 }
 
@@ -63,7 +69,7 @@
 #elif TARGET_OS_IPHONE
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
 //    self.imagePicker.allowsEditing = YES;
-    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 #endif
 }
@@ -75,7 +81,7 @@
     }
 //    self.imagePicker.allowsEditing = YES;
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 }
 

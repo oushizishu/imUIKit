@@ -27,6 +27,10 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
+#import <NSDateFormatter+Category.h>
+#import "BJAudioShowCalculation.h"
+#import <UIView+Basic.h>
+#import <UIColor+Util.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -56,6 +60,10 @@ const int BJ_Chat_Time_Interval = 5;
 @property (strong, nonatomic) BJChatInputBarViewController *inputController;
 
 @property (strong, nonatomic) SRRefreshView *slimeView;
+
+@property (strong, nonatomic) UILabel *nonRecordLable;
+
+@property (assign, nonatomic) BOOL isLoadMore;
 
 @end
 
@@ -95,7 +103,7 @@ const int BJ_Chat_Time_Interval = 5;
     {
         [[BJIMManager shareInstance] startChatToUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
     }
-    
+    [self.conversation resetUnReadNum];
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = NO;
     }
@@ -125,7 +133,7 @@ const int BJ_Chat_Time_Interval = 5;
 //第一次调用viewWillAppear
 - (void)viewWillAppearFirstHandle
 {
-    [self scrollViewToBottom:NO];
+//    [self scrollViewToBottom:NO];
 }
 
 - (void)viewDidLoad {
@@ -153,7 +161,6 @@ const int BJ_Chat_Time_Interval = 5;
         [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
     }
         [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
-    [self.conversation resetUnReadNum];
     
 //    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
 //    [self addNewMessages:array isForward:NO];
@@ -162,6 +169,9 @@ const int BJ_Chat_Time_Interval = 5;
 //    {
         [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
 //    }
+    
+    //重置音频计算单位
+    [[BJAudioShowCalculation sharedInstance] reset];
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
@@ -212,7 +222,7 @@ const int BJ_Chat_Time_Interval = 5;
     else if (forward || self.messageList.count<=0)
     {
         IMMessage *firstMessage = messages.firstObject;
-        [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:firstMessage.createAt] formattedTime] atIndex:0];
+        [mutMessages insertObject:[self customformattedTime:[NSDate dateWithTimeIntervalSince1970:firstMessage.createAt]] atIndex:0];
     }
     
     for (IMMessage *oneMessage in messages) {
@@ -220,7 +230,7 @@ const int BJ_Chat_Time_Interval = 5;
         if (lastMessage) {
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
             if (minute > 0) {
-                [mutMessages insertObject:[[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt] formattedTime] atIndex:[mutMessages indexOfObject:oneMessage]];
+                [mutMessages insertObject:[self customformattedTime:[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt]] atIndex:[mutMessages indexOfObject:oneMessage]];
                 lastMessage = oneMessage;
             }
         }
@@ -237,14 +247,99 @@ const int BJ_Chat_Time_Interval = 5;
     {
         [self.messageList addObjectsFromArray:mutMessages];
         [self.tableView reloadData]; 
-        [self scrollViewToBottom:YES];
     }
     return [mutMessages count];
 
 }
 
+//时间处理函数
+-(NSString*)customformattedTime:(NSDate*)time
+{
+    NSDateFormatter* formatter = [NSDateFormatter dateFormatter];
+    [formatter setDateFormat:@"YYYYMMdd"];
+    NSString * dateNow = [formatter stringFromDate:[NSDate date]];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    [components setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]];
+    [components setMonth:[[dateNow substringWithRange:NSMakeRange(4,2)] intValue]];
+    [components setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *date = [gregorian dateFromComponents:components]; //今天 0点时间
+    
+    NSInteger hour = [time hoursAfterDate:date];
+    NSDateFormatter *dateFormatter = nil;
+    NSString *ret = @"";
+    
+    if(hour>=0)
+    {
+        if (hour<6) {
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨HH:mm"];
+        }else if(hour<12){
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午HH:mm"];
+        }else if(hour<18){
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午HH:mm"];
+        }else{
+            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
+        }
+    }else
+    {
+        NSDateComponents *yComponents = [[NSDateComponents alloc] init];
+        [yComponents setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]-1];
+        [yComponents setMonth:[[dateNow substringWithRange:NSMakeRange(4,2)] intValue]];
+        [yComponents setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
+        NSDate *yDate = [gregorian dateFromComponents:yComponents]; //昨天 0点时间
+        
+        hour = [time hoursAfterDate:yDate];
+        if (hour>=0) {
+            if (hour<6) {
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
+            }else if(hour<12){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 上午HH:mm"];
+            }else if(hour<18){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 下午HH:mm"];
+            }else{
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 晚上HH:mm"];
+            }
+        }else
+        {
+            NSString *curDate = [formatter stringFromDate:time];
+            NSDateComponents *cComponents = [[NSDateComponents alloc] init];
+            [cComponents setDay:[[curDate substringWithRange:NSMakeRange(6,2)] intValue]];
+            [cComponents setMonth:[[curDate substringWithRange:NSMakeRange(4,2)] intValue]];
+            [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
+            NSDate *cDate = [gregorian dateFromComponents:yComponents]; //当天 0点时间
+            
+            hour = [time hoursAfterDate:yDate];
+            if (hour<6) {
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
+            }else if(hour<12){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
+            }else if(hour<18){
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
+            }else{
+                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
+            }
+        }
+    }
+    
+    /*
+     保留代码(获取当前系统时间设置，是否是24小时制)
+    NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
+    NSRange containsA = [formatStringForHours rangeOfString:@"a"];
+    BOOL hasAMPM = containsA.location != NSNotFound;
+    */
+    
+    ret = [dateFormatter stringFromDate:time];
+    return ret;
+}
+
+- (void)hiddenGetMoreView
+{
+    [self.slimeView removeFromSuperview];
+}
+
 - (void)loadMoreMessages
 {
+    self.isLoadMore = YES;
     double_t msgId = 0;
     if (self.messageList.count>0) {
         IMMessage *message = [self.messageList objectAtIndex:0];
@@ -407,6 +502,7 @@ const int BJ_Chat_Time_Interval = 5;
         if (msg.conversationId == self.conversation.rowid)
         {
             [self addNewMessages:@[msg] isForward:NO];
+            [self scrollViewToBottom:YES];
         }
     }
 }
@@ -415,6 +511,7 @@ const int BJ_Chat_Time_Interval = 5;
 {
     if (conversation.rowid == self.conversation.rowid) {
         [self addNewMessages:preMessages isForward:NO];
+        [self scrollViewToBottom:NO];
         _hasPreparedMessages = YES;
     }
 }
@@ -426,8 +523,19 @@ const int BJ_Chat_Time_Interval = 5;
         {
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
+            [self.tableView reloadData];
         }
+        if (self.isLoadMore) {
         [self addNewMessages:messages isForward:YES];
+        }
+        else
+        {
+            [self addNewMessages:messages isForward:NO];
+            [self scrollViewToBottom:NO];
+        }
+        if (!hasMore) {
+            [self hiddenGetMoreView];
+        }
     }
 }
 
@@ -445,7 +553,17 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)willSendMessage:(IMMessage *)message;
 {
-    [self addNewMessages:@[message] isForward:NO];
+    if (message.chat_t == eChatType_Chat) {
+        if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
+    else if (message.chat_t == eChatType_GroupChat)
+    {
+        if (message.receiver == self.chatInfo.getToId) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
 }
 
 - (void)didUserInfoChanged:(User *)user;
@@ -536,6 +654,7 @@ const int BJ_Chat_Time_Interval = 5;
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    [self checkOutRecords];
     return self.messageList.count;
 }
 
@@ -671,4 +790,34 @@ const int BJ_Chat_Time_Interval = 5;
     return _inputController;
 }
 
+- (UILabel *)nonRecordLable
+{
+    if (!_nonRecordLable) {
+        _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.current_w, 30)];
+        [_nonRecordLable setBackgroundColor:[UIColor clearColor]];
+        [_nonRecordLable setTextAlignment:NSTextAlignmentCenter];
+        [_nonRecordLable setTextColor:[UIColor colorWithHexString:@"#6d6d6e"]];
+        [_nonRecordLable setText:@"暂无聊天消息"];
+        [_nonRecordLable setFont:[UIFont systemFontOfSize:16]];
+    }
+    return _nonRecordLable;
+}
+
+
+#pragma mark - Internal Helpers
+/*!
+ *  @author Mrlu, 15-08-11 12:08
+ *
+ *  @brief 检测是否有消息
+ */
+- (void)checkOutRecords
+{
+    if ([self.messageList count]==0) {
+        if (!self.nonRecordLable.superview) {
+            [self.tableView addSubview:self.nonRecordLable];
+        }
+    } else {
+        [self.nonRecordLable removeFromSuperview];
+    }
+}
 @end

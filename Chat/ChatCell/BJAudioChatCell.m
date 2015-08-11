@@ -12,6 +12,7 @@
 #import <PureLayout/PureLayout.h>
 #import <BJAudioPlayer.h>
 #import "UIResponder+BJIMChatRouter.h"
+#import "BJAudioShowCalculation.h"
 
 #define BJ_ANIMATION_IMAGEVIEW_HEIGHT 17.5 // 小喇叭图片尺寸
 #define BJ_ANIMATION_IMAGEVIEW_WIDTH 11
@@ -152,6 +153,10 @@
         self.animationImageView.image = [UIImage imageNamed:BJ_RECEIVER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT];
         self.animationImageView.animationImages = self.recevierAnimationImages;
     }
+    
+    CGRect rect = self.bubbleContainerView.frame;
+    rect.size.width = [[BJAudioShowCalculation sharedInstance] calculationShowWidth:self.message.time];
+    self.bubbleContainerView.frame = rect;
     
     if (self.message.isPlaying)
     {
