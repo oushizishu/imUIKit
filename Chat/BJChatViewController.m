@@ -58,6 +58,8 @@ const int BJ_Chat_Time_Interval = 5;
 
 @property (strong, nonatomic) SRRefreshView *slimeView;
 
+@property (strong, nonatomic) UILabel *nonRecordLable;
+
 @end
 
 @implementation BJChatViewController
@@ -611,6 +613,7 @@ const int BJ_Chat_Time_Interval = 5;
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    [self checkOutRecords];
     return self.messageList.count;
 }
 
@@ -746,4 +749,34 @@ const int BJ_Chat_Time_Interval = 5;
     return _inputController;
 }
 
+- (UILabel *)nonRecordLable
+{
+    if (!_nonRecordLable) {
+        _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.current_w, 30)];
+        [_nonRecordLable setBackgroundColor:[UIColor clearColor]];
+        [_nonRecordLable setTextAlignment:NSTextAlignmentCenter];
+        [_nonRecordLable setTextColor:[UIColor bj_grey_500]];
+        [_nonRecordLable setText:@"暂无聊天消息"];
+        [_nonRecordLable setFont:UIFont_Font(16)];
+    }
+    return _nonRecordLable;
+}
+
+
+#pragma mark - Internal Helpers
+/*!
+ *  @author Mrlu, 15-08-11 12:08
+ *
+ *  @brief 检测是否有消息
+ */
+- (void)checkOutRecords
+{
+    if ([self.messageList count]==0) {
+        if (!self.nonRecordLable.superview) {
+            [self.tableView addSubview:self.nonRecordLable];
+        }
+    } else {
+        [self.nonRecordLable removeFromSuperview];
+    }
+}
 @end
