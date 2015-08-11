@@ -323,6 +323,11 @@ const int BJ_Chat_Time_Interval = 5;
     return ret;
 }
 
+- (void)hiddenGetMoreView
+{
+    [self.slimeView removeFromSuperview];
+}
+
 - (void)loadMoreMessages
 {
     self.isLoadMore = YES;
@@ -514,6 +519,9 @@ const int BJ_Chat_Time_Interval = 5;
             [self addNewMessages:messages isForward:NO];
             [self scrollViewToBottom:NO];
         }
+        if (!hasMore) {
+            [self hiddenGetMoreView];
+        }
     }
 }
 
@@ -531,7 +539,17 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)willSendMessage:(IMMessage *)message;
 {
-    [self addNewMessages:@[message] isForward:NO];
+    if (message.chat_t == eChatType_Chat) {
+        if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
+    else if (message.chat_t == eChatType_GroupChat)
+    {
+        if (message.receiver == self.chatInfo.getToId) {
+            [self addNewMessages:@[message] isForward:NO];
+        }
+    }
 }
 
 - (void)didUserInfoChanged:(User *)user;
