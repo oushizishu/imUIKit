@@ -525,7 +525,7 @@ const int BJ_Chat_Time_Interval = 5;
             if (index>=self.messageList.count) {
                 index = self.messageList.count - 1;
             }
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         }
         else
         {
@@ -556,12 +556,14 @@ const int BJ_Chat_Time_Interval = 5;
     if (message.chat_t == eChatType_Chat) {
         if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
             [self addNewMessages:@[message] isForward:NO];
+            [self scrollViewToBottom:YES];
         }
     }
     else if (message.chat_t == eChatType_GroupChat)
     {
         if (message.receiver == self.chatInfo.getToId) {
             [self addNewMessages:@[message] isForward:NO];
+            [self scrollViewToBottom:YES];            
         }
     }
 }
