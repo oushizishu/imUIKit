@@ -130,7 +130,7 @@ const int BJ_Chat_Time_Interval = 5;
 //第一次调用viewWillAppear
 - (void)viewWillAppearFirstHandle
 {
-    [self scrollViewToBottom:NO];
+//    [self scrollViewToBottom:NO];
 }
 
 - (void)viewDidLoad {
@@ -518,8 +518,8 @@ const int BJ_Chat_Time_Interval = 5;
         }
         else
         {
-            [self scrollViewToBottom:NO];
             [self addNewMessages:messages isForward:NO];
+            [self scrollViewToBottom:NO];
         }
     }
 }
