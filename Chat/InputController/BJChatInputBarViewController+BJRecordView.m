@@ -81,7 +81,7 @@ static char BJRecordView_Recorder;
         else if (timeLength<=BJChat_Audio_Min_Time)//录制时间不够
         {
             @IMTODO("错误提示");
-            [MBProgressHUD showMessage:@"录制时间太短" toView:[self.view superview]];
+//            [MBProgressHUD showMessage:@"录制时间太短" toView:[self.view superview]];
         }
         else if (isSuc) {//录制成功，正在转mp3
             @IMTODO("添加录音成功提示。");
@@ -90,7 +90,7 @@ static char BJRecordView_Recorder;
         else//失败，失败原因在message
         {
             @IMTODO("添加提示。");
-            [MBProgressHUD showMessage:message toView:[self.view superview]];
+//            [MBProgressHUD showMessage:message toView:[self.view superview]];
         }
     };
     self.recorder.remainingCallback = ^(CGFloat time){
