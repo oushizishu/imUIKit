@@ -434,13 +434,22 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)reloadWithMessage:(IMMessage *)message
 {
-    if (message.msg_t == eMessageType_CARD) {
-        [self.tableView reloadData];
-    }
-    else
+    if([self.messageList lastObject] != message)
     {
-        NSInteger index = [self.messageList indexOfObject:message];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        [self.messageList removeObject:message];
+        [self.messageList addObject:message];
+        [self.tableView reloadData];
+        
+        [self scrollViewToBottom:YES];
+    }else
+    {
+        if (message.msg_t == eMessageType_CARD) {
+            [self.tableView reloadData];
+        }else
+        {
+            NSInteger index = [self.messageList indexOfObject:message];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        }
     }
 }
 
