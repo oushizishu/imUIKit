@@ -16,7 +16,7 @@ const float HEAD_PADDING = 5; // 头像到cell的内间距和头像到bubble的�
 
 const float NAME_LABEL_WIDTH = 180; // nameLabel宽度
 const float NAME_LABEL_HEIGHT = 20; // nameLabel 高度
-const float NAME_LABEL_PADDING = 0; // nameLabel间距
+const float NAME_LABEL_PADDING = 5; // nameLabel间距
 
 
 const float SEND_STATUS_SIZE = 30; // 发送状态View的Size
@@ -101,11 +101,13 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     frame.origin.x = self.message.isMySend ? (self.bounds.size.width - self.headImageView.frame.size.width - HEAD_PADDING) : HEAD_PADDING;
     self.headImageView.frame = frame;
     
-    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), (self.bounds.size.width - (CGRectGetMaxX(self.headImageView.frame)+5)*2), NAME_LABEL_HEIGHT);
+//    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), (self.bounds.size.width - (CGRectGetMaxX(self.headImageView.frame)+5)*2), NAME_LABEL_HEIGHT);
+    //固定宽度
+    self.nameLabel.frame = CGRectMake(CGRectGetMaxX(self.headImageView.frame)+5, CGRectGetMinY(self.headImageView.frame), NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     CGRect bubbleFrame = self.bubbleContainerView.frame;
     if ([self shouldShowName]) {
-        bubbleFrame.origin.y = CGRectGetMaxY(self.nameLabel.frame);
+        bubbleFrame.origin.y = CGRectGetMaxY(self.nameLabel.frame) + NAME_LABEL_PADDING;
     }
     else
     {
@@ -126,7 +128,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
             {
                 [self.activtiy stopAnimating];
                 [self.activityView setHidden:YES];
-                
+                [self.activtiy setHidden:YES];
+                [self.retryButton setHidden:YES];
             }
                 break;
             case eMessageStatus_Send_Fail:
@@ -152,6 +155,10 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     else{
         bubbleFrame.origin.x = HEAD_PADDING * 2 + HEAD_SIZE;
         self.bubbleContainerView.frame = bubbleFrame;
+        [self.activtiy stopAnimating];
+        [self.activityView setHidden:YES];
+        [self.activtiy setHidden:YES];
+        [self.retryButton setHidden:YES];
     }
     self.backImageView.frame = self.bubbleContainerView.bounds;
 }
@@ -233,7 +240,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     if (height < cell.headImageView.frame.size.height) {
         height = cell.headImageView.frame.size.height;
     }
-    return height + BJ_CELLPADDING*2;
+    return height + BJ_CELLPADDING*2 + NAME_LABEL_PADDING;
 }
 
 #pragma mark - set get
