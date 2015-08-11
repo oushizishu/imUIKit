@@ -128,7 +128,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
             {
                 [self.activtiy stopAnimating];
                 [self.activityView setHidden:YES];
-                
+                [self.activtiy setHidden:YES];
+                [self.retryButton setHidden:YES];
             }
                 break;
             case eMessageStatus_Send_Fail:
@@ -154,6 +155,10 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     else{
         bubbleFrame.origin.x = HEAD_PADDING * 2 + HEAD_SIZE;
         self.bubbleContainerView.frame = bubbleFrame;
+        [self.activtiy stopAnimating];
+        [self.activityView setHidden:YES];
+        [self.activtiy setHidden:YES];
+        [self.retryButton setHidden:YES];
     }
     self.backImageView.frame = self.bubbleContainerView.bounds;
 }

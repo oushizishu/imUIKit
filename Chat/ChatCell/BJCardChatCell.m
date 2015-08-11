@@ -61,7 +61,7 @@ const float IntervalTitleWithImage = 5;
     if (!self.message.isMySend) {
         CGRect frame = self.cardImageView.frame;
         frame.origin.y = frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.origin.x = CardWidth-ImageWH;
+        frame.origin.x = CardWidth-ImageWH - Interval;
         self.cardImageView.frame = frame;
         
         frame = self.titleLabel.frame;

@@ -533,7 +533,7 @@ const int BJ_Chat_Time_Interval = 5;
             if (index>=self.messageList.count) {
                 index = self.messageList.count - 1;
             }
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         else
         {
