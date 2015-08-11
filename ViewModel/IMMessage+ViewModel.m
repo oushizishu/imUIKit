@@ -20,7 +20,7 @@
 #import "BJFacialView.h"
 #import "BJChatUtilsMacro.h"
 
-
+#import "BJChatFileCacheManager.h"
 
 @implementation IMMessage (ViewModel)
 
@@ -46,6 +46,11 @@
 - (NSURL *)headImageURL;
 {
     User *senderUser = [self getSenderUser];
+    if (![senderUser.avatar hasPrefix:@"http"]) {
+        if (senderUser.userRole == eUserRole_Kefu || senderUser.userRole == eUserRole_System) {
+            return [NSURL fileURLWithPath:senderUser.avatar];
+        }
+    }
     return [NSURL URLWithString:senderUser.avatar];
 }
 
@@ -124,7 +129,8 @@
 {
     IMImgMessageBody *imgMessage = [self imgMessageBody];
     if (imgMessage.file.length>0) {
-        if ([BJFileManagerTool isFileExisted:nil path:imgMessage.file]) {
+        NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
+        if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
             return [NSURL fileURLWithPath:imgMessage.file];
         }
     }
