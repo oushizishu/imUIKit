@@ -504,6 +504,7 @@ const int BJ_Chat_Time_Interval = 5;
         {
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
+            [self.tableView reloadData];
         }
         if (self.isLoadMore) {
         [self addNewMessages:messages isForward:YES];
