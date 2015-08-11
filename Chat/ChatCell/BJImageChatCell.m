@@ -24,6 +24,10 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 
 @implementation BJImageChatCell
 
+- (void)dealloc{
+    
+}
+
 + (void)load
 {
     [ChatCellFactoryInstance registerClass:[self class] forMessageType:eMessageType_IMG];
