@@ -552,9 +552,8 @@ const int BJ_Chat_Time_Interval = 5;
         }
         [self.slimeView endRefresh];
         //检测是否有记录
-        [self checkOutRecords];
+        [self checkOutRecords:YES];
     }
-    [self checkOutRecords];
 }
 
 - (void)willDeliveryMessage:(IMMessage *)message;
@@ -676,6 +675,8 @@ const int BJ_Chat_Time_Interval = 5;
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    //检测是否有记录
+    [self checkOutRecords:NO];
     return self.messageList.count;
 }
 
@@ -831,10 +832,10 @@ const int BJ_Chat_Time_Interval = 5;
  *
  *  @brief 检测是否有消息
  */
-- (void)checkOutRecords
+- (void)checkOutRecords:(BOOL)show
 {
     if ([self.messageList count]==0) {
-        if (!self.nonRecordLable.superview) {
+        if (!self.nonRecordLable.superview && show) {
             [self.tableView addSubview:self.nonRecordLable];
         }
     } else {
