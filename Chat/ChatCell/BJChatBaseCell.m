@@ -16,7 +16,7 @@ const float HEAD_PADDING = 5; // 头像到cell的内间距和头像到bubble的�
 
 const float NAME_LABEL_WIDTH = 180; // nameLabel宽度
 const float NAME_LABEL_HEIGHT = 20; // nameLabel 高度
-const float NAME_LABEL_PADDING = 0; // nameLabel间距
+const float NAME_LABEL_PADDING = 5; // nameLabel间距
 
 
 const float SEND_STATUS_SIZE = 30; // 发送状态View的Size
@@ -107,7 +107,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     
     CGRect bubbleFrame = self.bubbleContainerView.frame;
     if ([self shouldShowName]) {
-        bubbleFrame.origin.y = CGRectGetMaxY(self.nameLabel.frame);
+        bubbleFrame.origin.y = CGRectGetMaxY(self.nameLabel.frame) + NAME_LABEL_PADDING;
     }
     else
     {
@@ -240,7 +240,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     if (height < cell.headImageView.frame.size.height) {
         height = cell.headImageView.frame.size.height;
     }
-    return height + BJ_CELLPADDING*2;
+    return height + BJ_CELLPADDING*2 + NAME_LABEL_PADDING;
 }
 
 #pragma mark - set get

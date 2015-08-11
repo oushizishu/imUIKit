@@ -86,7 +86,7 @@
             break;
         }
     }
-    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@",typeName,self.nickName]];
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@",typeName,self.nickName?:@""]];
     [attStr addAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSBackgroundColorAttributeName:typeColor} range:NSMakeRange(0, typeName.length)];
     return [attStr copy];
 }
