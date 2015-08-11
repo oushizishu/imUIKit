@@ -241,11 +241,13 @@ const int BJ_Chat_Time_Interval = 5;
         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, mutMessages.count)];
         [self.messageList insertObjects:mutMessages atIndexes:set];
         [self.tableView reloadData];
+        [[BJAudioShowCalculation sharedInstance] reset];
     }
     else
     {
         [self.messageList addObjectsFromArray:mutMessages];
-        [self.tableView reloadData]; 
+        [self.tableView reloadData];
+        [[BJAudioShowCalculation sharedInstance] reset];
     }
     return [mutMessages count];
 
@@ -307,7 +309,7 @@ const int BJ_Chat_Time_Interval = 5;
             [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
             NSDate *cDate = [gregorian dateFromComponents:yComponents]; //当天 0点时间
             
-            hour = [time hoursAfterDate:yDate];
+            hour = [time hoursAfterDate:cDate];
             if (hour<6) {
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
             }else if(hour<12){
@@ -439,12 +441,14 @@ const int BJ_Chat_Time_Interval = 5;
         [self.messageList removeObject:message];
         [self.messageList addObject:message];
         [self.tableView reloadData];
+        [[BJAudioShowCalculation sharedInstance] reset];
         
         [self scrollViewToBottom:YES];
     }else
     {
         if (message.msg_t == eMessageType_CARD) {
             [self.tableView reloadData];
+            [[BJAudioShowCalculation sharedInstance] reset];
         }else
         {
             NSInteger index = [self.messageList indexOfObject:message];
@@ -482,9 +486,11 @@ const int BJ_Chat_Time_Interval = 5;
         [[BJChatAudioPlayerHelper sharedInstance] startPlayerWithMessage:message callback:^(NSError *error) {
             @IMTODO("提示错误消息");
             [weakSelf.tableView reloadData];
+            [[BJAudioShowCalculation sharedInstance] reset];
         }];
     }
     [self.tableView reloadData];
+    [[BJAudioShowCalculation sharedInstance] reset];
 }
 
 #pragma mark - 键盘相关
@@ -548,6 +554,7 @@ const int BJ_Chat_Time_Interval = 5;
         //检测是否有记录
         [self checkOutRecords];
     }
+    [self checkOutRecords];
 }
 
 - (void)willDeliveryMessage:(IMMessage *)message;
@@ -583,6 +590,7 @@ const int BJ_Chat_Time_Interval = 5;
 {
     if ([self.chatInfo.chatToUser isEqual:user]) {
         [self.tableView reloadData];
+        [[BJAudioShowCalculation sharedInstance] reset];
     }
 }
 
@@ -590,6 +598,7 @@ const int BJ_Chat_Time_Interval = 5;
 {
     if ([self.chatInfo.chatToGroup isEqual:group]) {
         [self.tableView reloadData];
+        [[BJAudioShowCalculation sharedInstance] reset];
     }
 }
 
