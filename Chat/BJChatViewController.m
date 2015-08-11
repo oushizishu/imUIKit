@@ -545,6 +545,8 @@ const int BJ_Chat_Time_Interval = 5;
             [self hiddenGetMoreView];
         }
         [self.slimeView endRefresh];
+        //检测是否有记录
+        [self checkOutRecords];
     }
 }
 
@@ -665,7 +667,6 @@ const int BJ_Chat_Time_Interval = 5;
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    [self checkOutRecords];
     return self.messageList.count;
 }
 
