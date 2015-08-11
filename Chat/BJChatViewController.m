@@ -27,6 +27,7 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatImageBrowserHelper.h"
+#import <NSDateFormatter+Category.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -56,6 +57,8 @@ const int BJ_Chat_Time_Interval = 5;
 @property (strong, nonatomic) BJChatInputBarViewController *inputController;
 
 @property (strong, nonatomic) SRRefreshView *slimeView;
+
+@property (assign, nonatomic) BOOL isLoadMore;
 
 @end
 
@@ -94,7 +97,7 @@ const int BJ_Chat_Time_Interval = 5;
     {
         [[BJIMManager shareInstance] startChatToUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
     }
-    
+    [self.conversation resetUnReadNum];
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = NO;
     }
@@ -152,7 +155,6 @@ const int BJ_Chat_Time_Interval = 5;
         [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
     }
         [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
-    [self.conversation resetUnReadNum];
     
 //    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
 //    [self addNewMessages:array isForward:NO];
@@ -324,6 +326,7 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)loadMoreMessages
 {
+    self.isLoadMore = YES;
     double_t msgId = 0;
     if (self.messageList.count>0) {
         IMMessage *message = [self.messageList objectAtIndex:0];
@@ -501,7 +504,11 @@ const int BJ_Chat_Time_Interval = 5;
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
         }
+        if (self.isLoadMore) {
         [self addNewMessages:messages isForward:YES];
+        }
+        else
+        [self addNewMessages:messages isForward:NO];
     }
 }
 
