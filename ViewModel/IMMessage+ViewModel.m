@@ -86,7 +86,7 @@
             break;
         }
     }
-    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@",typeName,self.nickName]];
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@",typeName,self.nickName?:@""]];
     [attStr addAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSBackgroundColorAttributeName:typeColor} range:NSMakeRange(0, typeName.length)];
     return [attStr copy];
 }
@@ -132,7 +132,7 @@
     if (imgMessage.file.length>0) {
         NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
         if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
-            return [NSURL fileURLWithPath:imgMessage.file];
+            return [NSURL fileURLWithPath:fileStr];
         }
     }
     return [NSURL URLWithString:[self imgMessageBody].url];
