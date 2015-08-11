@@ -230,6 +230,11 @@
     return [self cardMessageBody].thumb;
 }
 
+- (IMCardMessageType)cardType
+{
+    return [self cardMessageBody].type;
+}
+
 #pragma mark - gossip 通知和cmd显示消息
 - (NSString *)gossipText;
 {

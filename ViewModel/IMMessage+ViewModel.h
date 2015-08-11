@@ -42,6 +42,7 @@
 - (NSString *)cardContent;
 - (NSString *)cardUrl;
 - (NSString *)cardThumb;
+- (IMCardMessageType)cardType;
 
 //gossip 通知和cmd显示消息
 - (NSString *)gossipText;
