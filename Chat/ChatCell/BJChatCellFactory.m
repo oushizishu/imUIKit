@@ -16,6 +16,7 @@ static BJChatCellFactory *sharedInstance = nil;
 
 @interface BJChatCellFactory ()
 @property (strong, nonatomic) NSMutableDictionary *registerCellDic;
+@property (strong, nonatomic) NSMutableDictionary *thumbnailImageDic;
 @end
 
 @implementation BJChatCellFactory
@@ -99,6 +100,24 @@ static BJChatCellFactory *sharedInstance = nil;
         _registerCellDic = [[NSMutableDictionary alloc] initWithCapacity:0];
     }
     return _registerCellDic;
+}
+
+-(UIImage*)getMsgThumbnailImage:(NSString*)msgID
+{
+    return [self.thumbnailImageDic objectForKey:msgID];
+}
+
+-(void)setMsgThumbnailImage:(UIImage*)image withMsgID:(NSString*)msgID
+{
+    [self.thumbnailImageDic setObject:image forKey:msgID];
+}
+
+-(NSMutableDictionary*)thumbnailImageDic
+{
+    if (_thumbnailImageDic == nil) {
+        _thumbnailImageDic = [[NSMutableDictionary alloc] initWithCapacity:0];
+    }
+    return _thumbnailImageDic;
 }
 
 @end

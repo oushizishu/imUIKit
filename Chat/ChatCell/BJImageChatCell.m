@@ -78,10 +78,32 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
+    NSLog(@"BJImageChatCell setCellInfo start");
     [super setCellInfo:info indexPath:indexPath];
 
-    self.chatImageView.image = nil;
+    //self.chatImageView.image = nil;
     
+#if 1
+    
+    UIImage *thumbnailImage = [[BJChatCellFactory sharedInstance] getMsgThumbnailImage:[self.message.imageURL relativePath]];
+    if (thumbnailImage == nil) {
+        thumbnailImage = [self getThumbnailImage];
+        [[BJChatCellFactory sharedInstance] setMsgThumbnailImage:thumbnailImage withMsgID:[self.message.imageURL relativePath]];
+    }
+    
+    CGRect rect = CGRectMake(0, 0, thumbnailImage.size.width/2, thumbnailImage.size.height/2);
+    
+    self.chatImageView.frame = rect;
+    self.chatImageView.image = thumbnailImage;
+    
+    UIImage *bimage = [self bubbleImage];
+    UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:bimage];
+    imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
+    self.chatImageView.layer.mask = imageViewMask.layer;
+    
+    self.bubbleContainerView.frame = rect;
+    
+#else
     CGSize size = [self calculateCellHeight];
     @IMTODO("设置默认图片");
     [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
@@ -96,8 +118,46 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
     rect = self.bubbleContainerView.frame;
     rect.size = size;
     self.bubbleContainerView.frame = rect;
+#endif
+    
     [self setNeedsLayout];
     [self layoutIfNeeded];
+    NSLog(@"BJImageChatCell setCellInfo end");
+}
+
+-(UIImage*)getThumbnailImage
+{
+    UIImage *image = [UIImage imageWithContentsOfFile:[self.message.imageURL relativePath]];
+    CGSize reSize = CGSizeZero;
+    
+    CGSize size = CGSizeMake(image.size.width, image.size.height);
+    CGSize referenceSize = CGSizeMake(200, 200);
+    
+    CGFloat coefficients = 0.0f;
+    
+    coefficients = size.width/referenceSize.width;
+    
+    if (coefficients < (size.height/referenceSize.height)) {
+        coefficients = (size.height/referenceSize.height);
+    }
+    
+    if (coefficients != 0) {
+        reSize = CGSizeMake(size.width/coefficients, size.height/coefficients);
+    }
+    
+    UIGraphicsBeginImageContext(CGSizeMake(reSize.width*2, reSize.height*2));
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,reSize.width*2,reSize.height*2)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 #pragma mark - set get
