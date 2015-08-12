@@ -48,4 +48,9 @@ extern const NSInteger unKownSysMessageType;
 
 - (CGFloat)cellHeightWithMessage:(IMMessage *)message indexPath:(NSIndexPath *)indexPath;
 
+//获取消息缩略图
+-(UIImage*)getMsgThumbnailImage:(NSString*)msgID;
+//设置消息缩略图
+-(void)setMsgThumbnailImage:(UIImage*)image withMsgID:(NSString*)msgID;
+
 @end
