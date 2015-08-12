@@ -89,23 +89,28 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
     
 #if 1
     
-    UIImage *thumbnailImage = [[BJChatCellFactory sharedInstance] getMsgThumbnailImage:[self.message.imageURL relativePath]];
-    if (thumbnailImage == nil) {
-        thumbnailImage = [self getThumbnailImage];
-        [[BJChatCellFactory sharedInstance] setMsgThumbnailImage:thumbnailImage withMsgID:[self.message.imageURL relativePath]];
+    CGRect rect = CGRectZero;
+    if ([self.message.imageURL isFileURL]) {
+        UIImage *thumbnailImage = [[BJChatCellFactory sharedInstance] getMsgThumbnailImage:[self.message.imageURL relativePath]];
+        if (thumbnailImage == nil) {
+            thumbnailImage = [self getThumbnailImage];
+            [[BJChatCellFactory sharedInstance] setMsgThumbnailImage:thumbnailImage withMsgID:[self.message.imageURL relativePath]];
+        }
+        
+        rect = CGRectMake(0, 0, thumbnailImage.size.width/2, thumbnailImage.size.height/2);
+        
+        self.chatImageView.frame = rect;
+        self.chatImageView.image = thumbnailImage;
     }
-    
-    CGRect rect = CGRectMake(0, 0, thumbnailImage.size.width/2, thumbnailImage.size.height/2);
-    
-    self.chatImageView.frame = rect;
-    self.chatImageView.image = thumbnailImage;
-    
-    UIImage *bimage = [self bubbleImage];
-    UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:bimage];
-    imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
-    self.chatImageView.layer.mask = imageViewMask.layer;
-    
-    self.bubbleContainerView.frame = rect;
+    else
+    {
+        CGSize size = [self calculateCellHeight];
+        @IMTODO("设置默认图片");
+        [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
+        rect = self.chatImageView.frame;
+        rect.size = size;
+        self.chatImageView.frame = rect;
+    }
     
 #else
     CGSize size = [self calculateCellHeight];
