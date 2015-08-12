@@ -724,7 +724,7 @@ const int BJ_Chat_Time_Interval = 5;
         //    else
         //    {
         Height = [[BJChatCellFactory sharedInstance] cellHeightWithMessage:message indexPath:indexPath];
-        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
+//        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
         //    }
         return Height;
     }
