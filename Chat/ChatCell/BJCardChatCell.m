@@ -60,8 +60,8 @@ const float IntervalTitleWithImage = 5;
     
     if (!self.message.isMySend) {
         CGRect frame = self.cardImageView.frame;
-        frame.origin.y = frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.origin.x = CardWidth-ImageWH - Interval;
+        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
+        frame.origin.x = Interval+5;
         self.cardImageView.frame = frame;
         
         frame = self.titleLabel.frame;
@@ -70,7 +70,7 @@ const float IntervalTitleWithImage = 5;
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         
         frame = self.contentLabel.frame;
-        frame.origin.x = Interval+5;
+        frame.origin.x = Interval+10+ImageWH;
         self.contentLabel.frame = frame;
     }
     else
