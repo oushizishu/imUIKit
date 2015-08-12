@@ -528,9 +528,9 @@ IMUserInfoChangedDelegate>
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
         }
+        [self.chatHeadView setCanLoadMore:hasMore];
+        [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
         if (self.isLoadMore) {
-            [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
-            [self.chatHeadView setCanLoadMore:hasMore];
             NSUInteger lastCount = self.messageList.count;
             [self addNewMessages:messages isForward:YES];
             NSUInteger index = self.messageList.count- lastCount - 1;
@@ -658,7 +658,7 @@ IMUserInfoChangedDelegate>
     [self keyBoardHidden];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 {
     if (self.chatHeadView) {
         [self.chatHeadView scrollViewDidEndDecelerating:scrollView];
@@ -804,7 +804,7 @@ IMUserInfoChangedDelegate>
 -(BJChatLoadMoreHeadView *)chatHeadView
 {
     if (!_chatHeadView) {
-        _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, _tableView.size.width, 40)];
+        _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.size.width, 40)];
         [_chatHeadView setDelegate:self];
     }
     return _chatHeadView;
