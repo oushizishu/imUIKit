@@ -573,7 +573,13 @@ const int BJ_Chat_Time_Interval = 5;
                   errorCode:(NSInteger)errorCode
                       error:(NSString *)errorMessage;
 {
-    [self reloadWithMessage:message];
+    if (errorCode == eError_suc) {
+        [self reloadWithMessage:message];
+    }
+    else if (errorMessage.length>0)
+    {
+        [MBProgressHUD showErrorThenHide:errorMessage toView:self.view onHide:nil];
+    }
 }
 
 - (void)willSendMessage:(IMMessage *)message;
