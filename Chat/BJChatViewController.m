@@ -341,7 +341,7 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)loadMoreMessages
 {
     self.isLoadMore = YES;
-    double_t msgId = 0;
+    NSString *msgId ;
     if (self.messageList.count>0) {
         IMMessage *message = [self.messageList objectAtIndex:0];
         if ([message isKindOfClass:[IMMessage class]])
@@ -724,7 +724,7 @@ const int BJ_Chat_Time_Interval = 5;
         //    else
         //    {
         Height = [[BJChatCellFactory sharedInstance] cellHeightWithMessage:message indexPath:indexPath];
-        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:@(message.msgId)];
+        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
         //    }
         return Height;
     }
