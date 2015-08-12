@@ -338,27 +338,20 @@ IMUserInfoChangedDelegate>
 
 - (void)loadMoreMessages
 {
-    self.isLoadMore = YES;
     NSString *msgId ;
-    if (self.messageList.count>0) {
-        IMMessage *message = [self.messageList objectAtIndex:0];
-        if ([message isKindOfClass:[IMMessage class]])
-        {
-            msgId = message.msgId;
-        }
-        else
-        {
-            if (self.messageList.count>1) {
-                message = [self.messageList objectAtIndex:1];
-                msgId = message.msgId;
-            }
-        }
+    IMMessage *message = nil;
+    int i=0 ;
+    while (![message isKindOfClass:[IMMessage class]] && [self.messageList count] > i) {
+        message = [self.messageList objectAtIndex:i];
+        i++;
     }
-    [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
-    //    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
-    //    if (msgId != 0) {
-    //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    //    }
+    if (message) {
+        msgId = message.msgId;
+    }
+    if (msgId.length>0) {
+        self.isLoadMore = YES;
+        [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
+    }
 }
 
 #pragma mark - observer 通知 进入前台，后台等
