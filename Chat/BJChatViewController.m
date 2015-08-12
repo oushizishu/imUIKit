@@ -26,9 +26,9 @@
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
-#import "BJChatImageBrowserHelper.h"
-#import "StudentSettingsViewController.h"
 #import "TeacherSettingsViewController.h"
+#import "StudentSettingsViewController.h"
+#import "BJChatViewController+BrowserHelper.h"
 #import <NSDateFormatter+Category.h>
 #import "BJAudioShowCalculation.h"
 #import <UIView+Basic.h>
@@ -465,7 +465,7 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)showBigImageWithMessage:(IMMessage *)message
 {
     [self.inputController endEditing:YES];
-    [[BJChatImageBrowserHelper shareInstance] showBrowserWithImages:@[message.imageURL]];
+    [self showBrowserWithImages:@[message.imageURL]];
 }
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
