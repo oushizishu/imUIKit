@@ -32,16 +32,18 @@
 #import <UIView+Basic.h>
 #import <UIColor+Util.h>
 
+#import "BJChatLoadMoreHeadView.h"
+
 const int BJ_Chat_Time_Interval = 5;
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
-    IMReceiveNewMessageDelegate,
-    IMLoadMessageDelegate,
-    BJChatInputProtocol,
-    BJSendMessageProtocol,
-    IMDeliveredMessageDelegate,
-    IMGroupProfileChangedDelegate,
-    IMUserInfoChangedDelegate>
+IMReceiveNewMessageDelegate,
+IMLoadMessageDelegate,
+BJChatInputProtocol,
+BJSendMessageProtocol,
+IMDeliveredMessageDelegate,
+IMGroupProfileChangedDelegate,
+IMUserInfoChangedDelegate>
 {
     BOOL _isFirstAppear; //生命周期第一次判断
     BOOL _hasPreparedMessages;
@@ -59,7 +61,7 @@ const int BJ_Chat_Time_Interval = 5;
  */
 @property (strong, nonatomic) BJChatInputBarViewController *inputController;
 
-@property (strong, nonatomic) SRRefreshView *slimeView;
+@property (strong, nonatomic)  BJChatLoadMoreHeadView *chatHeadView;
 
 @property (strong, nonatomic) UILabel *nonRecordLable;
 
@@ -76,8 +78,6 @@ const int BJ_Chat_Time_Interval = 5;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"frame"];
     [BJSendMessageHelper sharedInstance].deledate = nil;
-    _slimeView.delegate = nil;
-    _slimeView = nil;
     
 }
 
@@ -123,7 +123,7 @@ const int BJ_Chat_Time_Interval = 5;
     [super viewWillDisappear:animated];
     [[BJIMManager shareInstance] stopChat];
     [[BJChatAudioPlayerHelper sharedInstance] stopPlayer];
-
+    
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = YES;
     }
@@ -132,12 +132,12 @@ const int BJ_Chat_Time_Interval = 5;
 //第一次调用viewWillAppear
 - (void)viewWillAppearFirstHandle
 {
-//    [self scrollViewToBottom:NO];
+    //    [self scrollViewToBottom:NO];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-      [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil]; 
+    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -150,8 +150,8 @@ const int BJ_Chat_Time_Interval = 5;
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-//    self.view.autoresizesSubviews = NO;
-//    self.view.autoresizingMask = UIViewAutoresizingNone;
+    //    self.view.autoresizesSubviews = NO;
+    //    self.view.autoresizingMask = UIViewAutoresizingNone;
     
     [[BJIMManager shareInstance] addReceiveNewMessageDelegate:self];
     [[BJIMManager shareInstance] addLoadMoreMessagesDelegate:self];
@@ -159,15 +159,15 @@ const int BJ_Chat_Time_Interval = 5;
     if ([self.chatInfo getContactType] == BJContact_Group) {
         [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
     }
-        [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
+    [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
     
-//    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
-//    [self addNewMessages:array isForward:NO];
-//    
-//    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
-//    {
-        [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
-//    }
+    //    NSArray *array = [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+    //    [self addNewMessages:array isForward:NO];
+    //
+    //    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
+    //    {
+    [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+    //    }
     
     //重置音频计算单位
     [[BJAudioShowCalculation sharedInstance] reset];
@@ -177,17 +177,17 @@ const int BJ_Chat_Time_Interval = 5;
     [self addChildViewController:self.inputController];
     [self.inputController didMoveToParentViewController:self];
     [self updateSubViewFrame];
-    [self.tableView addSubview:self.slimeView];
- 
-//    {
-//        IMMessage *cardMessage = [[IMMessage alloc] init];
-//        cardMessage.chat_t = eChatType_GroupChat;
-//        cardMessage.msg_t = eMessageType_TXT;
-//        IMTxtMessageBody*card = [[IMTxtMessageBody alloc] init];
-//        card.content = @"http://www.baidu.com";
-//        cardMessage.messageBody = card;
-//        [self addNewMessages:@[cardMessage] isForward:NO];
-//    }
+    [self.tableView addSubview:self.chatHeadView];
+    
+    //    {
+    //        IMMessage *cardMessage = [[IMMessage alloc] init];
+    //        cardMessage.chat_t = eChatType_GroupChat;
+    //        cardMessage.msg_t = eMessageType_TXT;
+    //        IMTxtMessageBody*card = [[IMTxtMessageBody alloc] init];
+    //        card.content = @"http://www.baidu.com";
+    //        cardMessage.messageBody = card;
+    //        [self addNewMessages:@[cardMessage] isForward:NO];
+    //    }
 }
 
 
@@ -197,14 +197,14 @@ const int BJ_Chat_Time_Interval = 5;
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 #pragma mark - 消息操作方法
 - (NSInteger)addNewMessages:(NSArray *)messages isForward:(BOOL)forward;
@@ -236,7 +236,7 @@ const int BJ_Chat_Time_Interval = 5;
         else
             lastMessage = oneMessage;
     }
-
+    
     if (forward) {
         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, mutMessages.count)];
         [self.messageList insertObjects:mutMessages atIndexes:set];
@@ -250,7 +250,7 @@ const int BJ_Chat_Time_Interval = 5;
         [[BJAudioShowCalculation sharedInstance] reset];
     }
     return [mutMessages count];
-
+    
 }
 
 //时间处理函数
@@ -324,10 +324,10 @@ const int BJ_Chat_Time_Interval = 5;
     
     /*
      保留代码(获取当前系统时间设置，是否是24小时制)
-    NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
-    NSRange containsA = [formatStringForHours rangeOfString:@"a"];
-    BOOL hasAMPM = containsA.location != NSNotFound;
-    */
+     NSString *formatStringForHours = [NSDateFormatter dateFormatFromTemplate:@"j" options:0 locale:[NSLocale currentLocale]];
+     NSRange containsA = [formatStringForHours rangeOfString:@"a"];
+     BOOL hasAMPM = containsA.location != NSNotFound;
+     */
     
     ret = [dateFormatter stringFromDate:time];
     return ret;
@@ -357,10 +357,10 @@ const int BJ_Chat_Time_Interval = 5;
         }
     }
     [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
-//    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
-//    if (msgId != 0) {
-//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-//    }
+    //    NSInteger addCount = [self addNewMessages:messageList isForward:YES];
+    //    if (msgId != 0) {
+    //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:addCount inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    //    }
 }
 
 #pragma mark - observer 通知 进入前台，后台等
@@ -425,7 +425,7 @@ const int BJ_Chat_Time_Interval = 5;
 - (void)scrollViewToBottom:(BOOL)animated
 {
     CGFloat canOffsetY = self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top;
-
+    
     if (canOffsetY>0)
     {
         CGPoint offset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom);
@@ -534,6 +534,8 @@ const int BJ_Chat_Time_Interval = 5;
             _hasPreparedMessages = NO;
         }
         if (self.isLoadMore) {
+            [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
+            [self.chatHeadView setCanLoadMore:hasMore];
             NSUInteger lastCount = self.messageList.count;
             [self addNewMessages:messages isForward:YES];
             NSUInteger index = self.messageList.count- lastCount - 1;
@@ -552,8 +554,9 @@ const int BJ_Chat_Time_Interval = 5;
         }
         [self.slimeView endRefresh];
         //检测是否有记录
-        [self checkOutRecords:YES];
+        [self checkOutRecords];
     }
+    [self checkOutRecords];
 }
 
 - (void)willDeliveryMessage:(IMMessage *)message;
@@ -613,7 +616,7 @@ const int BJ_Chat_Time_Interval = 5;
     
     if(toHeight > [BJChatInputBarViewController defaultHeight]+10){
         [self scrollViewToBottom:NO];
-
+        
     }
 }
 
@@ -644,20 +647,19 @@ const int BJ_Chat_Time_Interval = 5;
     }
 }
 
-#pragma mark - slimeRefresh delegate
-//加载更多
-- (void)slimeRefreshStartRefresh:(SRRefreshView *)refreshView
+#pragma mark - BJChatLoadMoreHeadViewDelegate
+
+- (void)bjChatLoadMoreHeadViewDidTriggerRefresh:(BJChatLoadMoreHeadView *)view
 {
     [self loadMoreMessages];
-    [self.slimeView endRefresh];
 }
 
 #pragma mark - scrollView delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (self.slimeView) {
-        [self.slimeView scrollViewDidScroll];
+    if (self.chatHeadView) {
+        [self.chatHeadView scrollViewDidScroll:scrollView];
     }
 }
 
@@ -667,16 +669,15 @@ const int BJ_Chat_Time_Interval = 5;
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (self.slimeView) {
-        [self.slimeView scrollViewDidEndDraging];
+    if (self.chatHeadView) {
+        [self.chatHeadView scrollViewDidEndDecelerating:scrollView];
     }
+    
 }
 
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //检测是否有记录
-    [self checkOutRecords:NO];
     return self.messageList.count;
 }
 
@@ -709,7 +710,7 @@ const int BJ_Chat_Time_Interval = 5;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     IMMessage *message = [self.messageList objectAtIndex:indexPath.row];
-
+    
     if ([message isKindOfClass:[NSString class]]) {
         return 40;
     }
@@ -728,7 +729,7 @@ const int BJ_Chat_Time_Interval = 5;
         //    }
         return Height;
     }
-
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -750,7 +751,7 @@ const int BJ_Chat_Time_Interval = 5;
         }
         else
         {
-        _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
+            _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
             if (_conversation) {
                 self.title = _conversation.chatToUser.name;
             }
@@ -770,22 +771,6 @@ const int BJ_Chat_Time_Interval = 5;
     return _tableView;
 }
 
-- (SRRefreshView *)slimeView
-{
-    if (_slimeView == nil) {
-        _slimeView = [[SRRefreshView alloc] init];
-        _slimeView.delegate = self;
-        _slimeView.upInset = 0;
-        _slimeView.slimeMissWhenGoingBack = YES;
-        _slimeView.slime.bodyColor = [UIColor grayColor];
-        _slimeView.slime.skinColor = [UIColor grayColor];
-        _slimeView.slime.lineWith = 1;
-        _slimeView.slime.shadowBlur = 4;
-        _slimeView.slime.shadowColor = [UIColor grayColor];
-    }
-    
-    return _slimeView;
-}
 
 - (NSMutableArray *)messageList
 {
@@ -825,6 +810,15 @@ const int BJ_Chat_Time_Interval = 5;
     return _nonRecordLable;
 }
 
+-(BJChatLoadMoreHeadView *)chatHeadView
+{
+    if (!_chatHeadView) {
+        _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, _tableView.size.width, 40)];
+        [_chatHeadView setDelegate:self];
+    }
+    return _chatHeadView;
+}
+
 
 #pragma mark - Internal Helpers
 /*!
@@ -832,10 +826,10 @@ const int BJ_Chat_Time_Interval = 5;
  *
  *  @brief 检测是否有消息
  */
-- (void)checkOutRecords:(BOOL)show
+- (void)checkOutRecords
 {
     if ([self.messageList count]==0) {
-        if (!self.nonRecordLable.superview && show) {
+        if (!self.nonRecordLable.superview) {
             [self.tableView addSubview:self.nonRecordLable];
         }
     } else {
