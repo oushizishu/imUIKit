@@ -44,16 +44,17 @@ const float Compression_Max_HEIGHT = 2000;
 {
     CGSize newSize = self.size;
     BOOL sizeChage = NO;
-    if (self.size.width > Compression_Max_Width) {
-        newSize.width = Compression_Max_Width;
-        newSize.height = self.size.height * (Compression_Max_Width / self.size.width);
-        sizeChage = YES;
-    }
-    if (newSize.height > Compression_Max_HEIGHT) {
-        newSize.height = Compression_Max_HEIGHT;
-        newSize.width = newSize.width * (Compression_Max_HEIGHT / newSize.height);
-        sizeChage = YES;
-    }
+//    if (self.size.width > Compression_Max_Width) {
+//        newSize.height = self.size.height * (Compression_Max_Width / self.size.width);
+//        newSize.width = Compression_Max_Width;
+//        sizeChage = YES;
+//    }
+//    if (newSize.height > Compression_Max_HEIGHT) {
+//        newSize.width = newSize.width * (Compression_Max_HEIGHT / newSize.height);
+//        newSize.height = Compression_Max_HEIGHT;
+//        
+//        sizeChage = YES;
+//    }
     
     UIImage *newImage = self;
     if (sizeChage) {
