@@ -524,7 +524,7 @@ IMUserInfoChangedDelegate>
         if (self.isLoadMore) {
             NSUInteger lastCount = self.messageList.count;
             [self addNewMessages:messages isForward:YES];
-            NSUInteger index = self.messageList.count- lastCount - 1;
+            NSUInteger index = self.messageList.count- lastCount;
             if (index>=self.messageList.count) {
                 index = self.messageList.count - 1;
             }
