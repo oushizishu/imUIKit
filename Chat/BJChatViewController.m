@@ -342,9 +342,7 @@ IMUserInfoChangedDelegate>
         message = [self.messageList objectAtIndex:i];
         i++;
     }
-    if (message) {
-        msgId = message.msgId;
-    }
+    msgId = message.msgId;
     if (msgId.length>0) {
         self.isLoadMore = YES;
         [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
