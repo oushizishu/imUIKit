@@ -26,7 +26,7 @@
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
-#import "BJChatImageBrowserHelper.h"
+#import "BJChatViewController+BrowserHelper.h"
 #import <NSDateFormatter+Category.h>
 #import "BJAudioShowCalculation.h"
 #import <UIView+Basic.h>
@@ -341,7 +341,7 @@ IMUserInfoChangedDelegate>
 - (void)loadMoreMessages
 {
     self.isLoadMore = YES;
-    double_t msgId = 0;
+    NSString *msgId ;
     if (self.messageList.count>0) {
         IMMessage *message = [self.messageList objectAtIndex:0];
         if ([message isKindOfClass:[IMMessage class]])
@@ -461,7 +461,7 @@ IMUserInfoChangedDelegate>
 - (void)showBigImageWithMessage:(IMMessage *)message
 {
     [self.inputController endEditing:YES];
-    [[BJChatImageBrowserHelper shareInstance] showBrowserWithImages:@[message.imageURL]];
+    [self showBrowserWithImages:@[message.imageURL]];
 }
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
@@ -725,7 +725,7 @@ IMUserInfoChangedDelegate>
         //    else
         //    {
         Height = [[BJChatCellFactory sharedInstance] cellHeightWithMessage:message indexPath:indexPath];
-        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:@(message.msgId)];
+//        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
         //    }
         return Height;
     }
