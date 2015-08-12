@@ -1,59 +1,23 @@
+//
+//  BJChatViewController+BrowserHelper.m
+//  BJEducation_student
+//
+//  Created by Mrlu-bjhl on 15/8/12.
+//  Copyright (c) 2015年 Baijiahulian. All rights reserved.
+//
 
+#import "BJChatViewController+BrowserHelper.h"
+static const char *photoKey = "photoKey";
+@implementation BJChatViewController (BrowserHelper)
 
-#import "BJChatImageBrowserHelper.h"
-#import <SDWebImage/UIImageView+WebCache.h>
-
-@interface BJChatImageBrowserHelper()
-
-@property (strong, nonatomic) UIWindow *keyWindow;
-
-@property (strong, nonatomic) NSMutableArray *photos;
-
-@end
-
-@implementation BJChatImageBrowserHelper
-
-+ (instancetype)shareInstance
+- (void)setPhotos:(NSMutableArray *)photos
 {
-    static BJChatImageBrowserHelper *sharedMessageReadManager = nil;
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
-        sharedMessageReadManager = [[self alloc] init];
-    });
-    return sharedMessageReadManager;
+    objc_setAssociatedObject(self, photoKey, photos, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-#pragma mark - getter
-
-- (UIWindow *)keyWindow
-{
-    if(_keyWindow == nil)
-    {
-        _keyWindow = [[UIApplication sharedApplication] keyWindow];
-    }
-    
-    return _keyWindow;
-}
-
 - (NSMutableArray *)photos
 {
-    if (_photos == nil) {
-        _photos = [[NSMutableArray alloc] init];
-    }
-    
-    return _photos;
+    return (objc_getAssociatedObject(self, photoKey));
 }
-
-- (BJPictueBrowser *)photoBrowser
-{
-    if (_photoBrowser == nil) {
-        _photoBrowser = [[BJPictueBrowser alloc] initWithDelegate:self];
-        [_photoBrowser setCurrentPhotoIndex:0];
-    }
-    
-    return _photoBrowser;
-}
-
 
 #pragma mark - MWPhotoBrowserDelegate
 
@@ -100,13 +64,11 @@
         self.photos = photoArray;
     }
     
-    UIViewController *rootController = [self.keyWindow rootViewController];
     BJPictueBrowser *browser = [[BJPictueBrowser alloc] initWithDelegate:self];
-
+    
     [browser setCurrentPhotoIndex:0];
     
-    [browser presentInViewController:rootController completion:nil];
+    [browser presentInViewController:self completion:nil];
 }
-
 
 @end
