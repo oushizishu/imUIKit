@@ -333,11 +333,6 @@ IMUserInfoChangedDelegate>
     return ret;
 }
 
-- (void)hiddenGetMoreView
-{
-    [self.slimeView removeFromSuperview];
-}
-
 - (void)loadMoreMessages
 {
     self.isLoadMore = YES;
@@ -549,10 +544,6 @@ IMUserInfoChangedDelegate>
             [self addNewMessages:messages isForward:NO];
             [self scrollViewToBottom:NO];
         }
-        if (!hasMore) {
-            [self hiddenGetMoreView];
-        }
-        [self.slimeView endRefresh];
         //检测是否有记录
         [self checkOutRecords];
     }
