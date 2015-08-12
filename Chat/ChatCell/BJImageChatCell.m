@@ -112,6 +112,15 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
         self.chatImageView.frame = rect;
     }
     
+    UIImage *image = [self bubbleImage];
+    UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:image];
+    imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
+    self.chatImageView.layer.mask = imageViewMask.layer;
+    
+    CGRect rect1 = self.bubbleContainerView.frame;
+    rect1.size = rect.size;
+    self.bubbleContainerView.frame = rect1;
+    
 #else
     CGSize size = [self calculateCellHeight];
     @IMTODO("设置默认图片");
