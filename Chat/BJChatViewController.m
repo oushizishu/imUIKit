@@ -586,6 +586,9 @@ IMUserInfoChangedDelegate>
         [message isMySend] && errorCode == eError_suc) {
         [self scrollViewToBottom:YES needDelay:NO];
     }
+    if (errorCode != eError_suc &&  errorMessage.length > 0) {
+        [MBProgressHUD showWindowErrorThenHide:errorMessage];
+    }
 }
 
 - (void)willSendMessage:(IMMessage *)message;
