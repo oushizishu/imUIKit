@@ -423,19 +423,29 @@ IMUserInfoChangedDelegate>
     return NO;
 }
 
-- (void)scrollViewToBottom:(BOOL)animated
+- (void)scrollViewToBottom:(BOOL)animated needDelay:(BOOL)delay
 {
     if (self.tableView.isDecelerating || self.tableView.isDragging || self.tableView.isTracking) {
         return;
     } else {
         WS(weakSelf);
+        if (delay) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSInteger index = weakSelf.messageList.count-1;
                 if (index>0) {
                     [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-
+                    
                 }
             });
+        }
+        else
+        {
+            NSInteger index = weakSelf.messageList.count-1;
+            if (index>0) {
+                [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+                
+            }
+        }
     }
 }
 
@@ -512,7 +522,7 @@ IMUserInfoChangedDelegate>
         if (msg.conversationId == self.conversation.rowid)
         {
             [self addNewMessages:@[msg] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
 }
@@ -521,7 +531,7 @@ IMUserInfoChangedDelegate>
 {
     if (conversation.rowid == self.conversation.rowid) {
         [self addNewMessages:preMessages isForward:NO];
-        [self scrollViewToBottom:NO];
+        [self scrollViewToBottom:NO needDelay:NO];
         _hasPreparedMessages = YES;
     }
 }
@@ -548,7 +558,7 @@ IMUserInfoChangedDelegate>
         else
         {
             [self addNewMessages:messages isForward:NO];
-            [self scrollViewToBottom:NO];
+            [self scrollViewToBottom:NO needDelay:NO];
         }
         //检测是否有记录
         [self checkOutRecords:YES];
@@ -576,7 +586,7 @@ IMUserInfoChangedDelegate>
         message.msg_t == eMessageType_CARD &&
         [self.messageList lastObject] == message &&
         [message isMySend] && errorCode == eError_suc) {
-        [self scrollViewToBottom:YES];
+        [self scrollViewToBottom:YES needDelay:NO];
     }
 }
 
@@ -585,14 +595,14 @@ IMUserInfoChangedDelegate>
     if (message.chat_t == eChatType_Chat) {
         if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
             [self addNewMessages:@[message] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
     else if (message.chat_t == eChatType_GroupChat)
     {
         if (message.receiver == self.chatInfo.getToId) {
             [self addNewMessages:@[message] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
 }
@@ -624,7 +634,7 @@ IMUserInfoChangedDelegate>
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, offset, 0);
     
     if(toHeight > [BJChatInputBarViewController defaultHeight]+10){
-        [self scrollViewToBottom:NO];
+        [self scrollViewToBottom:NO needDelay:NO];
         
     }
 }
@@ -663,7 +673,7 @@ IMUserInfoChangedDelegate>
             [self.tableView endUpdates];
             [[BJAudioShowCalculation sharedInstance] reset];
             
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:NO];
         }
     }
     else if ([eventName isEqualToString:kBJRouterEventAudioBubbleTapEventName])
