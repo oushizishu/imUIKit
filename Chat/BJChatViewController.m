@@ -30,7 +30,6 @@
 #import "StudentSettingsViewController.h"
 #import "BJChatViewController+BrowserHelper.h"
 #import <NSDateFormatter+Category.h>
-#import "BJAudioShowCalculation.h"
 #import <UIView+Basic.h>
 #import <UIColor+Util.h>
 
@@ -172,8 +171,6 @@ IMUserInfoChangedDelegate>
     [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
     //    }
     
-    //重置音频计算单位
-    [[BJAudioShowCalculation sharedInstance] reset];
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputController.view];
@@ -244,7 +241,6 @@ IMUserInfoChangedDelegate>
         NSIndexSet *set = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, mutMessages.count)];
         [self.messageList insertObjects:mutMessages atIndexes:set];
         [self.tableView reloadData];
-        [[BJAudioShowCalculation sharedInstance] reset];
     }
     else
     {
@@ -264,7 +260,6 @@ IMUserInfoChangedDelegate>
         {
             [self.tableView reloadData];
         }
-        [[BJAudioShowCalculation sharedInstance] reset];
     }
     return [mutMessages count];
     
@@ -499,11 +494,9 @@ IMUserInfoChangedDelegate>
         [[BJChatAudioPlayerHelper sharedInstance] startPlayerWithMessage:message callback:^(NSError *error) {
             @IMTODO("提示错误消息");
             [weakSelf.tableView reloadData];
-            [[BJAudioShowCalculation sharedInstance] reset];
         }];
     }
     [self.tableView reloadData];
-    [[BJAudioShowCalculation sharedInstance] reset];
 }
 
 #pragma mark - 键盘相关
@@ -617,7 +610,6 @@ IMUserInfoChangedDelegate>
 {
     if ([self.chatInfo.chatToUser isEqual:user]) {
         [self.tableView reloadData];
-        [[BJAudioShowCalculation sharedInstance] reset];
     }
 }
 
@@ -625,7 +617,6 @@ IMUserInfoChangedDelegate>
 {
     if ([self.chatInfo.chatToGroup isEqual:group]) {
         [self.tableView reloadData];
-        [[BJAudioShowCalculation sharedInstance] reset];
     }
 }
 
@@ -677,7 +668,6 @@ IMUserInfoChangedDelegate>
             [self.tableView beginUpdates];
             [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] toIndexPath:[NSIndexPath indexPathForRow:self.messageList.count-1 inSection:0]];
             [self.tableView endUpdates];
-            [[BJAudioShowCalculation sharedInstance] reset];
             
             [self scrollViewToBottom:YES needDelay:NO];
         }
