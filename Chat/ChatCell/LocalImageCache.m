@@ -41,6 +41,8 @@
         [self createDirectory:fileFloder];
     }
     
+    NSLog(@"main self.fileurl = %@",self.fileUrl);
+    
     UIImage *image = nil;
     
     if ([self ifExistFile:filePath]) {
@@ -58,16 +60,16 @@
     }
     
     //[self performSelectorOnMainThread:@selector(setImageOnMain:) withObject:image waitUntilDone:YES];
-    dispatch_main_async_safe(^{
+    
+    dispatch_main_sync_safe(^{
         self.imageView.image = image;
-        [self.imageView setNeedsDisplay];
     });
+    
 }
 
 -(void)setImageOnMain:(UIImage*)image
 {
     self.imageView.image = image;
-    [self.imageView setNeedsDisplay];
 }
 
 -(NSString*)getDocumnetsDirectory
@@ -156,7 +158,7 @@
 
 -(void)setLocalImage:(NSURL*)url withSize:(CGSize)size withImageView:(UIImageView*)imageView
 {
-    [self.operationQ cancelAllOperations];
+    //[self.operationQ cancelAllOperations];
     LoadLocalImageOperation *operation = [[LoadLocalImageOperation alloc] init];
     operation.fileUrl = url;
     operation.size = size;
