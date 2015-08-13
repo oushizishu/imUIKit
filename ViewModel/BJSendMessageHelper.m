@@ -13,6 +13,7 @@
 #import <IMEmojiMessageBody.h>
 #import "BJChatInfo.h"
 #import "CardSimpleItem.h"
+#import "BJChatFileCacheManager.h"
 @implementation BJSendMessageHelper
 
 + (instancetype)sharedInstance
@@ -51,8 +52,10 @@
 
 + (IMMessage *)sendAudioMessage:(NSString *)filePath duration:(NSInteger)duration chatInfo:(BJChatInfo *)chatInfo;
 {
+    //弄成相对路径，每次build发现绝对路径有变化
+    NSString *relativePath = [BJChatFileCacheManager audioCacheRelativePathWithName:[filePath lastPathComponent]];
     IMAudioMessageBody *messageBody = [[IMAudioMessageBody alloc] init];
-    messageBody.file = filePath;
+    messageBody.file = relativePath;
     messageBody.length = duration;
     
     IMMessage *message = [[IMMessage alloc] init];
@@ -68,8 +71,10 @@
 
 + (IMMessage *)sendImageMessage:(NSString *)filePath imageSize:(CGSize)size chatInfo:(BJChatInfo *)chatInfo;
 {
+    //弄成相对路径，每次build发现绝对路径有变化
+    NSString *relativePath = [BJChatFileCacheManager audioCacheRelativePathWithName:[filePath lastPathComponent]];
     IMImgMessageBody *messageBody = [[IMImgMessageBody alloc] init];
-    messageBody.file = filePath;
+    messageBody.file = relativePath;
     messageBody.width = size.width;
     messageBody.height = size.height;
     

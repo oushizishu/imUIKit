@@ -414,6 +414,9 @@ IMUserInfoChangedDelegate>
  */
 - (BOOL)analyzeScrollViewShouldToBottom
 {
+    if (self.tableView.isDecelerating || self.tableView.isDragging || self.tableView.isTracking) {
+        return NO;
+    }
     CGFloat leftContentHeight = self.tableView.contentSize.height - self.tableView.contentOffset.y;
     CGFloat viewHeight = self.tableView.frame.size.height - self.tableView.contentInset.bottom;
     if (leftContentHeight <  viewHeight*1.6)
@@ -425,28 +428,25 @@ IMUserInfoChangedDelegate>
 
 - (void)scrollViewToBottom:(BOOL)animated needDelay:(BOOL)delay
 {
-    if (self.tableView.isDecelerating || self.tableView.isDragging || self.tableView.isTracking) {
-        return;
-    } else {
-        WS(weakSelf);
-        if (delay) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                NSInteger index = weakSelf.messageList.count-1;
-                if (index>0) {
-                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-                    
-                }
-            });
-        }
-        else
-        {
+    WS(weakSelf);
+    if (delay) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             NSInteger index = weakSelf.messageList.count-1;
             if (index>0) {
                 [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
                 
             }
+        });
+    }
+    else
+    {
+        NSInteger index = weakSelf.messageList.count-1;
+        if (index>0) {
+            [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+            
         }
     }
+
 }
 
 - (void)reloadWithMessageForDeviveredChange:(IMMessage *)message
@@ -524,7 +524,10 @@ IMUserInfoChangedDelegate>
         if (msg.conversationId == self.conversation.rowid)
         {
             [self addNewMessages:@[msg] isForward:NO];
-            [self scrollViewToBottom:YES needDelay:YES];
+            
+            if ([self analyzeScrollViewShouldToBottom]) {
+                [self scrollViewToBottom:YES needDelay:YES];
+            }
         }
     }
 }
