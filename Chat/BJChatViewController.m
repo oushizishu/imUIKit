@@ -414,14 +414,11 @@ IMUserInfoChangedDelegate>
  */
 - (BOOL)analyzeScrollViewShouldToBottom
 {
-    CGFloat canOffsetY = self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom;
-    if (canOffsetY>0)
-    {
-        if (self.tableView.contentOffset.y > canOffsetY-15) {
-            return YES;
-        }
-        else
-            return NO;
+    CGFloat leftContentHeight = self.tableView.contentSize.height - self.tableView.contentOffset.y;
+    CGFloat viewHeight = self.tableView.frame.size.height - self.tableView.contentInset.bottom;
+    if (leftContentHeight <  viewHeight*1.6)
+    { //消息显示停留在视图半屏一下才自定上移动
+        return YES;
     }
     return NO;
 }
@@ -431,11 +428,7 @@ IMUserInfoChangedDelegate>
     if (self.tableView.isDecelerating || self.tableView.isDragging || self.tableView.isTracking) {
         return;
     } else {
-        CGFloat leftContentHeight = self.tableView.contentSize.height - self.tableView.contentOffset.y;
-        CGFloat viewHeight = self.tableView.frame.size.height - self.tableView.contentInset.bottom;
         WS(weakSelf);
-        if (leftContentHeight <  viewHeight*1.6)
-        { //消息显示停留在视图半屏一下才自定上移动
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSInteger index = weakSelf.messageList.count-1;
                 if (index>0) {
@@ -443,7 +436,6 @@ IMUserInfoChangedDelegate>
 
                 }
             });
-        }
     }
 }
 
