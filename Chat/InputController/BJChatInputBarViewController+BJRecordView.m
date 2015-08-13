@@ -136,7 +136,7 @@ static char BJRecordView_Recorder;
 {
     if (objc_getAssociatedObject(self, &BJRecordView_Recorder) == nil) {
         BJAudioBufferRecorder *recorder = [[BJAudioBufferRecorder alloc] init];
-        recorder.duration = 0;
+        recorder.duration = 60;
         [self setRecorder:recorder];
     }
     return objc_getAssociatedObject(self, &BJRecordView_Recorder);
