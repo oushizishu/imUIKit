@@ -10,6 +10,7 @@
 #import <CommonCrypto/CommonHMAC.h>
 #include "sys/stat.h"
 #import "SDWebImageCompat.h"
+#import "BJChatFileCacheManager.h"
 
 @implementation LoadLocalImageOperation
 
@@ -34,14 +35,7 @@
     
     NSString *fileKey = [NSString stringWithFormat:@"%@/%f/%f",muStr,self.size.width,self.size.height];
     
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@/%@.jpg",[self getDocumnetsDirectory],LocalImageCacheFloder,[self getStringWithStringByMD5:fileKey]];
-    NSString *fileFloder = [NSString stringWithFormat:@"%@/%@",[self getDocumnetsDirectory],LocalImageCacheFloder];
-    
-    if (![self ifExistDircory:fileFloder]) {
-        [self createDirectory:fileFloder];
-    }
-    
-    NSLog(@"main self.fileurl = %@",self.fileUrl);
+    NSString *filePath = [BJChatFileCacheManager imageCachePathWithName:[NSString stringWithFormat:@"%@.jpg",[self getStringWithStringByMD5:fileKey]]];
     
     UIImage *image = nil;
     
@@ -50,10 +44,6 @@
     }else
     {
         image = [self getNewImage:[self.fileUrl relativePath] withSize:self.size];
-        
-        if (![self ifExistDircory:fileFloder]) {
-            [self createDirectory:fileFloder];
-        }
         
         NSData *date = UIImageJPEGRepresentation(image, 1.0f);
         [date writeToFile:filePath atomically:YES];
@@ -126,11 +116,11 @@
 {
     UIImage *image = [UIImage imageWithContentsOfFile:filePath];
     
-    UIGraphicsBeginImageContext(CGSizeMake(size.width*3, size.height*3));
+    UIGraphicsBeginImageContext(CGSizeMake(size.width*2, size.height*2));
     
     // Tell the old image to draw in this new context, with the desired
     // new size
-    [image drawInRect:CGRectMake(0,0,size.width*3,size.height*3)];
+    [image drawInRect:CGRectMake(0,0,size.width*2,size.height*2)];
     
     // Get the new image from the context
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -158,7 +148,12 @@
 
 -(void)setLocalImage:(NSURL*)url withSize:(CGSize)size withImageView:(UIImageView*)imageView
 {
-    //[self.operationQ cancelAllOperations];
+    for(LoadLocalImageOperation *op in [self.operationQ operations]) {
+        if (op.imageView == imageView) {
+            [op cancel];
+        }
+    }
+    
     LoadLocalImageOperation *operation = [[LoadLocalImageOperation alloc] init];
     operation.fileUrl = url;
     operation.size = size;
