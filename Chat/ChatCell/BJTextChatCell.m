@@ -10,17 +10,19 @@
 #import "BJChatCellFactory.h"
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
-#import "BJAttributedHighlightLabel.h"
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <SETextView.h>
+#import "XHMessageBubbleHelper.h"
 
 const float BUBBLE_PROGRESSVIEW_HEIGHT = 10; // progressView 高度
 
 const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 
-@interface BJTextChatCell ()<AMAttributedHighlightLabelDelegate>
-@property (nonatomic, strong) BJAttributedHighlightLabel *contentLabel;
+@interface BJTextChatCell ()<SETextViewDelegate>
+@property (nonatomic, strong) SETextView *displayTextView;
+
 @end
 
 @implementation BJTextChatCell
@@ -45,7 +47,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     }
     
     frame.origin.y = BJ_TEXTCHATCELL_PADDING;
-    [self.contentLabel setFrame:frame];
+    [self.displayTextView setFrame:frame];
 }
 
 - (void)bubbleViewLongPressed:(id)sender
@@ -87,7 +89,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJTextChatCell class])];
     if (self) {
-        
+        [self.bubbleContainerView removeGestureRecognizer:self.tapGesture];
     }
     return self;
 }
@@ -97,13 +99,18 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     [super setCellInfo:info indexPath:indexPath];
     
     self.backImageView.image = [self bubbleImage];
-  
-    [self.contentLabel setString:self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本"];
-    CGRect contentRect = self.contentLabel.frame;
-    contentRect.size.width = TEXTLABEL_MAX_WIDTH;
-    self.contentLabel.frame = contentRect;
-    [self.contentLabel sizeToFit];
-    contentRect = self.contentLabel.frame;
+    
+    NSString *message = self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本";
+    
+    self.displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message];
+    CGRect contentRect = self.displayTextView.frame;
+//    contentRect.size.width = TEXTLABEL_MAX_WIDTH;
+//    self.displayTextView.frame = contentRect;
+    CGSize size = [self neededSizeForText:message];
+    self.displayTextView.frame = CGRectMake(0, 0, size.width, size.height);
+    [self.displayTextView sizeToFit];
+    contentRect = self.displayTextView.frame;
+    
     contentRect.size.width = contentRect.size.width + BJ_TEXTCHATCELL_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH;
     contentRect.size.height = contentRect.size.height + BJ_TEXTCHATCELL_PADDING*2;
     self.bubbleContainerView.frame = contentRect;
@@ -111,30 +118,70 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     [self layoutIfNeeded];
 }
 
-#pragma mark - 
-- (void)selectedLink:(NSString *)string;
+// 获取文本的实际大小
+- (CGFloat)neededWidthForText:(NSString *)text {
+    CGSize stringSize;
+    NSRange range = [text rangeOfString:@"\n" options:0];
+    if (range.length > 0) {
+        NSArray *array = [text componentsSeparatedByString:@"\n"];
+        stringSize = CGSizeMake(0, 0);
+        CGSize temp;
+        for (int i = 0; i < array.count; i++) {
+            temp = [[array objectAtIndex:i] sizeWithFont:self.displayTextView.font constrainedToSize:CGSizeMake(MAXFLOAT, 20)];
+            if (temp.width > stringSize.width) {
+                stringSize = temp;
+            }
+        }
+    } else {
+        stringSize = [text sizeWithFont:self.displayTextView.font
+                      constrainedToSize:CGSizeMake(MAXFLOAT, 20)];
+    }
+    
+    return roundf(stringSize.width);
+}
+
+// 计算文本实际的大小
+- (CGSize)neededSizeForText:(NSString *)text {
+    
+    CGFloat dyWidth = [self neededWidthForText:text];
+    
+    CGSize textSize = [SETextView frameRectWithAttributtedString:[[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:text]
+                                                  constraintSize:CGSizeMake(TEXTLABEL_MAX_WIDTH, MAXFLOAT)
+                                                     lineSpacing:self.displayTextView.lineSpacing
+                                                            font:self.displayTextView.font].size;
+    return CGSizeMake((dyWidth > textSize.width ? textSize.width : dyWidth), textSize.height);
+}
+
+#pragma mark - SETextViewDelegate
+- (BOOL)textView:(SETextView *)textView clickedOnLink:(SELinkText *)link atIndex:(NSUInteger)charIndex
 {
-    [super bjim_routerEventWithName:kBJRouterEventLinkName userInfo:@{kBJRouterEventUserInfoObject:string}];
+    [super bjim_routerEventWithName:kBJRouterEventLinkName userInfo:@{kBJRouterEventUserInfoObject:link.text}];
+    return YES;
 }
 
 #pragma mark - set get
-
-- (UILabel *)contentLabel
+- (SETextView *)displayTextView
 {
-    if (_contentLabel == nil) {
-        _contentLabel = [[BJAttributedHighlightLabel alloc] initWithFrame:CGRectZero];
-        _contentLabel.linkTextColor = [UIColor blueColor];
-        _contentLabel.selectedLinkTextColor = [UIColor grayColor];
-        _contentLabel.delegate = self;
-        _contentLabel.numberOfLines = 0;
-        _contentLabel.lineBreakMode = NSLineBreakByCharWrapping;
-        _contentLabel.font = [UIFont systemFontOfSize:BJ_TEXTCHARCELL_FONTSIZE];
-        _contentLabel.textColor = [UIColor colorWithHexString:BJ_TEXTCHATCELL_FONTCOLOR];
-        _contentLabel.userInteractionEnabled = YES;
-        _contentLabel.backgroundColor = [UIColor clearColor];
-        [self.bubbleContainerView addSubview:_contentLabel];
+    // 2、初始化显示文本消息的TextView
+    if (!_displayTextView) {
+        SETextView *displayTextView = [[SETextView alloc] initWithFrame:CGRectZero];
+        displayTextView.backgroundColor = [UIColor clearColor];
+        displayTextView.selectable = NO;
+        displayTextView.lineSpacing = 3.0;
+        displayTextView.lineBreakMode = NSLineBreakByCharWrapping;
+        displayTextView.linkHighlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        displayTextView.font = [UIFont systemFontOfSize:BJ_TEXTCHARCELL_FONTSIZE];
+        displayTextView.showsEditingMenuAutomatically = NO;
+        displayTextView.highlighted = YES;
+        displayTextView.delegate = self;
+        displayTextView.editable = NO;
+        _displayTextView = displayTextView;
+        [self.bubbleContainerView addSubview:displayTextView];
+        
+        [XHMessageBubbleHelper sharedMessageBubbleHelper].matchColor = [UIColor colorWithRed:0.185 green:0.583 blue:1.000 alpha:1.000];
+        [XHMessageBubbleHelper sharedMessageBubbleHelper].normalColor = [UIColor colorWithHexString:BJ_TEXTCHATCELL_FONTCOLOR];
     }
-    return _contentLabel;
+    return _displayTextView;
 }
 
 @end

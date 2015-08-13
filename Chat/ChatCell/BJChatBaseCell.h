@@ -30,6 +30,8 @@
 @property (nonatomic, strong) UIView *activityView;
 @property (nonatomic, strong) UIButton *retryButton;
 
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+
 
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath NS_REQUIRES_SUPER;
 - (void)headViewPressed:(id)sender;
