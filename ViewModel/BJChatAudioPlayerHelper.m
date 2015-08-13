@@ -120,6 +120,7 @@
         }
     } failure:^(NSError *error, RequestParams *params) {
         if ([weakSelf.message isEqual:message]) {
+            [weakSelf.downloadAudioDic removeObjectForKey:[self downKeyStrWithMessage:message]];
             if (weakSelf.callback) {
                 weakSelf.callback(error);
             }
