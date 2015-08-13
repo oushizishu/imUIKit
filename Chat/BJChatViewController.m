@@ -430,8 +430,8 @@ IMUserInfoChangedDelegate>
         CGFloat leftContentHeight = self.tableView.contentSize.height - self.tableView.contentOffset.y;
         CGFloat viewHeight = self.tableView.frame.size.height - self.tableView.contentInset.bottom;
         WS(weakSelf);
-        if (leftContentHeight <  viewHeight*1.6)
-        { //消息显示停留在视图半屏一下才自定上移动
+//        if (leftContentHeight <  viewHeight*1.6)
+//        { //消息显示停留在视图半屏一下才自定上移动
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 NSInteger index = weakSelf.messageList.count-1;
                 if (index>0) {
@@ -439,7 +439,7 @@ IMUserInfoChangedDelegate>
 
                 }
             });
-        }
+//        }
     }
 }
 
