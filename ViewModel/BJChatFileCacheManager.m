@@ -65,6 +65,26 @@
 
 }
 
+#pragma mark - 相对路径
+/**
+ *  相对于library 的路径 例如 .../library/caches/chat/audio/1.mp3 返回caches/chat/audio/1.mp3
+ *
+ *  @param imagName 文件名称
+ *
+ *  @return
+ */
++ (NSString *)imageCacheRelativePathWithName:(NSString *)imagName;
+{
+    NSString *cacheDir = [BJCachesDir lastPathComponent];
+    return [NSString stringWithFormat:@"%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Images,imagName];
+}
+
++ (NSString *)audioCacheRelativePathWithName:(NSString *)audioName;
+{
+    NSString *cacheDir = [BJCachesDir lastPathComponent];
+    return [NSString stringWithFormat:@"%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Audio,audioName];
+}
+
 #pragma mark - 生成名称
 + (NSString *)generateJpgImageName;
 {
