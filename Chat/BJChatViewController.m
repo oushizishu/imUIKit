@@ -445,19 +445,21 @@ IMUserInfoChangedDelegate>
     }
 }
 
-- (void)reloadWithMessage:(IMMessage *)message
+- (void)reloadWithMessageForDeviveredChange:(IMMessage *)message
 {
-    if (message.msg_t == eMessageType_CARD) {
-        [[BJAudioShowCalculation sharedInstance] reset];
-    }
     NSInteger index = [self.messageList indexOfObject:message];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if ([cell conformsToProtocol:@protocol(BJChatViewCellProtocol)]) {
-        id<BJChatViewCellProtocol>chatCell = (id<BJChatViewCellProtocol>)cell;
-        [chatCell setCellInfo:message indexPath:indexPath];
+    if (message.msg_t == eMessageType_CARD && message.deliveryStatus == eMessageStatus_Send_Succ) {
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     }
-//    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    else
+    {
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        if ([cell conformsToProtocol:@protocol(BJChatViewCellProtocol)]) {
+            id<BJChatViewCellProtocol>chatCell = (id<BJChatViewCellProtocol>)cell;
+            [chatCell setCellInfo:message indexPath:indexPath];
+        }
+    }
 }
 
 
@@ -559,14 +561,14 @@ IMUserInfoChangedDelegate>
 
 - (void)willDeliveryMessage:(IMMessage *)message;
 {
-    [self reloadWithMessage:message];
+    [self reloadWithMessageForDeviveredChange:message];
 }
 
 - (void)didDeliveredMessage:(IMMessage *)message
                   errorCode:(NSInteger)errorCode
                       error:(NSString *)errorMessage;
 {
-    [self reloadWithMessage:message];
+    [self reloadWithMessageForDeviveredChange:message];
     //如果最后一张是自己发送的卡片，则消息类型会更新，高度会变化
     if ([self analyzeScrollViewShouldToBottom] &&
         message.msg_t == eMessageType_CARD &&
