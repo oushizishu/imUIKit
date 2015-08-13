@@ -228,7 +228,7 @@ IMUserInfoChangedDelegate>
     }
     
     for (IMMessage *oneMessage in messages) {
-        [oneMessage markRead];
+//        [oneMessage markRead];
         if (lastMessage) {
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
             if (minute > 0) {
@@ -254,14 +254,15 @@ IMUserInfoChangedDelegate>
         for (int i=0; i<mutMessages.count; i++) {
             [indexPaths addObject:[NSIndexPath indexPathForRow:i+curIndex inSection:0]];
         }
-        if (curIndex>0) {
+        if (curIndex>0)//已经有消息了，通过插入方式
+        {
             [self.tableView beginUpdates];
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
             [self.tableView endUpdates];
         }
-        else
+        else //列表没有消息，直接reload就行
         {
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadData];
         }
         [[BJAudioShowCalculation sharedInstance] reset];
     }
@@ -452,7 +453,13 @@ IMUserInfoChangedDelegate>
         [[BJAudioShowCalculation sharedInstance] reset];
     }
     NSInteger index = [self.messageList indexOfObject:message];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if ([cell conformsToProtocol:@protocol(BJChatViewCellProtocol)]) {
+        id<BJChatViewCellProtocol>chatCell = (id<BJChatViewCellProtocol>)cell;
+        [chatCell setCellInfo:message indexPath:indexPath];
+    }
+//    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 
