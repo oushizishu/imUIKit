@@ -139,7 +139,7 @@
     }
     else if (self.chat_t == eChatType_GroupChat)
     {
-        return @"";
+        return [self.chatToGroup getContactName];
     }
     else
     {
