@@ -572,6 +572,12 @@ IMUserInfoChangedDelegate>
                   errorCode:(NSInteger)errorCode
                       error:(NSString *)errorMessage;
 {
+    if (errorCode == eError_suc) {
+    }
+    else if (errorMessage.length>0)
+    {
+        [MBProgressHUD showErrorThenHide:errorMessage toView:self.view onHide:nil];
+    }
     [self reloadWithMessage:message];
     //如果最后一张是自己发送的卡片，则消息类型会更新，高度会变化
     if ([self analyzeScrollViewShouldToBottom] &&
