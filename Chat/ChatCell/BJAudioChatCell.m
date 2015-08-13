@@ -12,7 +12,6 @@
 #import <PureLayout/PureLayout.h>
 #import <BJAudioPlayer.h>
 #import "UIResponder+BJIMChatRouter.h"
-#import "BJAudioShowCalculation.h"
 
 #define BJ_ANIMATION_IMAGEVIEW_HEIGHT 17.5 // 小喇叭图片尺寸
 #define BJ_ANIMATION_IMAGEVIEW_WIDTH 11
@@ -70,10 +69,13 @@
         self.animationImageView.frame = frame;
         
         frame = self.timeLabel.frame;
-        frame.origin.x = self.animationImageView.frame.origin.x - BJ_BJ_ANIMATION_TIME_LABEL_WIDHT - BJ_ANIMATION_TIME_LABEL_WIDHT;
-        frame.origin.y = self.bubbleContainerView.frame.size.height / 2 - frame.size.height / 2;
+        frame.origin.x = self.bubbleContainerView.frame.origin.x - BJ_ANIMATION_TIME_LABEL_WIDHT;
+        frame.origin.y = self.bubbleContainerView.frame.size.height / 2 - frame.size.height / 2+BJ_CELLPADDING;
         self.timeLabel.frame = frame;
         
+        frame = self.activityView.frame;
+        frame.origin.x = self.timeLabel.frame.origin.x - frame.size.width;
+        self.activityView.frame = frame;
     }
     else {
         self.animationImageView.image = [UIImage imageNamed:BJ_RECEIVER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT];
@@ -83,13 +85,15 @@
         self.animationImageView.frame = frame;
         
         frame = self.timeLabel.frame;
-        frame.origin.x = BJ_BJ_ANIMATION_TIME_LABEL_WIDHT + BJ_BUBBLE_ARROW_WIDTH + self.animationImageView.frame.size.width + self.animationImageView.frame.origin.x;
+        frame.origin.x = self.bubbleContainerView.frame.size.width + self.bubbleContainerView.frame.origin.x;
         frame.origin.y = self.animationImageView.center.y - frame.size.height / 2;
         self.timeLabel.frame = frame;
+        
         frame.origin.x = self.bubbleContainerView.frame.size.width - self.isReadView.frame.size.width / 2;
         frame.origin.y = - self.isReadView.frame.size.height / 2;
         frame.size = self.isReadView.frame.size;
         self.isReadView.frame = frame;
+        
     }
     
 }
@@ -155,7 +159,7 @@
     }
     
     CGRect rect = self.bubbleContainerView.frame;
-    rect.size.width = [[BJAudioShowCalculation sharedInstance] calculationShowWidth:self.message.time];
+    rect.size.width  = 30+((AUDIOSHOW_MAX_WIDTH-30)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
     self.bubbleContainerView.frame = rect;
     
     if (self.message.isPlaying)
@@ -188,7 +192,7 @@
         _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeLabel.textColor = [UIColor grayColor];
         _timeLabel.backgroundColor = [UIColor clearColor];
-        [self.bubbleContainerView addSubview:_timeLabel];
+        [self addSubview:_timeLabel];
     }
     return _timeLabel;
 }

@@ -8,6 +8,9 @@
 
 #import "BJChatBaseCell.h"
 
+#define AUDIOLENGTH_MAX_WIDTH 60
+#define AUDIOSHOW_MAX_WIDTH 200.0f
+
 @interface BJAudioChatCell : BJChatBaseCell
 -(void)startAudioAnimation;
 -(void)stopAudioAnimation;
