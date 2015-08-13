@@ -549,8 +549,7 @@ IMUserInfoChangedDelegate>
             [self.messageList removeAllObjects];
             _hasPreparedMessages = NO;
         }
-        [self.chatHeadView setCanLoadMore:hasMore];
-        [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
+
         if (self.isLoadMore) {
             NSUInteger lastCount = self.messageList.count;
             [self addNewMessages:messages isForward:YES];
@@ -565,6 +564,8 @@ IMUserInfoChangedDelegate>
             [self addNewMessages:messages isForward:NO];
             [self scrollViewToBottom:NO needDelay:NO];
         }
+        [self.chatHeadView setCanLoadMore:hasMore];
+        [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
         //检测是否有记录
         [self checkOutRecords:YES];
     }

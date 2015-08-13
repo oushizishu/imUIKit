@@ -13,6 +13,7 @@
 #import "BJChatFileCacheManager.h"
 #import <BJNetworkUtil.h>
 #import <BJCommonProxy.h>
+#import <NSError+BJIM.h>
 
 @interface BJChatAudioPlayerHelper ()
 @property (strong, nonatomic) BJAudioPlayer *player;
@@ -59,7 +60,7 @@
     if ([message.audioURL isFileURL]) {
         [self.player startPlayWithUrl:message.audioURL];
     }
-    else
+    else if(message.audioURL)
     {
         NSString *localPath = [self localFilePathWithMessage:message];
         if ([BJFileManagerTool isFileExisted:nil path:localPath]) {
@@ -69,6 +70,12 @@
         {
             [self downLoadAudioWithMessage:message];
             
+        }
+    }
+    else
+    {
+        if (callback) {
+            callback([NSError bjim_errorWithReason:@"文件不存在"]);
         }
     }
 }
