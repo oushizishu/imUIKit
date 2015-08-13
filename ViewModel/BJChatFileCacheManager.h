@@ -16,6 +16,16 @@
 + (NSString *)imageCachePathWithName:(NSString *)imageName;
 + (NSString *)audioCachePathWithName:(NSString *)audioName;
 
+/**
+ *  相对于library 的路径 例如 .../library/caches/chat/audio/1.mp3 返回caches/chat/audio/1.mp3
+ *
+ *  @param imagName 文件名称
+ *
+ *  @return
+ */
++ (NSString *)imageCacheRelativePathWithName:(NSString *)imagName;
++ (NSString *)audioCacheRelativePathWithName:(NSString *)audioName;
+
 + (NSString *)generateJpgImageName;
 + (NSString *)generateMp3AudioName;
 @end

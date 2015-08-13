@@ -178,8 +178,9 @@
 {
     IMAudioMessageBody *audioMessage = [self audioMessageBody];
     if (audioMessage.file.length>0) {
-        if ([BJFileManagerTool isFileExisted:nil path:audioMessage.file]) {
-            return [NSURL fileURLWithPath:audioMessage.file];
+        NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[audioMessage.file lastPathComponent]];
+        if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
+            return [NSURL fileURLWithPath:fileStr];
         }
     }
     return [NSURL URLWithString:[self audioMessageBody].url];
