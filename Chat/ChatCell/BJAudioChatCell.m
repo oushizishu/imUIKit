@@ -86,7 +86,7 @@
         frame.origin.x = BJ_BJ_ANIMATION_TIME_LABEL_WIDHT + BJ_BUBBLE_ARROW_WIDTH + self.animationImageView.frame.size.width + self.animationImageView.frame.origin.x;
         frame.origin.y = self.animationImageView.center.y - frame.size.height / 2;
         self.timeLabel.frame = frame;
-        frame.origin.x += frame.size.width - self.isReadView.frame.size.width / 2;
+        frame.origin.x = self.bubbleContainerView.frame.size.width - self.isReadView.frame.size.width / 2;
         frame.origin.y = - self.isReadView.frame.size.height / 2;
         frame.size = self.isReadView.frame.size;
         self.isReadView.frame = frame;

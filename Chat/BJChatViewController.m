@@ -225,7 +225,7 @@ IMUserInfoChangedDelegate>
     }
     
     for (IMMessage *oneMessage in messages) {
-        [oneMessage markRead];
+//        [oneMessage markRead];
         if (lastMessage) {
             long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
             if (minute > 0) {
@@ -245,8 +245,22 @@ IMUserInfoChangedDelegate>
     }
     else
     {
+        NSInteger curIndex = self.messageList.count;
         [self.messageList addObjectsFromArray:mutMessages];
-        [self.tableView reloadData];
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:0];
+        for (int i=0; i<mutMessages.count; i++) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i+curIndex inSection:0]];
+        }
+        if (curIndex>0)//已经有消息了，通过插入方式
+        {
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView endUpdates];
+        }
+        else //列表没有消息，直接reload就行
+        {
+            [self.tableView reloadData];
+        }
         [[BJAudioShowCalculation sharedInstance] reset];
     }
     return [mutMessages count];
@@ -342,7 +356,7 @@ IMUserInfoChangedDelegate>
         message = [self.messageList objectAtIndex:i];
         i++;
     }
-    msgId = message.msgId;
+        msgId = message.msgId;
     if (msgId.length>0) {
         self.isLoadMore = YES;
         [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
@@ -396,49 +410,54 @@ IMUserInfoChangedDelegate>
  */
 - (BOOL)analyzeScrollViewShouldToBottom
 {
-    CGFloat canOffsetY = self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top;
-    if (canOffsetY>0)
-    {
-        if (self.tableView.contentOffset.y > canOffsetY-15) {
-            return YES;
-        }
-        else
-            return NO;
+    CGFloat leftContentHeight = self.tableView.contentSize.height - self.tableView.contentOffset.y;
+    CGFloat viewHeight = self.tableView.frame.size.height - self.tableView.contentInset.bottom;
+    if (leftContentHeight <  viewHeight*1.6)
+    { //消息显示停留在视图半屏一下才自定上移动
+        return YES;
     }
     return NO;
 }
 
-- (void)scrollViewToBottom:(BOOL)animated
+- (void)scrollViewToBottom:(BOOL)animated needDelay:(BOOL)delay
 {
-    CGFloat canOffsetY = self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top;
-    
-    if (canOffsetY>0)
-    {
-        CGPoint offset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height + self.tableView.contentInset.bottom);
-        [self.tableView setContentOffset:offset animated:animated];
-        
+    if (self.tableView.isDecelerating || self.tableView.isDragging || self.tableView.isTracking) {
+        return;
+    } else {
+        WS(weakSelf);
+        if (delay) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                NSInteger index = weakSelf.messageList.count-1;
+                if (index>0) {
+                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+                    
+                }
+            });
+        }
+        else
+        {
+            NSInteger index = weakSelf.messageList.count-1;
+            if (index>0) {
+                [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+                
+            }
+        }
     }
 }
 
-- (void)reloadWithMessage:(IMMessage *)message
+- (void)reloadWithMessageForDeviveredChange:(IMMessage *)message
 {
-    if([self.messageList lastObject] != message)
+    NSInteger index = [self.messageList indexOfObject:message];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    if (message.msg_t == eMessageType_CARD && message.deliveryStatus == eMessageStatus_Send_Succ) {
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    else
     {
-        [self.messageList removeObject:message];
-        [self.messageList addObject:message];
-        [self.tableView reloadData];
-        [[BJAudioShowCalculation sharedInstance] reset];
-        
-        [self scrollViewToBottom:YES];
-    }else
-    {
-        if (message.msg_t == eMessageType_CARD) {
-            [self.tableView reloadData];
-            [[BJAudioShowCalculation sharedInstance] reset];
-        }else
-        {
-            NSInteger index = [self.messageList indexOfObject:message];
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        if ([cell conformsToProtocol:@protocol(BJChatViewCellProtocol)]) {
+            id<BJChatViewCellProtocol>chatCell = (id<BJChatViewCellProtocol>)cell;
+            [chatCell setCellInfo:message indexPath:indexPath];
         }
     }
 }
@@ -497,7 +516,7 @@ IMUserInfoChangedDelegate>
         if (msg.conversationId == self.conversation.rowid)
         {
             [self addNewMessages:@[msg] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
 }
@@ -506,7 +525,7 @@ IMUserInfoChangedDelegate>
 {
     if (conversation.rowid == self.conversation.rowid) {
         [self addNewMessages:preMessages isForward:NO];
-        [self scrollViewToBottom:NO];
+        [self scrollViewToBottom:NO needDelay:NO];
         _hasPreparedMessages = YES;
     }
 }
@@ -533,24 +552,30 @@ IMUserInfoChangedDelegate>
         else
         {
             [self addNewMessages:messages isForward:NO];
-            [self scrollViewToBottom:NO];
+            [self scrollViewToBottom:NO needDelay:NO];
         }
         //检测是否有记录
-        [self checkOutRecords];
+        [self checkOutRecords:YES];
     }
-    [self checkOutRecords];
 }
 
 - (void)willDeliveryMessage:(IMMessage *)message;
 {
-    [self reloadWithMessage:message];
+    [self reloadWithMessageForDeviveredChange:message];
 }
 
 - (void)didDeliveredMessage:(IMMessage *)message
                   errorCode:(NSInteger)errorCode
                       error:(NSString *)errorMessage;
 {
-    [self reloadWithMessage:message];
+    [self reloadWithMessageForDeviveredChange:message];
+    //如果最后一张是自己发送的卡片，则消息类型会更新，高度会变化
+    if ([self analyzeScrollViewShouldToBottom] &&
+        message.msg_t == eMessageType_CARD &&
+        [self.messageList lastObject] == message &&
+        [message isMySend] && errorCode == eError_suc) {
+        [self scrollViewToBottom:YES needDelay:NO];
+    }
 }
 
 - (void)willSendMessage:(IMMessage *)message;
@@ -558,14 +583,14 @@ IMUserInfoChangedDelegate>
     if (message.chat_t == eChatType_Chat) {
         if (message.receiver == self.chatInfo.getToId && message.receiverRole == self.chatInfo.getToRole) {
             [self addNewMessages:@[message] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
     else if (message.chat_t == eChatType_GroupChat)
     {
         if (message.receiver == self.chatInfo.getToId) {
             [self addNewMessages:@[message] isForward:NO];
-            [self scrollViewToBottom:YES];
+            [self scrollViewToBottom:YES needDelay:YES];
         }
     }
 }
@@ -597,7 +622,7 @@ IMUserInfoChangedDelegate>
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, offset, 0);
     
     if(toHeight > [BJChatInputBarViewController defaultHeight]+10){
-        [self scrollViewToBottom:NO];
+        [self scrollViewToBottom:NO needDelay:NO];
         
     }
 }
@@ -614,6 +639,18 @@ IMUserInfoChangedDelegate>
     else if ([eventName isEqualToString:kBJResendButtonTapEventName])
     {
         [[BJIMManager shareInstance] retryMessage:message];
+        if([self.messageList lastObject] != message)
+        {
+            NSInteger index = [self.messageList indexOfObject:message];
+            [self.messageList removeObjectAtIndex:index];
+            [self.messageList addObject:message];
+            [self.tableView beginUpdates];
+            [self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] toIndexPath:[NSIndexPath indexPathForRow:self.messageList.count-1 inSection:0]];
+            [self.tableView endUpdates];
+            [[BJAudioShowCalculation sharedInstance] reset];
+            
+            [self scrollViewToBottom:YES needDelay:NO];
+        }
     }
     else if ([eventName isEqualToString:kBJRouterEventAudioBubbleTapEventName])
     {
@@ -660,6 +697,7 @@ IMUserInfoChangedDelegate>
 #pragma mark - UITableView delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    [self checkOutRecords:NO];
     return self.messageList.count;
 }
 
@@ -707,7 +745,7 @@ IMUserInfoChangedDelegate>
         //    else
         //    {
         Height = [[BJChatCellFactory sharedInstance] cellHeightWithMessage:message indexPath:indexPath];
-//        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
+        //        [self.messageHeightDic setObject:@(Height) forKeyedSubscript:message.msgId];
         //    }
         return Height;
     }
@@ -808,10 +846,10 @@ IMUserInfoChangedDelegate>
  *
  *  @brief 检测是否有消息
  */
-- (void)checkOutRecords
+- (void)checkOutRecords:(BOOL)show
 {
     if ([self.messageList count]==0) {
-        if (!self.nonRecordLable.superview) {
+        if (!self.nonRecordLable.superview && show) {
             [self.tableView addSubview:self.nonRecordLable];
         }
     } else {
@@ -819,3 +857,4 @@ IMUserInfoChangedDelegate>
     }
 }
 @end
+

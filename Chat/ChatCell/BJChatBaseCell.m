@@ -204,6 +204,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     NSAssert(0, @"请子类实现此方法");
     return nil;
 }
+
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     self.message = info;
@@ -219,6 +220,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
         self.nameLabel.attributedText = nil;
         self.nameLabel.hidden = YES;
     }
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 + (CGFloat)cellHeightWithInfo:(id)dic indexPath:(NSIndexPath *)indexPath;
