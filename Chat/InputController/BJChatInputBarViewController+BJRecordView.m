@@ -44,7 +44,8 @@ static char BJRecordView_Recorder;
 {
     __weak typeof(self) weakSelf = self;
     //如果还没有获取授权，则按住效果会被打断
-    if ([[JLMicrophonePermission sharedInstance] authorizationStatus] == JLPermissionAuthorized) {
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0") || [[JLMicrophonePermission sharedInstance] authorizationStatus] == JLPermissionAuthorized)
+    {
         weakSelf.recordView.center = weakSelf.parentViewController.view.center;
         [weakSelf.parentViewController.view addSubview:weakSelf.recordView];
         [weakSelf.parentViewController.view bringSubviewToFront:weakSelf.recordView];
@@ -58,9 +59,10 @@ static char BJRecordView_Recorder;
         [[JLMicrophonePermission sharedInstance] authorize:^(bool granted, NSError *error) {
             
         }];
-
+        
     }
 }
+
 
 - (void)recordButtonTouchUpOutside
 {
