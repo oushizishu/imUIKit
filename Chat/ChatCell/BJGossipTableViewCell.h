@@ -13,8 +13,18 @@
 #define BJ_GOSSIP_FONTSIZE 11
 #define BJ_GOSSIP_FONTCOLOR @"#9d9e9e"
 #define BJ_GOOSIP_BACKCOLOR @"#dcddde"
-#define BJ_GOSSIP_TEXTMAXWIDTH 180
+#define BJ_GOSSIP_TEXTMAXWIDTH 180.0f
 #define BJ_GOSSIP_MARGIN 10
+#define BJ_GOSSIP_LINESPAC 5
+
+@interface BJGossipLable : UIView
+
+@property(strong,nonatomic)NSString *showMsg;
+@property(strong,nonatomic)NSArray *subStrA;
+
++(CGFloat)getGossipLableHeight:(NSString*)msg withFontHeight:(CGFloat)fontHeight withMaxWidth:(CGFloat)maxWidth;
+
+@end
 
 @interface BJGossipTableViewCell : UITableViewCell<BJChatViewCellProtocol>
 @property (strong, nonatomic)IMMessage *message;
