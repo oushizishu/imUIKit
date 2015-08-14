@@ -28,10 +28,10 @@
 
 + (void)sendMessage:(IMMessage *)message
 {
+    [[BJIMManager shareInstance] sendMessage:message];
     if ([[BJSendMessageHelper sharedInstance].deledate respondsToSelector:@selector(willSendMessage:)]) {
         [[BJSendMessageHelper sharedInstance].deledate willSendMessage:message];
     }
-    [[BJIMManager shareInstance] sendMessage:message];
 }
 
 #pragma mark - 消息发送
