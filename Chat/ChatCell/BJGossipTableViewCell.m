@@ -14,43 +14,6 @@
 const float Gossip_Content_Label_Max_Width = 200;
 const float Gossip_Content_Label_Height = 18;
 
-@implementation BJGossipLable
-
-
-+(CGFloat)getGossipLableHeight:(NSString*)msg withFontHeight:(CGFloat)fontHeight withMaxWidth:(CGFloat)maxWidth
-{
-    NSInteger count = 0;
-    if (msg != nil) {
-        NSMutableString *subStr = [[NSMutableString alloc] init];
-        UIFont *font = [UIFont systemFontOfSize:fontHeight];
-        for (int i=0; i<[msg length]; i++) {
-            CGSize size = [[NSString stringWithFormat:@"%@%@",subStr,[msg substringWithRange:NSMakeRange(i, 1)]] sizeWithFont:font];
-            if (size.width>maxWidth) {
-                if ([subStr length]>0) {
-                    count++;
-                    subStr = [[NSMutableString alloc] init];
-                    i--;
-                }else
-                {
-                    break;
-                }
-            }else
-            {
-                [subStr appendString:[msg substringWithRange:NSMakeRange(i, 1)]];
-            }
-        }
-        
-        if ([subStr length]>0) {
-            count++;
-        }
-    }
-    
-    return count;
-}
-
-
-@end
-
 @interface BJGossipTableViewCell ()
 @property (strong ,nonatomic) UIView *gossipView;
 @property (strong, nonatomic) UILabel *contentLabel;

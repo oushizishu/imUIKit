@@ -17,15 +17,6 @@
 #define BJ_GOSSIP_MARGIN 10
 #define BJ_GOSSIP_LINESPAC 5
 
-@interface BJGossipLable : UIView
-
-@property(strong,nonatomic)NSString *showMsg;
-@property(strong,nonatomic)NSArray *subStrA;
-
-+(CGFloat)getGossipLableHeight:(NSString*)msg withFontHeight:(CGFloat)fontHeight withMaxWidth:(CGFloat)maxWidth;
-
-@end
-
 @interface BJGossipTableViewCell : UITableViewCell<BJChatViewCellProtocol>
 @property (strong, nonatomic)IMMessage *message;
 @property (strong, nonatomic)NSIndexPath *indexPath;
