@@ -145,6 +145,7 @@ const float IntervalTitleWithImage = 5;
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, CardWidth-Interval*2, 40)];
         [_titleLabel setFont:[UIFont systemFontOfSize:16]];
         _titleLabel.numberOfLines = 2;
+        _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
     }
     return _titleLabel;
@@ -154,6 +155,7 @@ const float IntervalTitleWithImage = 5;
 {
     if (!_contentLabel) {
         _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, ContentWidth, CardHeight-55)];
+        _contentLabel.backgroundColor = [UIColor clearColor];;
         [_contentLabel setFont:[UIFont systemFontOfSize:14]];
         _contentLabel.numberOfLines = 4;
         [_contentLabel setTextColor:[UIColor darkGrayColor]];
