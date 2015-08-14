@@ -20,7 +20,7 @@ NSString *const kBJRouterEventChatCellBubbleTapEventName;
 NSString *const kBJRouterEventChatCellBubbleLongTapEventName;
 NSString *const kBJResendButtonTapEventName;
 NSString *const kBJRouterEventLinkName;
-
+NSString *const kBJRouterEventPhoneCall;
 NSString *const kBJRouterEventUserInfoObject;
 
 @interface UIResponder (BJIMChatRouter)
