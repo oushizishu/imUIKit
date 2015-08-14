@@ -76,13 +76,13 @@
 + (NSString *)imageCacheRelativePathWithName:(NSString *)imagName;
 {
     NSString *cacheDir = [BJCachesDir lastPathComponent];
-    return [NSString stringWithFormat:@"%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Images,imagName];
+    return [NSString stringWithFormat:@"/%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Images,imagName];
 }
 
 + (NSString *)audioCacheRelativePathWithName:(NSString *)audioName;
 {
     NSString *cacheDir = [BJCachesDir lastPathComponent];
-    return [NSString stringWithFormat:@"%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Audio,audioName];
+    return [NSString stringWithFormat:@"/%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Audio,audioName];
 }
 
 #pragma mark - 生成名称
