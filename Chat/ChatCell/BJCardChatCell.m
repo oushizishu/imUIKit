@@ -34,6 +34,19 @@ const float IntervalTitleWithImage = 5;
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+   
+    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
+    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
+    [self.contentLabel sizeToFit];
+    CGRect rect = self.bubbleContainerView.frame;
+    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
+    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
+        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
+    }
+    self.bubbleContainerView.frame = rect;
+    
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
@@ -90,6 +103,7 @@ const float IntervalTitleWithImage = 5;
         self.contentLabel.frame = frame;
     }
 
+    [CATransaction commit];
 }
 
 #pragma mark - Protocol
@@ -119,15 +133,7 @@ const float IntervalTitleWithImage = 5;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
-    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
-    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
-    [self.contentLabel sizeToFit];
-    CGRect rect = self.bubbleContainerView.frame;
-    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
-    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
-        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
-    }
-    self.bubbleContainerView.frame = rect;
+
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }

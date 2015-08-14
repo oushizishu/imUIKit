@@ -35,6 +35,22 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    CGRect contentRect = self.displayTextView.frame;
+    //    contentRect.size.width = TEXTLABEL_MAX_WIDTH;
+    //    self.displayTextView.frame = contentRect;
+    NSString *message = self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本";
+
+    CGSize size = [self neededSizeForText:message];
+    self.displayTextView.frame = CGRectMake(0, 0, size.width, size.height);
+    [self.displayTextView sizeToFit];
+    contentRect = self.displayTextView.frame;
+    
+    contentRect.size.width = contentRect.size.width + BJ_TEXTCHATCELL_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH;
+    contentRect.size.height = contentRect.size.height + BJ_TEXTCHATCELL_PADDING*2;
+    self.bubbleContainerView.frame = contentRect;
+    
     [super layoutSubviews];
     
     CGRect frame = self.bubbleContainerView.bounds;
@@ -48,6 +64,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     
     frame.origin.y = BJ_TEXTCHATCELL_PADDING;
     [self.displayTextView setFrame:frame];
+    [CATransaction commit];
 }
 
 - (void)bubbleViewLongPressed:(id)sender
@@ -105,17 +122,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     NSString *message = self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本";
     
     self.displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message];
-    CGRect contentRect = self.displayTextView.frame;
-//    contentRect.size.width = TEXTLABEL_MAX_WIDTH;
-//    self.displayTextView.frame = contentRect;
-    CGSize size = [self neededSizeForText:message];
-    self.displayTextView.frame = CGRectMake(0, 0, size.width, size.height);
-    [self.displayTextView sizeToFit];
-    contentRect = self.displayTextView.frame;
-    
-    contentRect.size.width = contentRect.size.width + BJ_TEXTCHATCELL_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH;
-    contentRect.size.height = contentRect.size.height + BJ_TEXTCHATCELL_PADDING*2;
-    self.bubbleContainerView.frame = contentRect;
+
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
