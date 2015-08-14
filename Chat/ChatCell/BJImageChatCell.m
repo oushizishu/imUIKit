@@ -36,9 +36,27 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    CGSize size = [self calculateCellHeight];
+ 
+    CGRect rect = self.chatImageView.frame;
+    rect.size = size;
+    self.chatImageView.frame = rect;
+    UIImage *image = [self bubbleImage];
+    UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:image];
+    imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
+    self.chatImageView.layer.mask = imageViewMask.layer;
+    
+    rect = self.bubbleContainerView.frame;
+    rect.size = size;
+    self.bubbleContainerView.frame = rect;
+    
     [super layoutSubviews];
     CGRect frame = self.bubbleContainerView.bounds;
     [self.chatImageView setFrame:frame];
+    
+    [CATransaction commit];
 }
 
 #pragma mark - 内部方法
@@ -95,17 +113,6 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
     {
         [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
     }
-    CGRect rect = self.chatImageView.frame;
-    rect.size = size;
-    self.chatImageView.frame = rect;
-    UIImage *image = [self bubbleImage];
-    UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:image];
-    imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
-    self.chatImageView.layer.mask = imageViewMask.layer;
-    
-    rect = self.bubbleContainerView.frame;
-    rect.size = size;
-    self.bubbleContainerView.frame = rect;
     
     [self setNeedsLayout];
     [self layoutIfNeeded];

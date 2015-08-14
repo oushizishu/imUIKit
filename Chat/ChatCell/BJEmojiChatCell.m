@@ -32,9 +32,20 @@ const float BJ_EMOJI_MAX_SIZE = 60;
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    CGSize size = [self calculateCellHeight];
+    CGRect rect = self.emojiImageView.frame;
+    rect.size = size;
+    self.emojiImageView.frame = rect;
+    
+    rect = self.bubbleContainerView.frame;
+    rect.size = size;
+    self.bubbleContainerView.frame = rect;
     [super layoutSubviews];
     CGRect frame = self.bubbleContainerView.bounds;
     [self.emojiImageView setFrame:frame];
+    [CATransaction commit];
 }
 
 #pragma mark - 内部方法
@@ -106,7 +117,6 @@ const float BJ_EMOJI_MAX_SIZE = 60;
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     [super setCellInfo:info indexPath:indexPath];
-    CGSize size = [self calculateCellHeight];
     NSString *gifLocal = [BJFacialView imageNamedWithEmoji:[self.message emojiName]];
     self.emojiImageView.image = nil;
     if (gifLocal.length>0) {
@@ -117,13 +127,6 @@ const float BJ_EMOJI_MAX_SIZE = 60;
         [self.emojiImageView sd_setImageWithURL:[self.message emojiImageURL] placeholderImage:nil];
     }
 
-    CGRect rect = self.emojiImageView.frame;
-    rect.size = size;
-    self.emojiImageView.frame = rect;
-    
-    rect = self.bubbleContainerView.frame;
-    rect.size = size;
-    self.bubbleContainerView.frame = rect;
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
