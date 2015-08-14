@@ -28,10 +28,10 @@
 
 + (void)sendMessage:(IMMessage *)message
 {
+    [[BJIMManager shareInstance] sendMessage:message];
     if ([[BJSendMessageHelper sharedInstance].deledate respondsToSelector:@selector(willSendMessage:)]) {
         [[BJSendMessageHelper sharedInstance].deledate willSendMessage:message];
     }
-    [[BJIMManager shareInstance] sendMessage:message];
 }
 
 #pragma mark - 消息发送
@@ -53,26 +53,32 @@
 + (IMMessage *)sendAudioMessage:(NSString *)filePath duration:(NSInteger)duration chatInfo:(BJChatInfo *)chatInfo;
 {
     //弄成相对路径，每次build发现绝对路径有变化
-    NSString *relativePath = [BJChatFileCacheManager audioCacheRelativePathWithName:[filePath lastPathComponent]];
-    IMAudioMessageBody *messageBody = [[IMAudioMessageBody alloc] init];
-    messageBody.file = relativePath;
-    messageBody.length = duration;
-    
-    IMMessage *message = [[IMMessage alloc] init];
-    message.createAt = [NSDate date].timeIntervalSince1970;
-    message.messageBody = messageBody;
-    message.chat_t = chatInfo.chat_t;
-    message.msg_t = eMessageType_AUDIO;
-    message.receiver = chatInfo.getToId;
-    message.receiverRole = chatInfo.getToRole;
-    [BJSendMessageHelper sendMessage:message];
-    return message;
+    NSString *abPath = [BJChatFileCacheManager audioCachePathWithName:[filePath lastPathComponent]];
+    NSError *error;
+    [[NSFileManager defaultManager] moveItemAtPath:filePath toPath:abPath error:&error];
+    if (!error) {
+        NSString *relativePath = [BJChatFileCacheManager audioCacheRelativePathWithName:[filePath lastPathComponent]];
+        IMAudioMessageBody *messageBody = [[IMAudioMessageBody alloc] init];
+        messageBody.file = relativePath;
+        messageBody.length = duration;
+        
+        IMMessage *message = [[IMMessage alloc] init];
+        message.createAt = [NSDate date].timeIntervalSince1970;
+        message.messageBody = messageBody;
+        message.chat_t = chatInfo.chat_t;
+        message.msg_t = eMessageType_AUDIO;
+        message.receiver = chatInfo.getToId;
+        message.receiverRole = chatInfo.getToRole;
+        [BJSendMessageHelper sendMessage:message];
+        return message;
+    }
+    return nil;
 }
 
 + (IMMessage *)sendImageMessage:(NSString *)filePath imageSize:(CGSize)size chatInfo:(BJChatInfo *)chatInfo;
 {
     //弄成相对路径，每次build发现绝对路径有变化
-    NSString *relativePath = [BJChatFileCacheManager audioCacheRelativePathWithName:[filePath lastPathComponent]];
+    NSString *relativePath = [BJChatFileCacheManager imageCacheRelativePathWithName:[filePath lastPathComponent]];
     IMImgMessageBody *messageBody = [[IMImgMessageBody alloc] init];
     messageBody.file = relativePath;
     messageBody.width = size.width;

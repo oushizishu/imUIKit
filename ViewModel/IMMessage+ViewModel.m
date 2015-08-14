@@ -48,7 +48,10 @@
     User *senderUser = [self getSenderUser];
     if (![senderUser.avatar hasPrefix:@"http"]) {
         if (senderUser.userRole == eUserRole_Kefu || senderUser.userRole == eUserRole_System) {
-            return [NSURL fileURLWithPath:senderUser.avatar];
+            if (senderUser.avatar) {
+                return [NSURL fileURLWithPath:senderUser.avatar];
+            }
+            return nil;
         }
     }
     return [NSURL URLWithString:senderUser.avatar];

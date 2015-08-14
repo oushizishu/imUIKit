@@ -34,6 +34,19 @@ const float IntervalTitleWithImage = 5;
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+   
+    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
+    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
+    [self.contentLabel sizeToFit];
+    CGRect rect = self.bubbleContainerView.frame;
+    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
+    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
+        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
+    }
+    self.bubbleContainerView.frame = rect;
+    
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
@@ -90,6 +103,7 @@ const float IntervalTitleWithImage = 5;
         self.contentLabel.frame = frame;
     }
 
+    [CATransaction commit];
 }
 
 #pragma mark - Protocol
@@ -119,15 +133,7 @@ const float IntervalTitleWithImage = 5;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
-    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
-    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
-    [self.contentLabel sizeToFit];
-    CGRect rect = self.bubbleContainerView.frame;
-    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
-    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
-        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
-    }
-    self.bubbleContainerView.frame = rect;
+
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
@@ -145,6 +151,7 @@ const float IntervalTitleWithImage = 5;
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, CardWidth-Interval*2, 40)];
         [_titleLabel setFont:[UIFont systemFontOfSize:16]];
         _titleLabel.numberOfLines = 2;
+        _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
     }
     return _titleLabel;
@@ -154,6 +161,7 @@ const float IntervalTitleWithImage = 5;
 {
     if (!_contentLabel) {
         _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, ContentWidth, CardHeight-55)];
+        _contentLabel.backgroundColor = [UIColor clearColor];;
         [_contentLabel setFont:[UIFont systemFontOfSize:14]];
         _contentLabel.numberOfLines = 4;
         [_contentLabel setTextColor:[UIColor darkGrayColor]];
