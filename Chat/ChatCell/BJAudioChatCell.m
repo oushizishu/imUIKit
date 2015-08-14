@@ -13,8 +13,8 @@
 #import <BJAudioPlayer.h>
 #import "UIResponder+BJIMChatRouter.h"
 
-#define BJ_ANIMATION_IMAGEVIEW_HEIGHT 17.5 // 小喇叭图片尺寸
-#define BJ_ANIMATION_IMAGEVIEW_WIDTH 11
+#define BJ_ANIMATION_IMAGEVIEW_HEIGHT 14 // 小喇叭图片尺寸
+#define BJ_ANIMATION_IMAGEVIEW_WIDTH 13
 #define BJ_ANIMATION_IMAGEVIEW_SPEED 1 // 小喇叭动画播放速度
 
 
@@ -70,7 +70,7 @@
         
         frame = self.timeLabel.frame;
         frame.origin.x = self.bubbleContainerView.frame.origin.x - BJ_ANIMATION_TIME_LABEL_WIDHT;
-        frame.origin.y = self.bubbleContainerView.frame.size.height / 2 - frame.size.height / 2+BJ_CELLPADDING;
+        frame.origin.y = self.bubbleContainerView.frame.origin.y + (self.bubbleContainerView.frame.size.height-BJ_ANIMATION_TIME_LABEL_HEIGHT)/2;
         self.timeLabel.frame = frame;
         
         frame = self.activityView.frame;
@@ -86,11 +86,11 @@
         
         frame = self.timeLabel.frame;
         frame.origin.x = self.bubbleContainerView.frame.size.width + self.bubbleContainerView.frame.origin.x;
-        frame.origin.y = self.animationImageView.center.y - frame.size.height / 2;
+        frame.origin.y = self.bubbleContainerView.frame.origin.y + (self.bubbleContainerView.frame.size.height-BJ_ANIMATION_TIME_LABEL_HEIGHT)/2;
         self.timeLabel.frame = frame;
         
-        frame.origin.x = self.bubbleContainerView.frame.size.width - self.isReadView.frame.size.width / 2;
-        frame.origin.y = - self.isReadView.frame.size.height / 2;
+        frame.origin.x = self.bubbleContainerView.frame.origin.x + self.timeLabel.frame.size.width/2-self.isReadView.frame.size.width/2;
+        frame.origin.y = - self.isReadView.frame.origin.y;
         frame.size = self.isReadView.frame.size;
         self.isReadView.frame = frame;
         
@@ -200,8 +200,8 @@
 - (UIImageView *)isReadView
 {
     if (_isReadView == nil) {
-        _isReadView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-        _isReadView.layer.cornerRadius = 5;
+        _isReadView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 7, 7)];
+        _isReadView.layer.cornerRadius = 3.5;
         [_isReadView setClipsToBounds:YES];
         [_isReadView setBackgroundColor:[UIColor redColor]];
         [self.bubbleContainerView addSubview:_isReadView];
