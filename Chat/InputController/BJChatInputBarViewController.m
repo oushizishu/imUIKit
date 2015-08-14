@@ -674,6 +674,7 @@
         //增加背景照片
         UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];
         backgroundImageView.image = [[UIImage imageNamed:@"messageToolbarBg"] stretchableImageWithLeftCapWidth:0.5 topCapHeight:10];
+        [backgroundImageView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
         [_toolbarView addSubview:backgroundImageView];
     }
     

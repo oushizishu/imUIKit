@@ -60,6 +60,12 @@
 
 -(void)layoutSubviews
 {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    CGRect rect = self.bubbleContainerView.frame;
+    rect.size.width  = 30+((AUDIOSHOW_MAX_WIDTH-30)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
+    self.bubbleContainerView.frame = rect;
+    
     [super layoutSubviews];
     
     CGRect frame = self.animationImageView.frame;
@@ -96,6 +102,7 @@
         
     }
     
+    [CATransaction commit];
 }
 
 #pragma mark - 方法
@@ -157,10 +164,6 @@
         self.animationImageView.image = [UIImage imageNamed:BJ_RECEIVER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT];
         self.animationImageView.animationImages = self.recevierAnimationImages;
     }
-    
-    CGRect rect = self.bubbleContainerView.frame;
-    rect.size.width  = 30+((AUDIOSHOW_MAX_WIDTH-30)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
-    self.bubbleContainerView.frame = rect;
     
     if (self.message.isPlaying)
     {
