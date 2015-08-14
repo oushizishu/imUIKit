@@ -584,21 +584,29 @@
     //保存草稿
     [self saveToDraftWithContent:self.inputTextView.text];
 }
+- (UIViewController *)rootParentViewController
+{
+    UIViewController *root = self.parentViewController;
+    while (root.parentViewController) {
+        root = root.parentViewController;
+    }
+    return root;
+}
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     
     if ([text isEqualToString:@"\n"]) {
         NSString *content = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
+        
         if (content.length>BJChat_Text_Max_Length)
         {
-            @IMTODO("消息太长");
+            [MBProgressHUD showErrorThenHide:[NSString stringWithFormat:@"消息超过%d字了",BJChat_Text_Max_Length] toView:[self rootParentViewController].view onHide:nil];
         }
         else if (content.length<=0)
         {
             self.inputTextView.text = @"";
-            @IMTODO("不能发送空白消息");
+            [MBProgressHUD showErrorThenHide:@"不能发送空白消息" toView:[self rootParentViewController].view onHide:nil];
         }
         else if([self ifEmoji:content])
         {
@@ -612,7 +620,7 @@
             self.inputTextView.text = @"";
             [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
         }
-
+        
         
         return NO;
     }
