@@ -164,8 +164,20 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 #pragma mark - SETextViewDelegate
 - (BOOL)textView:(SETextView *)textView clickedOnLink:(SELinkText *)link atIndex:(NSUInteger)charIndex
 {
-    [super bjim_routerEventWithName:kBJRouterEventLinkName userInfo:@{kBJRouterEventUserInfoObject:link.text}];
+    if ([link.text hasPrefix:@"http"]) {
+        [super bjim_routerEventWithName:kBJRouterEventLinkName userInfo:@{kBJRouterEventUserInfoObject:link.text}];
+    }
+    if ([self isPureInt:link.text]) {
+        [super bjim_routerEventWithName:kBJRouterEventPhoneCall userInfo:@{kBJRouterEventUserInfoObject:link.text}];
+    }
     return YES;
+}
+
+//判断书否为纯数字=手机号
+- (BOOL)isPureInt:(NSString *)string{
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    int val;
+    return [scan scanInt:&val] && [scan isAtEnd];
 }
 
 #pragma mark - set get

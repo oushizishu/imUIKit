@@ -63,7 +63,7 @@
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     CGRect rect = self.bubbleContainerView.frame;
-    rect.size.width  = 30+((AUDIOSHOW_MAX_WIDTH-30)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
+    rect.size.width  = BJ_ANIMATION_IMAGEVIEW_WIDTH*3+((AUDIOSHOW_MAX_WIDTH-BJ_ANIMATION_IMAGEVIEW_WIDTH*3)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
     self.bubbleContainerView.frame = rect;
     
     [super layoutSubviews];
@@ -95,8 +95,8 @@
         frame.origin.y = self.bubbleContainerView.frame.origin.y + (self.bubbleContainerView.frame.size.height-BJ_ANIMATION_TIME_LABEL_HEIGHT)/2;
         self.timeLabel.frame = frame;
         
-        frame.origin.x = self.bubbleContainerView.frame.origin.x + self.timeLabel.frame.size.width/2-self.isReadView.frame.size.width/2;
-        frame.origin.y = - self.isReadView.frame.origin.y;
+        frame.origin.x = self.bubbleContainerView.frame.origin.x+ self.bubbleContainerView.frame.size.width + self.timeLabel.frame.size.width/2-self.isReadView.frame.size.width/2;
+        frame.origin.y = self.bubbleContainerView.frame.origin.y;
         frame.size = self.isReadView.frame.size;
         self.isReadView.frame = frame;
         
@@ -207,7 +207,7 @@
         _isReadView.layer.cornerRadius = 3.5;
         [_isReadView setClipsToBounds:YES];
         [_isReadView setBackgroundColor:[UIColor redColor]];
-        [self.bubbleContainerView addSubview:_isReadView];
+        [self addSubview:_isReadView];
     }
     return _isReadView;
 }
