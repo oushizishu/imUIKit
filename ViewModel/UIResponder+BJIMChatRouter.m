@@ -21,6 +21,7 @@ NSString *const kBJRouterEventChatCellBubbleLongTapEventName = @"kBJRouterEventC
 NSString *const kBJResendButtonTapEventName = @"kBJResendButtonTapEventName";
 
 NSString *const kBJRouterEventLinkName = @"kBJRouterEventLinkName";
+NSString *const kBJRouterEventPhoneCall = @"kBJRouterEventPhoneCall";
 
 @implementation UIResponder (BJIMChatRouter)
 
