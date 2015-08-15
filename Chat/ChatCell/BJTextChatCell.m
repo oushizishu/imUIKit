@@ -48,7 +48,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     contentRect = self.displayTextView.frame;
     
     contentRect.size.width = contentRect.size.width + BJ_TEXTCHATCELL_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH;
-    contentRect.size.height = contentRect.size.height + BJ_TEXTCHATCELL_PADDING*2;
+    contentRect.size.height = contentRect.size.height + BJ_TEXTCHATCELL_PADDING*2+2;
     self.bubbleContainerView.frame = contentRect;
     
     [super layoutSubviews];
