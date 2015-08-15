@@ -78,7 +78,6 @@ IMUserInfoChangedDelegate>
     [[BJChatAudioPlayerHelper sharedInstance] stopPlayer];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"frame"];
-    [BJSendMessageHelper sharedInstance].deledate = nil;
     
 }
 
@@ -88,7 +87,7 @@ IMUserInfoChangedDelegate>
     if (self) {
         _chatInfo = chatInfo;
         _isFirstAppear = YES;
-        [BJSendMessageHelper sharedInstance].deledate = self;
+        [[BJSendMessageHelper sharedInstance] addDelegate:self];
     }
     return self;
 }
