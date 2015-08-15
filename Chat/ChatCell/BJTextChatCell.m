@@ -173,6 +173,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     return YES;
 }
 
+//判断书否为纯数字=手机号
 - (BOOL)isPureInt:(NSString *)string{
     NSScanner* scan = [NSScanner scannerWithString:string];
     int val;
