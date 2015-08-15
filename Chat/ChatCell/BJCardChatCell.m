@@ -14,7 +14,7 @@
 #import "UIResponder+BJIMChatRouter.h"
 const float ImageWH = 60;
 const float Interval = 10;
-const float CardWidth = 212;
+const float CardWidth = 217;
 const float CardHeight = 130;
 const float ContentWidth = 130;
 const float IntervalTitleWithImage = 5;
@@ -37,7 +37,7 @@ const float IntervalTitleWithImage = 5;
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
    
-    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
+    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
     CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
     [self.contentLabel sizeToFit];
     CGRect rect = self.bubbleContainerView.frame;
@@ -50,7 +50,7 @@ const float IntervalTitleWithImage = 5;
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
-    frame.size = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, 40)];
+    frame.size = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
     frame.origin.y = 10;
     self.titleLabel.frame = frame;
     
@@ -58,7 +58,7 @@ const float IntervalTitleWithImage = 5;
         [self.cardImageView setHidden:YES];
         frame = self.contentLabel.frame;
         frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2, CardHeight-35)];
+        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, CardHeight-35)];
         frame.origin.x = Interval;
         self.contentLabel.frame = frame;
     }else

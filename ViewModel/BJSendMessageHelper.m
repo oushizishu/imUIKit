@@ -14,7 +14,21 @@
 #import "BJChatInfo.h"
 #import "CardSimpleItem.h"
 #import "BJChatFileCacheManager.h"
+
+@interface BJSendMessageHelper ()
+@property (strong, nonatomic) NSHashTable *weakTable;
+@end
+
 @implementation BJSendMessageHelper
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _weakTable = [NSHashTable weakObjectsHashTable];
+    }
+    return self;
+}
 
 + (instancetype)sharedInstance
 {
@@ -26,12 +40,28 @@
     return _sharedInstance;
 }
 
+- (void)addDelegate:(id<BJSendMessageProtocol>)delegate;
+{
+    [self.weakTable addObject:delegate];
+}
+
+- (void)notifySendMessage:(IMMessage *)message
+{
+    NSEnumerator *enumerator = [self.weakTable objectEnumerator];
+    id<BJSendMessageProtocol> delegate = nil;
+    while (delegate = [enumerator nextObject])
+    {
+        if ([delegate respondsToSelector:@selector(willSendMessage:)]) {
+            [delegate willSendMessage:message];
+        }
+    }
+
+}
+
 + (void)sendMessage:(IMMessage *)message
 {
     [[BJIMManager shareInstance] sendMessage:message];
-    if ([[BJSendMessageHelper sharedInstance].deledate respondsToSelector:@selector(willSendMessage:)]) {
-        [[BJSendMessageHelper sharedInstance].deledate willSendMessage:message];
-    }
+    [[BJSendMessageHelper sharedInstance] notifySendMessage:message];
 }
 
 #pragma mark - 消息发送

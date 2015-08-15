@@ -23,7 +23,9 @@
 @end
 
 @interface BJSendMessageHelper : NSObject
-@property (weak, nonatomic) id<BJSendMessageProtocol>deledate;
+
+- (void)addDelegate:(id<BJSendMessageProtocol>)delegate;
+
 + (instancetype)sharedInstance;
 
 /**

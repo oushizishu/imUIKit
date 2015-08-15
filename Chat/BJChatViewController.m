@@ -68,6 +68,8 @@ IMUserInfoChangedDelegate>
 
 @property (assign, nonatomic) BOOL isLoadMore;
 
+@property (strong, nonatomic) UIWebView *webView;//webView实现打电话,可以直接返回到应用
+
 @end
 
 @implementation BJChatViewController
@@ -78,7 +80,6 @@ IMUserInfoChangedDelegate>
     [[BJChatAudioPlayerHelper sharedInstance] stopPlayer];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.view removeObserver:self forKeyPath:@"frame"];
-    [BJSendMessageHelper sharedInstance].deledate = nil;
     
 }
 
@@ -88,8 +89,8 @@ IMUserInfoChangedDelegate>
     if (self) {
         _chatInfo = chatInfo;
         _isFirstAppear = YES;
-        [BJSendMessageHelper sharedInstance].deledate = self;
         _isCanDeliveryMessage = YES;
+        [[BJSendMessageHelper sharedInstance] addDelegate:self];
     }
     return self;
 }
@@ -482,6 +483,12 @@ IMUserInfoChangedDelegate>
     [self.navigationController pushViewController:web animated:YES];
 }
 
+- (void)phoneTapWithPhoneNum:(NSString *)phoneNum
+{
+    NSURL *phoneURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNum]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:phoneURL]];
+}
+
 - (void)audioCellTapWithMessage:(IMMessage *)message
 {
     __weak typeof(self) weakSelf = self;
@@ -684,6 +691,10 @@ IMUserInfoChangedDelegate>
     {
         [self linkCellTapWithMessage:[userInfo objectForKey:kBJRouterEventUserInfoObject]];
     }
+    else if ([eventName isEqualToString:kBJRouterEventPhoneCall])
+    {
+        [self phoneTapWithPhoneNum:[userInfo objectForKey:kBJRouterEventUserInfoObject]];
+    }
 }
 
 #pragma mark - BJChatLoadMoreHeadViewDelegate
@@ -859,6 +870,13 @@ IMUserInfoChangedDelegate>
     return _chatHeadView;
 }
 
+- (UIWebView *)webView
+{
+    if (!_webView) {
+        _webView = [[UIWebView alloc]initWithFrame:CGRectZero];
+    }
+    return _webView;
+}
 
 #pragma mark - Internal Helpers
 /*!

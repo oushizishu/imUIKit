@@ -510,31 +510,36 @@
     else{
         CGFloat changeHeight = toHeight - _previousTextViewContentHeight;
         
-        CGRect rect = self.view.frame;
-        rect.size.height += changeHeight;
-        rect.origin.y -= changeHeight;
-        self.view.frame = rect;
-        
-        rect = self.toolbarView.frame;
-        rect.size.height += changeHeight;
-        self.toolbarView.frame = rect;
-        
-        if (self.activityButtomView){
-            rect = self.activityButtomView.frame;
-            rect.origin.y += changeHeight;
-            self.activityButtomView.frame = rect;
-        }
-        
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 7.0) {
-            [self.inputTextView setContentOffset:CGPointMake(0.0f, (self.inputTextView.contentSize.height - self.inputTextView.frame.size.height) / 2) animated:YES];
-        }
-        else
-            [self.inputTextView setContentOffset:self.inputTextView.contentOffset animated:YES];
-        _previousTextViewContentHeight = toHeight;
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(didChangeFrameToHeight:)]) {
-            [self.delegate didChangeFrameToHeight:self.view.frame.size.height];
-        }
+        [UIView animateWithDuration:0.25 delay:0 options:(UIViewAnimationCurveEaseInOut << 16 | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+            
+            CGRect rect = self.view.frame;
+            rect.size.height += changeHeight;
+            rect.origin.y -= changeHeight;
+            self.view.frame = rect;
+            
+            rect = self.toolbarView.frame;
+            rect.size.height += changeHeight;
+            self.toolbarView.frame = rect;
+            
+            if (self.activityButtomView){
+                rect = self.activityButtomView.frame;
+                rect.origin.y += changeHeight;
+                self.activityButtomView.frame = rect;
+            }
+            
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] < 7.0) {
+                [self.inputTextView setContentOffset:CGPointMake(0.0f, (self.inputTextView.contentSize.height - self.inputTextView.frame.size.height) / 2) animated:YES];
+            }
+            else
+                [self.inputTextView setContentOffset:self.inputTextView.contentOffset animated:YES];
+            _previousTextViewContentHeight = toHeight;
+            
+            if (self.delegate && [self.delegate respondsToSelector:@selector(didChangeFrameToHeight:)]) {
+                [self.delegate didChangeFrameToHeight:self.view.frame.size.height];
+            }
+        } completion:^(BOOL finished) {
+
+        }];
     }
 }
 
