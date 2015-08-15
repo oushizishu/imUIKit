@@ -118,6 +118,9 @@ IMUserInfoChangedDelegate>
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if ([BJSendMessageHelper sharedInstance].deledate == nil) {
+        [BJSendMessageHelper sharedInstance].deledate = self;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
