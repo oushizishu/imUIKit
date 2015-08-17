@@ -263,7 +263,7 @@ IMUserInfoChangedDelegate>
     
 }
 
-//时间处理函数
+//时间处理函数,统一使用UTC时间，计算出来的时间也是UTC时间。
 -(NSString*)customformattedTime:(NSDate*)time
 {
     NSDateFormatter* formatter = [NSDateFormatter dateFormatter];
@@ -317,7 +317,7 @@ IMUserInfoChangedDelegate>
             [cComponents setDay:[[curDate substringWithRange:NSMakeRange(6,2)] intValue]];
             [cComponents setMonth:[[curDate substringWithRange:NSMakeRange(4,2)] intValue]];
             [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
-            NSDate *cDate = [gregorian dateFromComponents:yComponents]; //当天 0点时间
+            NSDate *cDate = [gregorian dateFromComponents:cComponents]; //当天 0点时间
             
             hour = [time hoursAfterDate:cDate];
             if (hour<6) {
