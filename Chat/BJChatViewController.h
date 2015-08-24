@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "BJChatInfo.h"
+typedef void (^OpenURL)(NSString*url);
 @interface BJChatViewController : UIViewController
 @property (strong, nonatomic, readonly) BJChatInfo *chatInfo;
+@property (nonatomic,copy)OpenURL openURL;
 - (instancetype)initWithChatInfo:(BJChatInfo *)chatInfo;
 @end

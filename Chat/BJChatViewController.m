@@ -26,6 +26,9 @@
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
+#import "IMMessage+ViewModel.h"
+#import "MBProgressHUD+Simple.h"
+#import  <NSError+BJIM.h>
 #import "BJChatViewController+BrowserHelper.h"
 #import <NSDateFormatter+Category.h>
 #import <UIView+Basic.h>
@@ -111,11 +114,6 @@ IMUserInfoChangedDelegate>
         _isFirstAppear = NO;
         [self viewWillAppearFirstHandle];
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -467,12 +465,17 @@ IMUserInfoChangedDelegate>
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
-    @IMTODO("点击跳转代码");
+    NSString *url = [message cardUrl];
+    if (self.openURL != nil) {
+        self.openURL(url);
+    }
 }
 
 - (void)linkCellTapWithMessage:(NSString *)str
 {
-    @IMTODO("点击链接跳转代码");
+    if (self.openURL != nil) {
+        self.openURL(str);
+    }
 }
 
 - (void)phoneTapWithPhoneNum:(NSString *)phoneNum
@@ -491,7 +494,9 @@ IMUserInfoChangedDelegate>
     {
         [message markPlayed];
         [[BJChatAudioPlayerHelper sharedInstance] startPlayerWithMessage:message callback:^(NSError *error) {
-            @IMTODO("提示错误消息");
+            if (error !=nil) {
+                [MBProgressHUD showErrorThenHide:[error bjim_Reason] toView:weakSelf.view onHide:nil];
+            }
             [weakSelf.tableView reloadData];
         }];
     }
@@ -579,6 +584,9 @@ IMUserInfoChangedDelegate>
         [self.messageList lastObject] == message &&
         [message isMySend] && errorCode == eError_suc) {
         [self scrollViewToBottom:YES needDelay:NO];
+    }
+    if (errorCode != eError_suc &&  errorMessage.length > 0) {
+        [MBProgressHUD showWindowErrorThenHide:errorMessage];
     }
 }
 

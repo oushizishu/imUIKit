@@ -14,11 +14,11 @@
 - (NSString *)getContactNickName;
 {
     if (self.userRole == eUserRole_System) {
-        return @"跟谁学小秘书";
+        return @"系统消息";
     }
     else if (self.userRole == eUserRole_Kefu)
     {
-        return @"在线客服";
+        return @"跟谁学客服";
     }
     return self.name;
 }
@@ -38,6 +38,9 @@
 
 - (NSString *)getContactAvatar;
 {
+    if (self.userRole == eUserRole_Kefu) {
+        return @"http://img.gsxservice.com/ic_customer.png";
+    }
     return self.avatar;
 }
 

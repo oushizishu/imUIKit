@@ -18,5 +18,29 @@
 		<key>icon</key>
 		<string>ic_camera_normal</string>
 	</dict>
+	<dict>
+		<key>key</key>
+		<string>card</string>
+		<key>name</key>
+		<string>我的名片</string>
+		<key>icon</key>
+		<string>icon_chat_my_card.png</string>
+	</dict>
+	<dict>
+		<key>key</key>
+		<string>course</string>
+		<key>name</key>
+		<string>推广班课</string>
+		<key>icon</key>
+		<string>icon_chat_class_course.png</string>
+	</dict>
+	<dict>
+		<key>key</key>
+		<string>coupon</string>
+		<key>name</key>
+		<string>发优惠劵</string>
+		<key>icon</key>
+		<string>ic_coupon.png</string>
+	</dict>
 </array>
 </plist>

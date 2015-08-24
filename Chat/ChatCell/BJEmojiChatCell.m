@@ -16,6 +16,8 @@
 #import "BJFacialView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 const float BJ_EMOJI_MAX_SIZE = 60;
 
 
