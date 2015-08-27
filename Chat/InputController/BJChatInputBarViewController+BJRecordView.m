@@ -127,7 +127,7 @@ static char BJRecordView_Recorder;
 - (BJRecordView *)recordView
 {
     if (objc_getAssociatedObject(self, &BJRecordView_View) == nil) {
-        BJRecordView *view = [[BJRecordView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-140)/2, 130, 140, 140)];
+        BJRecordView *view = [[BJRecordView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-250)/2, 130, 250, 250)];
         view.delegate = self;
         [self setRecordView:view];
     }

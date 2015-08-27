@@ -20,10 +20,16 @@
 
 @interface BJRecordView : UIView
 @property (weak, nonatomic) id<BJRecordViewDelegate>delegate;
+//圆形显示区
+@property(nonatomic, strong)UIView *showView;
 // 显示动画的ImageView
 @property (nonatomic, strong) UIImageView *recordAnimationView;
+//文本框
+@property (nonatomic, strong) UILabel *tLable;
 // 提示文字
 @property (nonatomic, strong) UILabel *textLabel;
+//声音长度
+@property(nonatomic)NSInteger timelength;
 
 // 录音按钮按下
 -(void)recordButtonTouchDown;
