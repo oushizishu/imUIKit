@@ -600,13 +600,13 @@
         {
             @IMTODO("消息太长");
             
-            [MBProgressHUD showMessage:@"消息太长" toView:self.parentViewController.view];
+//            [MBProgressHUD showMessage:@"消息太长" toView:self.parentViewController.view];
         }
         else if (content.length<=0)
         {
             self.inputTextView.text = @"";
             @IMTODO("不能发送空白消息");
-            [MBProgressHUD showMessage:@"不能发送空白消息" toView:self.parentViewController.view];
+//            [MBProgressHUD showMessage:@"不能发送空白消息" toView:self.parentViewController.view];
         }
         else if([self ifEmoji:content])
         {

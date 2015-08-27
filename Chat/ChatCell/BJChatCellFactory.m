@@ -79,7 +79,7 @@ static BJChatCellFactory *sharedInstance = nil;
 
 - (BOOL)canHandleMessageType:(IMMessageType)type
 {
-    return [self.registerCellDic objectForKey:@(type)];
+    return ([self.registerCellDic objectForKey:@(type)] != nil);
 }
 
 - (CGFloat)cellHeightWithMessage:(IMMessage *)message indexPath:(NSIndexPath *)indexPath;

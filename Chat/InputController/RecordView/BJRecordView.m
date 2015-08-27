@@ -11,6 +11,7 @@
   */
 
 #import "BJRecordView.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 @interface BJRecordView ()
 {
     NSTimer *_timer;
