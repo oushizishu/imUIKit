@@ -344,6 +344,9 @@
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
+    if (self.faceButton.selected || self.moreButton.selected || self.recordButton.selected) {
+        return;
+    }
     NSDictionary *userInfo = notification.userInfo;
     CGRect endFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGRect beginFrame = [userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
