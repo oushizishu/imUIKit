@@ -21,8 +21,6 @@
 
 #import "BJChatTimeCell.h"
 
-#import "SRRefreshView.h"
-
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
