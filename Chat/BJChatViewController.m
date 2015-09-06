@@ -639,7 +639,6 @@ IMUserInfoChangedDelegate>
     
     if(toHeight > [BJChatInputBarViewController defaultHeight]+10){
         [self scrollViewToBottom:NO needDelay:NO];
-        
     }
 }
 
@@ -648,19 +647,7 @@ IMUserInfoChangedDelegate>
 {
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
     if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
-        //点击头像，添加响应操作
-        if (message.senderRole == eUserRole_Teacher) {
-            User *user = [[BJIMManager shareInstance] getUser:message.sender role:message.senderRole];
-            BJChatInfo *contact = [[BJChatInfo alloc] initWithUser:user];
-            TeacherSettingsViewController *vc  = [[TeacherSettingsViewController alloc] initWithContactItem:contact];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        else if (message.senderRole == eUserRole_Student) {
-            User *user = [[BJIMManager shareInstance] getUser:message.sender role:message.senderRole];
-            BJChatInfo *contact = [[BJChatInfo alloc] initWithUser:user];
-            StudentSettingsViewController *vc = [[StudentSettingsViewController alloc] initWithContactItem:contact];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+
     }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];
     }
