@@ -18,7 +18,7 @@
 #import "IMMessage+ViewModel.h"
 #import <BJIMManager.h>
 #import <IMMessage+DB.h>
-#import "WebPageViewControllerEx.h"
+#import "WebPageViewController.h"
 #import "BJChatTimeCell.h"
 
 #import "SRRefreshView.h"
@@ -471,14 +471,14 @@ IMUserInfoChangedDelegate>
 
 - (void)cardCellTapWithMessage:(IMMessage *)message
 {
-    WebPageViewControllerEx *web = [[WebPageViewControllerEx alloc] init];
+    WebPageViewController *web = [[WebPageViewController alloc] init];
     web.urlPath = [message cardUrl];
     [self.navigationController pushViewController:web animated:YES];
 }
 
 - (void)linkCellTapWithMessage:(NSString *)str
 {
-    WebPageViewControllerEx *web = [[WebPageViewControllerEx alloc] init];
+    WebPageViewController *web = [[WebPageViewController alloc] init];
     web.urlPath = str;
     [self.navigationController pushViewController:web animated:YES];
 }
