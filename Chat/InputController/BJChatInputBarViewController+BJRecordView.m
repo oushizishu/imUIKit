@@ -12,6 +12,7 @@
 #import <JLMicrophonePermission.h>
 #import "BJChatLimitMacro.h"
 #import "BJChatUtilsMacro.h"
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 static char BJRecordView_View;
 static char BJRecordView_Recorder;
@@ -47,6 +48,10 @@ static char BJRecordView_Recorder;
     if (SYSTEM_VERSION_LESS_THAN(@"7.0") || [[JLMicrophonePermission sharedInstance] authorizationStatus] == JLPermissionAuthorized)
     {
         weakSelf.recordView.center = weakSelf.parentViewController.view.center;
+        CGRect rFrame = weakSelf.recordView.frame;
+        CGRect pFrame = weakSelf.parentViewController.view.frame;
+        rFrame.origin.y = (pFrame.size.height-rFrame.size.height)/2;
+        weakSelf.recordView.frame = rFrame;
         [weakSelf.parentViewController.view addSubview:weakSelf.recordView];
         [weakSelf.parentViewController.view bringSubviewToFront:weakSelf.recordView];
         [weakSelf.recordView recordButtonTouchDown];
@@ -127,7 +132,7 @@ static char BJRecordView_Recorder;
 - (BJRecordView *)recordView
 {
     if (objc_getAssociatedObject(self, &BJRecordView_View) == nil) {
-        BJRecordView *view = [[BJRecordView alloc] initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-250)/2, 130, 250, 250)];
+        BJRecordView *view = [[BJRecordView alloc] initWithFrame:CGRectMake(0, 0, 250, 250)];
         view.delegate = self;
         [self setRecordView:view];
     }

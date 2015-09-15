@@ -95,7 +95,10 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
 
 - (void)scopy:(id)sender
 {
-    [[UIPasteboard generalPasteboard] setString:self.message.content];
+    if (self.message.content)
+    {
+        [[UIPasteboard generalPasteboard] setString:self.message.content];
+    }
 }
 
 #pragma mark - Protocol
