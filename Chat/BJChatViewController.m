@@ -10,6 +10,7 @@
 #import <IMMessage.h>
 #import "BJChatCellFactory.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #import <Conversation+DB.h>
 
 #import "BJChatInputBarViewController.h"
@@ -20,8 +21,6 @@
 #import <IMMessage+DB.h>
 
 #import "BJChatTimeCell.h"
-
-#import "SRRefreshView.h"
 
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
