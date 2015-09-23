@@ -11,6 +11,7 @@
 #import "BJChatCellFactory.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 #import <Conversation+DB.h>
 
 #import "BJChatInputBarViewController.h"
@@ -136,6 +137,7 @@ IMUserInfoChangedDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
@@ -788,6 +790,7 @@ IMUserInfoChangedDelegate>
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.dataSource = self;
