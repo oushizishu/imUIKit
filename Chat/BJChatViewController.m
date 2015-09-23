@@ -292,7 +292,7 @@ IMUserInfoChangedDelegate>
         }else{
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
         }
-    }
+    }else
     {
         NSDateComponents *yComponents = [[NSDateComponents alloc] init];
         [yComponents setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]-1];
