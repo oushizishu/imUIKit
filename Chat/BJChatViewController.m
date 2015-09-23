@@ -277,22 +277,22 @@ IMUserInfoChangedDelegate>
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDate *date = [gregorian dateFromComponents:components]; //今天 0点时间
     
-    NSInteger hour = [time hoursAfterDate:date];
+    NSTimeInterval interval = [time timeIntervalSinceDate:date];
     NSDateFormatter *dateFormatter = nil;
     NSString *ret = @"";
     
-    if(hour>=0)
+    if(interval >= 0)
     {
-        if (hour<6) {
+        if (interval < 6*60*60) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨HH:mm"];
-        }else if(hour<12){
+        }else if(interval < 12*60*60){
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午HH:mm"];
-        }else if(hour<18){
+        }else if(interval < 18*60*60){
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午HH:mm"];
         }else{
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
         }
-    }else
+    }
     {
         NSDateComponents *yComponents = [[NSDateComponents alloc] init];
         [yComponents setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]-1];
@@ -300,13 +300,13 @@ IMUserInfoChangedDelegate>
         [yComponents setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
         NSDate *yDate = [gregorian dateFromComponents:yComponents]; //昨天 0点时间
         
-        hour = [time hoursAfterDate:yDate];
-        if (hour>=0) {
-            if (hour<6) {
+        interval = [time timeIntervalSinceDate:yDate];
+        if (interval >= 0) {
+            if (interval < 6*60*60) {
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
-            }else if(hour<12){
+            }else if(interval < 12*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 上午HH:mm"];
-            }else if(hour<18){
+            }else if(interval < 18*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 下午HH:mm"];
             }else{
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 晚上HH:mm"];
@@ -320,12 +320,12 @@ IMUserInfoChangedDelegate>
             [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
             NSDate *cDate = [gregorian dateFromComponents:cComponents]; //当天 0点时间
             
-            hour = [time hoursAfterDate:cDate];
-            if (hour<6) {
+            interval = [time timeIntervalSinceDate:cDate];
+            if (interval < 6*60*60) {
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
-            }else if(hour<12){
+            }else if(interval < 12*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
-            }else if(hour<18){
+            }else if(interval < 18*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
             }else{
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
