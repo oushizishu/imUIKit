@@ -10,6 +10,8 @@
 #import <IMMessage.h>
 #import "BJChatCellFactory.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 #import <Conversation+DB.h>
 
 #import "BJChatInputBarViewController.h"
@@ -135,6 +137,7 @@ IMUserInfoChangedDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
@@ -274,17 +277,17 @@ IMUserInfoChangedDelegate>
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDate *date = [gregorian dateFromComponents:components]; //今天 0点时间
     
-    NSInteger hour = [time hoursAfterDate:date];
+    NSTimeInterval interval = [time timeIntervalSinceDate:date];
     NSDateFormatter *dateFormatter = nil;
     NSString *ret = @"";
     
-    if(hour>=0)
+    if(interval >= 0)
     {
-        if (hour<6) {
+        if (interval < 6*60*60) {
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨HH:mm"];
-        }else if(hour<12){
+        }else if(interval < 12*60*60){
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午HH:mm"];
-        }else if(hour<18){
+        }else if(interval < 18*60*60){
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午HH:mm"];
         }else{
             dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
@@ -297,13 +300,13 @@ IMUserInfoChangedDelegate>
         [yComponents setYear:[[dateNow substringWithRange:NSMakeRange(0,4)] intValue]];
         NSDate *yDate = [gregorian dateFromComponents:yComponents]; //昨天 0点时间
         
-        hour = [time hoursAfterDate:yDate];
-        if (hour>=0) {
-            if (hour<6) {
+        interval = [time timeIntervalSinceDate:yDate];
+        if (interval >= 0) {
+            if (interval < 6*60*60) {
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
-            }else if(hour<12){
+            }else if(interval < 12*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 上午HH:mm"];
-            }else if(hour<18){
+            }else if(interval < 18*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 下午HH:mm"];
             }else{
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 晚上HH:mm"];
@@ -317,12 +320,12 @@ IMUserInfoChangedDelegate>
             [cComponents setYear:[[curDate substringWithRange:NSMakeRange(0,4)] intValue]];
             NSDate *cDate = [gregorian dateFromComponents:cComponents]; //当天 0点时间
             
-            hour = [time hoursAfterDate:cDate];
-            if (hour<6) {
+            interval = [time timeIntervalSinceDate:cDate];
+            if (interval < 6*60*60) {
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
-            }else if(hour<12){
+            }else if(interval < 12*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
-            }else if(hour<18){
+            }else if(interval < 18*60*60){
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
             }else{
                 dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
@@ -787,6 +790,7 @@ IMUserInfoChangedDelegate>
 {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.dataSource = self;
