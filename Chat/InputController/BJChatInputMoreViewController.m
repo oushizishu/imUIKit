@@ -135,7 +135,8 @@
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
     if ([self.chatInfo getToRole] == eUserRole_Teacher ||
-        [self.chatInfo getToRole] == eUserRole_Kefu ) {
+        [self.chatInfo getToRole] == eUserRole_Kefu ||
+        ![CommonInstance.mainAccount isAuthorized:eAuthorization_YouHuiQuan]) {
         return self.editList.count - 1;                 //对方为老师或客服不能发送优惠券
     } else {
         return self.editList.count;
