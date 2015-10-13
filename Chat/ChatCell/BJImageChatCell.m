@@ -16,8 +16,8 @@
 #import "BJChatUtilsMacro.h"
 #import "LocalImageCache.h"
 
-const float BJ_MAX_SIZE = 120; //　图片最大显示大小
-
+const CGFloat BJ_MAX_SIZE = 120; //　图片最大显示大小
+const CGFloat BJ_MIN_SIZE = 37; //　图片最大显示大小
 
 @interface BJImageChatCell ()
 @property (strong, nonatomic) UIImageView *chatImageView;
@@ -63,18 +63,42 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 - (CGSize)calculateCellHeight
 {
     CGSize retSize = self.message.imageSize;
-    NSLog(@"calculateCellHeight,%@",NSStringFromCGSize(retSize));
     if (retSize.width == 0 || retSize.height == 0) {
-        retSize.width = BJ_MAX_SIZE;
-        retSize.height = BJ_MAX_SIZE;
+        retSize.width = BJ_MIN_SIZE*2;
+        retSize.height = BJ_MIN_SIZE*2;
+    }else {
+        CGFloat width = MAX(MIN(BJ_MAX_SIZE, retSize.width),BJ_MIN_SIZE);
+        CGFloat height =  MAX(MIN(width/retSize.width*retSize.height,BJ_MAX_SIZE*2),BJ_MIN_SIZE);
+        retSize.width = width;
+        retSize.height = height;
+    }
+    return retSize;
+}
+
+- (CGSize)calculateImageContentHeight
+{
+    CGSize retSize = self.message.imageSize;
+    if (retSize.width == 0 || retSize.height == 0) {
+        retSize.width = BJ_MIN_SIZE*2;
+        retSize.height = BJ_MIN_SIZE*2;
     }else if (retSize.width > retSize.height) {
         CGFloat height =  BJ_MAX_SIZE / retSize.width  *  retSize.height;
         retSize.height = height;
         retSize.width = BJ_MAX_SIZE;
+        if (height < BJ_MIN_SIZE) {
+            CGFloat width =  BJ_MIN_SIZE / retSize.height  *  retSize.width;
+            retSize.width = width;
+            retSize.height = BJ_MIN_SIZE;
+        }
     }else {
         CGFloat width = BJ_MAX_SIZE / retSize.height * retSize.width;
         retSize.width = width;
         retSize.height = BJ_MAX_SIZE;
+        if (width < BJ_MIN_SIZE) {
+            CGFloat height =  BJ_MIN_SIZE / retSize.width  *  retSize.height;
+            retSize.height = height;
+            retSize.width = BJ_MIN_SIZE;
+        }
     }
     return retSize;
 }
@@ -105,7 +129,7 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
 
     self.chatImageView.image = nil;
     
-    CGSize size = [self calculateCellHeight];
+    CGSize size = [self calculateImageContentHeight];
     @IMTODO("设置默认图片");
     if ([self.message.imageURL isFileURL]) {
         [[LocalImageCache sharedInstance] setLocalImage:self.message.imageURL withSize:size withImageView:self.chatImageView];
@@ -125,6 +149,7 @@ const float BJ_MAX_SIZE = 120; //　图片最大显示大小
         _chatImageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _chatImageView.userInteractionEnabled = YES;
         _chatImageView.multipleTouchEnabled = YES;
+        [_chatImageView setContentMode:UIViewContentModeScaleAspectFill];
         [self.bubbleContainerView addSubview:_chatImageView];
     }
     return _chatImageView;
