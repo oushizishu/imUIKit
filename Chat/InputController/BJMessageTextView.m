@@ -12,6 +12,20 @@
 
 #import "BJMessageTextView.h"
 
+@implementation UITextView(ios7Resize)
+
+-(void)resizeForIOS7:(CGFloat)height
+{
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version >= 7.0f && version < 8.0f)
+    {
+        UIView *firstView = [self.subviews firstObject];
+        firstView.frame = CGRectMake(0, 0, self.frame.size.width, height);
+    }
+}
+
+@end
+
 @implementation BJMessageTextView
 
 #pragma mark - Setters
