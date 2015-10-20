@@ -13,7 +13,7 @@
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <SETextView.h>
+#import "SETextView.h"
 #import "XHMessageBubbleHelper.h"
 
 const float BUBBLE_PROGRESSVIEW_HEIGHT = 10; // progressView 高度
@@ -40,10 +40,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     CGRect contentRect = self.displayTextView.frame;
     //    contentRect.size.width = TEXTLABEL_MAX_WIDTH;
     //    self.displayTextView.frame = contentRect;
-    NSString *message = self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本";
-
-    CGSize size = [self neededSizeForText:message];
-    self.displayTextView.frame = CGRectMake(0, 0, size.width, size.height);
+    self.displayTextView.frame = CGRectMake(0, 0, TEXTLABEL_MAX_WIDTH, 20);
     [self.displayTextView sizeToFit];
     contentRect = self.displayTextView.frame;
     
@@ -130,40 +127,6 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     [self layoutIfNeeded];
 }
 
-// 获取文本的实际大小
-- (CGFloat)neededWidthForText:(NSString *)text {
-    CGSize stringSize;
-    NSRange range = [text rangeOfString:@"\n" options:0];
-    if (range.length > 0) {
-        NSArray *array = [text componentsSeparatedByString:@"\n"];
-        stringSize = CGSizeMake(0, 0);
-        CGSize temp;
-        for (int i = 0; i < array.count; i++) {
-            temp = [[array objectAtIndex:i] sizeWithFont:self.displayTextView.font constrainedToSize:CGSizeMake(MAXFLOAT, 20)];
-            if (temp.width > stringSize.width) {
-                stringSize = temp;
-            }
-        }
-    } else {
-        stringSize = [text sizeWithFont:self.displayTextView.font
-                      constrainedToSize:CGSizeMake(MAXFLOAT, 20)];
-    }
-    
-    return roundf(stringSize.width);
-}
-
-// 计算文本实际的大小
-- (CGSize)neededSizeForText:(NSString *)text {
-    
-    CGFloat dyWidth = [self neededWidthForText:text];
-    
-    CGSize textSize = [SETextView frameRectWithAttributtedString:[[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:text]
-                                                  constraintSize:CGSizeMake(TEXTLABEL_MAX_WIDTH, MAXFLOAT)
-                                                     lineSpacing:self.displayTextView.lineSpacing
-                                                            font:self.displayTextView.font].size;
-    return CGSizeMake((dyWidth > textSize.width ? textSize.width : dyWidth), textSize.height);
-}
-
 #pragma mark - SETextViewDelegate
 - (BOOL)textView:(SETextView *)textView clickedOnLink:(SELinkText *)link atIndex:(NSUInteger)charIndex
 {
@@ -192,7 +155,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
         displayTextView.backgroundColor = [UIColor clearColor];
         displayTextView.selectable = NO;
         displayTextView.lineSpacing = 3.0;
-        displayTextView.lineBreakMode = NSLineBreakByCharWrapping;
+        displayTextView.lineBreakMode = NSLineBreakByWordWrapping;
         displayTextView.linkHighlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
         displayTextView.font = [UIFont systemFontOfSize:BJ_TEXTCHARCELL_FONTSIZE];
         displayTextView.showsEditingMenuAutomatically = NO;
