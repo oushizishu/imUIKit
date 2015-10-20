@@ -165,7 +165,12 @@ IMUserInfoChangedDelegate>
     //
     //    if ([array count] > 0 && self.conversation && self.conversation.chat_t == eChatType_GroupChat)
     //    {
-    [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+//    [[BJIMManager shareInstance] loadMessageFromMinMsgId:0 inConversation:self.conversation];
+    if (self.chatInfo.chat_t == eChatType_Chat) {
+        [[BJIMManager shareInstance] loadMessageFromMinMsgId:nil withUser:self.chatInfo.chatToUser];
+    } else {
+        [[BJIMManager shareInstance] loadMessageFromMinMsgId:nil withGroup:self.chatInfo.chatToGroup];
+    }
     //    }
     
     
@@ -354,7 +359,12 @@ IMUserInfoChangedDelegate>
         msgId = message.msgId;
     if (msgId.length>0) {
         self.isLoadMore = YES;
-        [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
+//        [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId inConversation:self.conversation];
+        if (self.chatInfo.chat_t == eChatType_Chat) {
+            [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId withUser:self.chatInfo.chatToUser];
+        } else {
+            [[BJIMManager shareInstance] loadMessageFromMinMsgId:msgId withGroup:self.chatInfo.chatToGroup];
+        }
     }
 }
 
