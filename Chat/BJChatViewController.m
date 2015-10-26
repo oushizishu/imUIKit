@@ -789,7 +789,8 @@ IMUserInfoChangedDelegate>
         {
             _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
             if (_conversation) {
-                self.title = _conversation.chatToUser.name;
+                self.title = (_conversation.chatToUser.remarkName && _conversation.chatToUser.remarkName.length > 0)?
+                _conversation.chatToUser.remarkName:_conversation.chatToUser.name;
             }
         }
     }
