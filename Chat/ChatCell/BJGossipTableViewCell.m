@@ -10,13 +10,54 @@
 #import "BJChatCellFactory.h"
 #import "BJChatBaseCell.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import "MyXmlDomParser.h"
 
 const float Gossip_Content_Label_Max_Width = 200;
 const float Gossip_Content_Label_Height = 18;
 
+@interface CustomLable()
+
+@end
+
+@implementation CustomLable
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+        self.font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
+        self.textAlignment = NSTextAlignmentCenter;
+        self.backgroundColor = [UIColor clearColor];
+        self.textColor = [UIColor colorWithHexString:BJ_GOSSIP_FONTCOLOR];
+        self.numberOfLines = 1;
+        self.clipsToBounds = YES;
+    }
+    
+    return self;
+}
+
+-(void)addHrefLink:(NSString*)href
+{
+    self.href = href;
+    self.textColor = [UIColor blueColor];
+    UITapGestureRecognizer *hitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lablePressed:)];
+    [self addGestureRecognizer:hitTap];
+}
+
+-(void)lablePressed:(id)aciton
+{
+    if (self.deleagate != nil) {
+        [self.deleagate userHitHrefLink:self];
+    }
+}
+
+@end
+
 @interface BJGossipTableViewCell ()
 @property (strong ,nonatomic) UIView *gossipView;
 @property (strong, nonatomic) UILabel *contentLabel;
+@property (strong ,nonatomic) NSMutableArray *lableArray;
 @end
 
 @implementation BJGossipTableViewCell
@@ -52,44 +93,82 @@ const float Gossip_Content_Label_Height = 18;
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJGossipTableViewCell class])];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
-    self.message = info;
-    self.indexPath = indexPath;
-    NSString *showMsg = self.message.gossipText;
-    UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
-    
-    NSInteger lineCount = [BJGossipTableViewCell getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
     
     CGFloat screenW = [[UIScreen mainScreen] bounds].size.width;
     self.contentView.frame = CGRectMake(0, 0, screenW, self.frame.size.height);
     
-    CGFloat textW = 0.0f;
-    
-    if (lineCount >1) {
-        textW = BJ_GOSSIP_TEXTMAXWIDTH;
-        self.contentLabel.numberOfLines = 0;
-        self.contentLabel.textAlignment = NSTextAlignmentLeft;
-    }else
-    {
-        self.contentLabel.numberOfLines = 1;
-        self.contentLabel.textAlignment = NSTextAlignmentCenter;
-        if (lineCount == 0) {
-            showMsg = @"空消息!";
-            lineCount = 1;
+    if (self.contentLabel != nil) {
+        [self.contentLabel removeFromSuperview];
+    }
+    if (self.lableArray != nil) {
+        for (int i = 0; i < [self.lableArray count]; i++) {
+            UILabel *itemLable = [self.lableArray objectAtIndex:i];
+            [itemLable removeFromSuperview];
         }
-        CGSize size = [showMsg sizeWithFont:font];
-        textW = size.width;
+        [self.lableArray removeAllObjects];
+    }
+    if (self.lableArray == nil) {
+        self.lableArray = [[NSMutableArray alloc] init];
     }
     
-    self.contentLabel.text = showMsg;
+    self.message = info;
+    self.indexPath = indexPath;
+    IMNotificationMessageBody *body = self.message.getNotificationBody;
+    NSString *showMsg = body.content;
     
-    self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-(textW+BJ_GOSSIP_MARGIN*2))/2, BJ_GOSSIP_LINESPAC, textW+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1));
+    UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
     
-    self.contentLabel.frame = CGRectMake(BJ_GOSSIP_MARGIN, BJ_GOSSIP_MARGIN, textW , BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_LINESPAC*(lineCount-1));
+    MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
+    if (body.type == eTxtMessageContentType_RICH_TXT && [parser parserStr:showMsg]) {
+        
+        MyNode *rootNode = [parser getRootNode];
+        
+        CGSize rSize = [BJGossipTableViewCell getRichTxtSize:self withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        
+        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-rSize.width)/2, 0, rSize.width, rSize.height);
+        
+        for (int i = 0; i < [self.lableArray count]; i++) {
+            UILabel *itemLable = [self.lableArray objectAtIndex:i];
+            [self.gossipView addSubview:itemLable];
+        }
+        
+    }else
+    {
+        NSInteger lineCount = 0;
+        
+        NSArray *spArray = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        
+        CGFloat textW = 0.0f;
+        
+        if ([spArray count] >1) {
+            textW = BJ_GOSSIP_TEXTMAXWIDTH;
+            self.contentLabel.numberOfLines = 0;
+            self.contentLabel.textAlignment = NSTextAlignmentLeft;
+            lineCount = [spArray count];
+        }else
+        {
+            self.contentLabel.numberOfLines = 1;
+            self.contentLabel.textAlignment = NSTextAlignmentCenter;
+            if ([spArray count] == 0) {
+                showMsg = @"空消息!";
+            }
+            CGSize size = [showMsg sizeWithFont:font];
+            textW = size.width;
+            lineCount = 1;
+        }
+        
+        self.contentLabel.text = showMsg;
+        
+        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-(textW+BJ_GOSSIP_MARGIN*2))/2, 0, textW+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1));
+        [self.gossipView addSubview:self.contentLabel];
+        self.contentLabel.frame = CGRectMake(BJ_GOSSIP_MARGIN, BJ_GOSSIP_MARGIN, textW , BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_LINESPAC*(lineCount-1));
+    }
     
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -97,14 +176,39 @@ const float Gossip_Content_Label_Height = 18;
 
 + (CGFloat)cellHeightWithInfo:(id)dic indexPath:(NSIndexPath *)indexPath;
 {
+    CGFloat height = 0.0f;
     IMMessage *message = dic;
-    NSString *showMsg = message.gossipText;
+    IMNotificationMessageBody *body = message.getNotificationBody;
+    
     UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
-    NSInteger count = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
-    if (count == 0) {
-        count = 1;
+    
+    if(body.type == eTxtMessageContentType_RICH_TXT)
+    {
+        NSString *showMsg = body.content;
+        
+        MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
+        UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
+        if ([parser parserStr:showMsg]) {
+            MyNode *rootNode = [parser getRootNode];
+            CGSize rSize = [self getRichTxtSize:nil withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+            height = rSize.height;
+        }else
+        {
+            NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+            if (lineCount == 0) {
+                lineCount = 1;
+            }
+            height = BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1);
+        }
+    }else
+    {
+        NSString *showMsg = message.gossipText;
+        NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        if (lineCount == 0) {
+            lineCount = 1;
+        }
+        height = BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1);
     }
-    CGFloat height = BJ_GOSSIP_FONTSIZE*count+BJ_GOSSIP_MARGIN*2+10*2+BJ_GOSSIP_LINESPAC*(count-1);
     
     return height;
 }
@@ -137,6 +241,117 @@ const float Gossip_Content_Label_Height = 18;
     }
     
     return count;
+}
+
++(NSArray*)splitMsg:(NSString*)showMsg withFont:(UIFont*)font withMaxWid:(CGFloat)width;
+{
+    NSMutableArray *retArray = [[NSMutableArray alloc] init];
+    if (showMsg != nil) {
+        NSMutableString *subStr = [[NSMutableString alloc] init];
+        for (int i=0; i<[showMsg length]; i++) {
+            CGSize size = [[NSString stringWithFormat:@"%@%@",subStr,[showMsg substringWithRange:NSMakeRange(i, 1)]] sizeWithFont:font];
+            if (size.width>width) {
+                if ([subStr length]>0) {
+                    [retArray addObject:subStr];
+                    subStr = [[NSMutableString alloc] init];
+                    i--;
+                }else
+                {
+                    break;
+                }
+            }else
+            {
+                [subStr appendString:[showMsg substringWithRange:NSMakeRange(i, 1)]];
+            }
+        }
+        
+        if ([subStr length]>0) {
+            [retArray addObject:subStr];
+        }
+    }
+    
+    return retArray;
+}
+
++(CGSize)getRichTxtSize:(BJGossipTableViewCell*)cell withNode:(MyNode*)node withFont:(UIFont*)font withMaxWid:(CGFloat)maxWidth;
+{
+    CGFloat width = 0.0f;
+    NSInteger lineCount = 0;
+    
+    MyNode *rootNode = node;
+    CGFloat curShowWidth = maxWidth;
+    for (int i = 0; i < [rootNode.storageMutableArray count]; i++) {
+        NSString *showMsg = nil;
+        NSString *hrefLink = nil;
+        id object = [rootNode.storageMutableArray objectAtIndex:i];
+        if ([object isKindOfClass:[NSString class]]) {
+            showMsg = object;
+        }else if([object isKindOfClass:[MyNode class]])
+        {
+            MyNode *itemNode = (MyNode*)object;
+            showMsg = [itemNode getNodeValue];
+            if ([itemNode.nodeName isEqualToString:@"a"]) {
+                hrefLink = [itemNode.nodeAttributes objectForKey:@"href"];
+            }
+        }
+        NSArray *splitA = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:curShowWidth];
+        if ([splitA count] == 0 && curShowWidth < maxWidth) {
+            lineCount++;
+            if (width < maxWidth) {
+                width = maxWidth;
+            }
+            curShowWidth = maxWidth;
+            splitA = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:curShowWidth];
+        }
+        while ([splitA count]>1) {
+            if (cell != nil) {
+                NSString *labelText = [splitA objectAtIndex:0];
+                CGFloat lableWidth = [labelText sizeWithFont:font].width;
+                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(BJ_GOSSIP_TEXTMAXWIDTH-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
+                itemLable.deleagate = cell;
+                itemLable.text = labelText;
+                if (hrefLink != nil) {
+                    [itemLable addHrefLink:hrefLink];
+                }
+                [cell.lableArray addObject:itemLable];
+            }
+            
+            showMsg = [showMsg substringWithRange:NSMakeRange([[splitA objectAtIndex:0] length], [showMsg length]-[[splitA objectAtIndex:0] length])];
+            lineCount++;
+            if (width < maxWidth) {
+                width = maxWidth;
+            }
+            curShowWidth = maxWidth;
+            splitA = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:curShowWidth];
+        }
+        if ([splitA count]>0) {
+            NSString *labelText = [splitA objectAtIndex:0];
+            CGFloat lableWidth = [labelText sizeWithFont:font].width;
+            if (cell != nil) {
+                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(BJ_GOSSIP_TEXTMAXWIDTH-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
+                itemLable.deleagate = cell;
+                itemLable.text = labelText;
+                if (hrefLink != nil) {
+                    [itemLable addHrefLink:hrefLink];
+                }
+                [cell.lableArray addObject:itemLable];
+            }
+            
+            if (width < lableWidth) {
+                width = lableWidth;
+            }
+            curShowWidth = curShowWidth - lableWidth;
+        }
+    }
+    
+    return CGSizeMake(width+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*(lineCount+1)+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*lineCount);
+
+}
+
+#pragma mark - CustomLableDelegate
+-(void)userHitHrefLink:(CustomLable *)customLable
+{
+    
 }
 
 #pragma mark - set get

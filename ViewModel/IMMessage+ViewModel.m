@@ -254,4 +254,11 @@
     return @"未知消息";
 }
 
+- (IMNotificationMessageBody *)getNotificationBody
+{
+    IMNotificationMessageBody *body = (IMNotificationMessageBody *)self.messageBody;
+    return body;
+}
+
+
 @end

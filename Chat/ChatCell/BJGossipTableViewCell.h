@@ -17,7 +17,24 @@
 #define BJ_GOSSIP_MARGIN 10
 #define BJ_GOSSIP_LINESPAC 5
 
-@interface BJGossipTableViewCell : UITableViewCell<BJChatViewCellProtocol>
+@class CustomLable;
+
+@protocol CustomLableDelegate <NSObject>
+
+-(void)userHitHrefLink:(CustomLable*)customLable;
+
+@end
+
+@interface CustomLable : UILabel
+
+@property(strong ,nonatomic)NSString *href;
+@property(weak,nonatomic)id<CustomLableDelegate> deleagate;
+
+-(void)addHrefLink:(NSString*)href;
+
+@end
+
+@interface BJGossipTableViewCell : UITableViewCell<BJChatViewCellProtocol,CustomLableDelegate>
 @property (strong, nonatomic)IMMessage *message;
 @property (strong, nonatomic)NSIndexPath *indexPath;
 @end

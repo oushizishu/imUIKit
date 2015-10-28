@@ -47,4 +47,7 @@
 //gossip 通知和cmd显示消息
 - (NSString *)gossipText;
 
+// 获取通知内容对象
+- (IMNotificationMessageBody *)getNotificationBody;
+
 @end
