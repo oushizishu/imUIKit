@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <IMMessage.h>
+#import <BJHL-IM-iOS-SDK/BJIMUrlSchema.h>
 #import "BJChatViewCellProtocol.h"
 
 #define BJ_GOSSIP_FONTSIZE 11

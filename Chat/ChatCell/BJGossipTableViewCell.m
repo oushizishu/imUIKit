@@ -41,6 +41,7 @@ const float Gossip_Content_Label_Height = 18;
 {
     self.href = href;
     self.textColor = [UIColor blueColor];
+    self.userInteractionEnabled = YES;
     UITapGestureRecognizer *hitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lablePressed:)];
     [self addGestureRecognizer:hitTap];
 }
@@ -131,7 +132,7 @@ const float Gossip_Content_Label_Height = 18;
         
         CGSize rSize = [BJGossipTableViewCell getRichTxtSize:self withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
         
-        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-rSize.width)/2, 0, rSize.width, rSize.height);
+        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-rSize.width)/2, 10, rSize.width, rSize.height);
         
         for (int i = 0; i < [self.lableArray count]; i++) {
             UILabel *itemLable = [self.lableArray objectAtIndex:i];
@@ -165,7 +166,7 @@ const float Gossip_Content_Label_Height = 18;
         
         self.contentLabel.text = showMsg;
         
-        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-(textW+BJ_GOSSIP_MARGIN*2))/2, 0, textW+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1));
+        self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-(textW+BJ_GOSSIP_MARGIN*2))/2, 10, textW+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1));
         [self.gossipView addSubview:self.contentLabel];
         self.contentLabel.frame = CGRectMake(BJ_GOSSIP_MARGIN, BJ_GOSSIP_MARGIN, textW , BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_LINESPAC*(lineCount-1));
     }
@@ -182,32 +183,21 @@ const float Gossip_Content_Label_Height = 18;
     
     UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
     
-    if(body.type == eTxtMessageContentType_RICH_TXT)
+    NSString *showMsg = body.content;
+    MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
+    
+    if(body.type == eTxtMessageContentType_RICH_TXT && [parser parserStr:showMsg])
     {
-        NSString *showMsg = body.content;
-        
-        MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
-        UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
-        if ([parser parserStr:showMsg]) {
-            MyNode *rootNode = [parser getRootNode];
-            CGSize rSize = [self getRichTxtSize:nil withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
-            height = rSize.height;
-        }else
-        {
-            NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
-            if (lineCount == 0) {
-                lineCount = 1;
-            }
-            height = BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1);
-        }
+        MyNode *rootNode = [parser getRootNode];
+        CGSize rSize = [self getRichTxtSize:nil withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        height = rSize.height+20;
     }else
     {
-        NSString *showMsg = message.gossipText;
         NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
         if (lineCount == 0) {
             lineCount = 1;
         }
-        height = BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1);
+        height = BJ_GOSSIP_FONTSIZE*lineCount+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*(lineCount-1)+20;
     }
     
     return height;
@@ -351,7 +341,7 @@ const float Gossip_Content_Label_Height = 18;
 #pragma mark - CustomLableDelegate
 -(void)userHitHrefLink:(CustomLable *)customLable
 {
-    
+    [[BJIMUrlSchema shareInstance] handleUrl:customLable.href];
 }
 
 #pragma mark - set get
