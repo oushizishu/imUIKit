@@ -21,6 +21,7 @@
 #import "BJChatUtilsMacro.h"
 
 #import "BJChatFileCacheManager.h"
+#import "MyXmlDomParser.h"
 
 @implementation IMMessage (ViewModel)
 
@@ -243,7 +244,26 @@
 {
     if (self.msg_t == eMessageType_NOTIFICATION) {
         IMNotificationMessageBody *body = (IMNotificationMessageBody *)self.messageBody;
-        return body.content;
+        MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
+        if(body.type == eTxtMessageContentType_RICH_TXT && [parser parserStr:body.content])
+        {
+            MyNode *rootNode = [parser getRootNode];
+            NSMutableString *showMsg = [[NSMutableString alloc] init];
+            for (int i = 0; i < [rootNode.storageMutableArray count]; i++) {
+                id object = [rootNode.storageMutableArray objectAtIndex:i];
+                if ([object isKindOfClass:[NSString class]]) {
+                    [showMsg appendString:object];
+                }else if([object isKindOfClass:[MyNode class]])
+                {
+                    MyNode *itemNode = (MyNode*)object;
+                    [showMsg appendString:[itemNode getNodeValue]];
+                }
+            }
+            return showMsg;
+        }else
+        {
+            return body.content;
+        }
     }
     else if (self.msg_t == eMessageType_CMD)
     {
