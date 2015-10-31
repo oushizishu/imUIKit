@@ -41,7 +41,7 @@ const float Gossip_Content_Label_Height = 18;
 -(void)addHrefLink:(NSString*)href
 {
     self.href = href;
-    self.textColor = [UIColor bj_blue_200];
+    self.textColor = [UIColor colorWithHexString:@"#3fa5f2"];;
     self.userInteractionEnabled = YES;
 }
 
