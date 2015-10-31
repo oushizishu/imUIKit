@@ -32,6 +32,7 @@ const float Gossip_Content_Label_Height = 18;
         self.textColor = [UIColor colorWithHexString:BJ_GOSSIP_FONTCOLOR];
         self.numberOfLines = 1;
         self.clipsToBounds = YES;
+        self.href = nil;
     }
     
     return self;
@@ -42,15 +43,49 @@ const float Gossip_Content_Label_Height = 18;
     self.href = href;
     self.textColor = [UIColor bj_blue_200];
     self.userInteractionEnabled = YES;
-    UITapGestureRecognizer *hitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lablePressed:)];
-    [self addGestureRecognizer:hitTap];
 }
 
--(void)lablePressed:(id)aciton
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    if (self.deleagate != nil) {
-        [self.deleagate userHitHrefLink:self];
+    [super touchesBegan:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    if(touch.view == self)
+    {
+        CGPoint point = [touch locationInView:self];
+        if(point.x>=-10&&point.y>=-10&&point.x<=self.frame.size.width+10&&point.y<=self.frame.size.height+10)
+        {
+        }
     }
+}
+
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    if(touch.view == self)
+    {
+    }
+}
+
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    if(touch.view == self)
+    {
+        CGPoint point = [touch locationInView:self];
+        if(point.x>=-10&&point.y>=-10&&point.x<=self.frame.size.width+10&&point.y<=self.frame.size.height+10)
+        {
+            if (self.href != nil && self.deleagate != nil) {
+                [self.deleagate userHitHrefLink:self];
+            }
+        }
+    }
+}
+
+-(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
 }
 
 @end
