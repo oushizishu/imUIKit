@@ -40,7 +40,7 @@ const float Gossip_Content_Label_Height = 18;
 -(void)addHrefLink:(NSString*)href
 {
     self.href = href;
-    self.textColor = [UIColor blueColor];
+    self.textColor = [UIColor bj_blue_200];
     self.userInteractionEnabled = YES;
     UITapGestureRecognizer *hitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lablePressed:)];
     [self addGestureRecognizer:hitTap];
