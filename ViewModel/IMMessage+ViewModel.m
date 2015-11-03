@@ -97,7 +97,12 @@
 - (NSString *)nickName;
 {
     User *senderUser = [self getSenderUser];
-    return senderUser.name;
+    if (senderUser.remarkName != nil && senderUser.remarkName.length > 0) {
+        return senderUser.remarkName;
+    }else
+    {
+        return senderUser.name;
+    }
 }
 
 - (NSString *)content;//text
