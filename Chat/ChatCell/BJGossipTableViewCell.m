@@ -137,6 +137,7 @@ const float Gossip_Content_Label_Height = 18;
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     
+    
     CGFloat screenW = [[UIScreen mainScreen] bounds].size.width;
     self.contentView.frame = CGRectMake(0, 0, screenW, self.frame.size.height);
     
@@ -160,13 +161,14 @@ const float Gossip_Content_Label_Height = 18;
     NSString *showMsg = body.content;
     
     UIFont *font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
+    CGFloat maxTextWidth = screenW-40-BJ_GOSSIP_MARGIN*2;
     
     MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
     if (body.type == eTxtMessageContentType_RICH_TXT && [parser parserStr:showMsg]) {
         
         MyNode *rootNode = [parser getRootNode];
         
-        CGSize rSize = [BJGossipTableViewCell getRichTxtSize:self withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        CGSize rSize = [BJGossipTableViewCell getRichTxtSize:self withNode:rootNode withFont:font withMaxWid:maxTextWidth];
         
         self.gossipView.frame = CGRectMake((self.contentView.frame.size.width-rSize.width)/2, 10, rSize.width, rSize.height);
         
@@ -179,12 +181,12 @@ const float Gossip_Content_Label_Height = 18;
     {
         NSInteger lineCount = 0;
         
-        NSArray *spArray = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        NSArray *spArray = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:maxTextWidth];
         
         CGFloat textW = 0.0f;
         
         if ([spArray count] >1) {
-            textW = BJ_GOSSIP_TEXTMAXWIDTH;
+            textW = maxTextWidth;
             self.contentLabel.numberOfLines = 0;
             self.contentLabel.textAlignment = NSTextAlignmentLeft;
             lineCount = [spArray count];
@@ -213,6 +215,8 @@ const float Gossip_Content_Label_Height = 18;
 
 + (CGFloat)cellHeightWithInfo:(id)dic indexPath:(NSIndexPath *)indexPath;
 {
+    CGFloat screenW = [[UIScreen mainScreen] bounds].size.width;
+    
     CGFloat height = 0.0f;
     IMMessage *message = dic;
     IMNotificationMessageBody *body = message.getNotificationBody;
@@ -222,14 +226,16 @@ const float Gossip_Content_Label_Height = 18;
     NSString *showMsg = body.content;
     MyXmlDomParser *parser = [[MyXmlDomParser alloc] init];
     
+    CGFloat maxTextWidth = screenW-40-BJ_GOSSIP_MARGIN*2;
+    
     if(body.type == eTxtMessageContentType_RICH_TXT && [parser parserStr:showMsg])
     {
         MyNode *rootNode = [parser getRootNode];
-        CGSize rSize = [self getRichTxtSize:nil withNode:rootNode withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        CGSize rSize = [self getRichTxtSize:nil withNode:rootNode withFont:font withMaxWid:maxTextWidth];
         height = rSize.height+20;
     }else
     {
-        NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:BJ_GOSSIP_TEXTMAXWIDTH];
+        NSInteger lineCount = [self getMsgLineCount:showMsg withFont:font withMaxWid:maxTextWidth];
         if (lineCount == 0) {
             lineCount = 1;
         }
@@ -333,7 +339,7 @@ const float Gossip_Content_Label_Height = 18;
             if (cell != nil) {
                 NSString *labelText = [splitA objectAtIndex:0];
                 CGFloat lableWidth = [labelText sizeWithFont:font].width;
-                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(BJ_GOSSIP_TEXTMAXWIDTH-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
+                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(maxWidth-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
                 itemLable.deleagate = cell;
                 itemLable.text = labelText;
                 if (hrefLink != nil) {
@@ -342,19 +348,20 @@ const float Gossip_Content_Label_Height = 18;
                 [cell.lableArray addObject:itemLable];
             }
             
-            showMsg = [showMsg substringWithRange:NSMakeRange([[splitA objectAtIndex:0] length], [showMsg length]-[[splitA objectAtIndex:0] length])];
             lineCount++;
             if (width < maxWidth) {
                 width = maxWidth;
             }
             curShowWidth = maxWidth;
+            
+            showMsg = [showMsg substringWithRange:NSMakeRange([[splitA objectAtIndex:0] length], [showMsg length]-[[splitA objectAtIndex:0] length])];
             splitA = [BJGossipTableViewCell splitMsg:showMsg withFont:font withMaxWid:curShowWidth];
         }
         if ([splitA count]>0) {
             NSString *labelText = [splitA objectAtIndex:0];
             CGFloat lableWidth = [labelText sizeWithFont:font].width;
             if (cell != nil) {
-                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(BJ_GOSSIP_TEXTMAXWIDTH-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
+                CustomLable *itemLable = [[CustomLable alloc] initWithFrame:CGRectMake(BJ_GOSSIP_MARGIN+(maxWidth-curShowWidth),BJ_GOSSIP_MARGIN+lineCount*BJ_GOSSIP_FONTSIZE+lineCount*BJ_GOSSIP_LINESPAC,lableWidth , BJ_GOSSIP_FONTSIZE)];
                 itemLable.deleagate = cell;
                 itemLable.text = labelText;
                 if (hrefLink != nil) {
@@ -363,15 +370,15 @@ const float Gossip_Content_Label_Height = 18;
                 [cell.lableArray addObject:itemLable];
             }
             
-            if (width < lableWidth) {
-                width = lableWidth;
+            width = width + lableWidth;
+            if (width > maxWidth) {
+                width = maxWidth;
             }
             curShowWidth = curShowWidth - lableWidth;
         }
     }
     
     return CGSizeMake(width+BJ_GOSSIP_MARGIN*2, BJ_GOSSIP_FONTSIZE*(lineCount+1)+BJ_GOSSIP_MARGIN*2+BJ_GOSSIP_LINESPAC*lineCount);
-
 }
 
 #pragma mark - CustomLableDelegate

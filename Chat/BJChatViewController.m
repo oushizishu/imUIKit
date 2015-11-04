@@ -137,7 +137,7 @@ IMUserInfoChangedDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];

@@ -11,7 +11,7 @@
 #import <BJHL-IM-iOS-SDK/BJIMUrlSchema.h>
 #import "BJChatViewCellProtocol.h"
 
-#define BJ_GOSSIP_FONTSIZE 11
+#define BJ_GOSSIP_FONTSIZE 12
 #define BJ_GOSSIP_FONTCOLOR @"#9d9e9e"
 #define BJ_GOOSIP_BACKCOLOR @"#dcddde"
 #define BJ_GOSSIP_TEXTMAXWIDTH 180.0f
