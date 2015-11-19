@@ -26,8 +26,6 @@
 #import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
-#import "TeacherSettingsViewController.h"
-#import "StudentSettingsViewController.h"
 #import "BJChatViewController+BrowserHelper.h"
 #import <NSDateFormatter+Category.h>
 #import <UIView+Basic.h>

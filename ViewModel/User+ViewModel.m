@@ -39,10 +39,10 @@
 - (NSString *)getContactAvatar;
 {
     if (self.userRole == eUserRole_System) {
-        return [[NSBundle mainBundle] pathForResource:@"ic_secretary@2x" ofType:@"png"];
+        return [[NSBundle mainBundle] pathForResource:@"ic_news_radio_small_n@2x" ofType:@"png"];
     }
     else if (self.userRole == eUserRole_Kefu){
-        return [[NSBundle mainBundle] pathForResource:@"ic_square_service@2x" ofType:@"png"];
+        return [[NSBundle mainBundle] pathForResource:@"ic_cservice_n@2x" ofType:@"png"];
     }
     return self.avatar;
 }
