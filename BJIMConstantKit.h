@@ -25,11 +25,10 @@ typedef NS_ENUM (NSInteger, BJContactType)
     BJContact_KeFu = 7,
     BJContact_Admin = 100,
     BJContact_Group = 1001,
+    BJContact_Stranger = -2, //陌生人
+    BJContact_Fans = -3, // 新粉丝
     BJContact_Unkonwn = 1002,
     BJContact_Anonymous = -1,
-    BJContact_Stanger = -2, //陌生人
-    BJContact_Fans = -3 // 新粉丝
 };
-
 
 #endif
