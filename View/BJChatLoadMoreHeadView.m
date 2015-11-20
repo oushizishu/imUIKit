@@ -114,15 +114,19 @@
 }
 
 - (void)bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
-
+    
     if (!_canLoadMore) {
         UIEdgeInsets currentInsets = scrollView.contentInset;
         currentInsets.top = 0;
         scrollView.contentInset = currentInsets;
     } else {
-        UIEdgeInsets currentInsets = scrollView.contentInset;
-        currentInsets.top = self.frame.size.height;
-        scrollView.contentInset = currentInsets;
+        if (scrollView.contentSize.height > scrollView.frame.size.height) {
+            UIEdgeInsets currentInsets = scrollView.contentInset;
+            currentInsets.top = self.frame.size.height;
+            scrollView.contentInset = currentInsets;
+        } else {
+            _canLoadMore = NO;
+        }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         //通知主线程刷新

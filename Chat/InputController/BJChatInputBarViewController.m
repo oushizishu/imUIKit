@@ -662,6 +662,8 @@
 {
     CGFloat height = [self getTextViewContentH:textView];
     [self willShowInputTextViewToHeight:height];
+    
+    [textView resizeForIOS7:height];
 }
 
 #pragma mark - set get

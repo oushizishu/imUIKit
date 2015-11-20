@@ -83,7 +83,7 @@
 - (void)stopPlayerWithMessage:(IMMessage *)message;
 {
     if ([self isPlayerWithMessage:message]) {
-        [self stopPlayer];
+        [self _stopPlayer];
     }
 }
 
@@ -96,6 +96,15 @@
  *  停止当前的播放
  */
 - (void)stopPlayer;
+{
+    [self _stopPlayer];
+    if (self.callback) {
+        self.callback(nil);
+    }
+}
+
+#pragma mark - internal
+- (void)_stopPlayer
 {
     [self.player stopPlay];
     self.message = nil;

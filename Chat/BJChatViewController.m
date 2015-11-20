@@ -138,7 +138,7 @@ IMUserInfoChangedDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
@@ -800,7 +800,8 @@ IMUserInfoChangedDelegate>
         {
             _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
             if (_conversation) {
-                self.title = _conversation.chatToUser.name;
+                self.title = (_conversation.chatToUser.remarkName && _conversation.chatToUser.remarkName.length > 0)?
+                _conversation.chatToUser.remarkName:_conversation.chatToUser.name;
             }
         }
     }

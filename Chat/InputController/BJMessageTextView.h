@@ -19,6 +19,12 @@ typedef NS_ENUM(NSUInteger, BJTextViewInputViewType) {
     BJTextViewShareMenuInputType,
 };
 
+@interface UITextView(ios7Resize)
+
+-(void)resizeForIOS7:(CGFloat)height;
+
+@end
+
 @interface BJMessageTextView : UITextView
 
 /**

@@ -13,6 +13,7 @@
 #import "BJChatLimitMacro.h"
 #import "BJChatUtilsMacro.h"
 #import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import "BJChatAudioPlayerHelper.h"
 
 static char BJRecordView_View;
 static char BJRecordView_Recorder;
@@ -43,6 +44,8 @@ static char BJRecordView_Recorder;
 
 - (void)recordButtonTouchDown
 {
+    //录音的时候停止播放
+    [[BJChatAudioPlayerHelper sharedInstance] stopPlayer];
     __weak typeof(self) weakSelf = self;
     //如果还没有获取授权，则按住效果会被打断
     if (SYSTEM_VERSION_LESS_THAN(@"7.0") || [[JLMicrophonePermission sharedInstance] authorizationStatus] == JLPermissionAuthorized)
