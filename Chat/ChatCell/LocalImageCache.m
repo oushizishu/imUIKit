@@ -102,7 +102,7 @@
     unsigned char result[CC_MD5_DIGEST_LENGTH] = {
         0,
     };
-    CC_MD5(cStr, strlen(cStr), result);
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), result);
     
     
     return [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",

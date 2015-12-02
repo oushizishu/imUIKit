@@ -859,7 +859,7 @@ IMUserInfoChangedDelegate>
 {
     if (!_chatHeadView) {
         _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.size.width, 40)];
-        [_chatHeadView setDelegate:self];
+        [_chatHeadView setDelegate:(id<BJChatLoadMoreHeadViewDelegate>)self];
     }
     return _chatHeadView;
 }
