@@ -790,14 +790,14 @@ IMUserInfoChangedDelegate>
         if (self.chatInfo.chat_t == eChatType_GroupChat) {
             _conversation = [[BJIMManager shareInstance] getConversationGroupId:self.chatInfo.getToId];
             if (_conversation) {
-                self.title = _conversation.chatToGroup.groupName;
+                self.navigationItem.title = _conversation.chatToGroup.groupName;
             }
         }
         else
         {
             _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
             if (_conversation) {
-                self.title = _conversation.chatToUser.name;
+                self.navigationItem.title = _conversation.chatToUser.name;
             }
         }
     }
