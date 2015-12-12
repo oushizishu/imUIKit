@@ -12,9 +12,19 @@
 + (NSString *)chatRootPath;
 + (NSString *)chatAudiosPath;
 + (NSString *)chatImagesPath;
++ (NSString *)chatUploadFilePath;
++ (NSString *)chatDownloadFilePath;
++ (NSString *)chatGroupFilePath;
 
 + (NSString *)imageCachePathWithName:(NSString *)imageName;
 + (NSString *)audioCachePathWithName:(NSString *)audioName;
+
+//上传文件缓存路径
++ (NSString *)uploadFileCachePathwithName:(NSString *)fileName;
+//下载文件缓存路径
++ (NSString *)downloadFileCacherPathWithName:(NSString *)fileName;
+//群文件缓存路径
++ (NSString *)groupFileCachePathWithName:(NSString *)fileName;
 
 /**
  *  相对于library 的路径 例如 .../library/caches/chat/audio/1.mp3 返回caches/chat/audio/1.mp3
