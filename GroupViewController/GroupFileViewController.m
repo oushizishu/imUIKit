@@ -179,15 +179,57 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)addNewUploadFileMode:(NSData*)data withattachment:(NSString*)attachment
+{
+    
+}
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
-    NSString *type = [info objectForKey:UIImagePickerControllerEditedImage];
-    NSURL* url = [info objectForKey:UIImagePickerControllerMediaURL];
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    // 判断获取类型：图片
+    if ([mediaType isEqualToString:( NSString *)kUTTypeImage]){
+        UIImage *theImage = nil;
+        // 判断，图片是否允许修改
+        if ([picker allowsEditing]){
+            //获取用户编辑之后的图像
+            theImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        } else {
+            // 照片的元数据参数
+            theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+            
+        }
+        
+        // 保存图片到相册中
+        //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
+        //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
+        
+    }else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]){
+        // 判断获取类型：视频
+        //获取视频文件的url
+        NSURL* mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
+        //创建ALAssetsLibrary对象并将视频保存到媒体库
+        // Assets Library 框架包是提供了在应用程序中操作图片和视频的相关功能。相当于一个桥梁，链接了应用程序和多媒体文件。
+        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+        
+        // 将视频保存到相册中
+        /*
+        [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:mediaURL
+                                          completionBlock:^(NSURL *assetURL, NSError *error) {
+                                              if (!error) {
+                                                  NSLog(@"captured video saved with no error.");
+                                              }else{
+                                                  NSLog(@"error occured while saving the video:%@", error);
+                                              }
+                                          }];
+         */
+        
+    }
+    
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    
 }
 
 - (CustomTableViewController *)customTableViewController
