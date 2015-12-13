@@ -156,7 +156,10 @@
     info.filePath = filePath;
     info.fileName = [assetRepresentation filename];
     info.info = @"来自自己";
-    info.createDate = @"上传时间";
+    
+    NSDate *date = [NSDate date];
+    NSDateFormatter *formatter = [NSDateFormatter defaultDateFormatter];
+    info.createDate = [formatter stringFromDate:date];
     
     IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
     mode.fileDelegate = self;

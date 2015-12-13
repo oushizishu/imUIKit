@@ -431,12 +431,28 @@
 
 @interface IMFileCellMode()
 
-@property(strong ,nonatomic)NSOperation *uploadOperation;
-@property(strong ,nonatomic)NSOperation *downloadOperation;
+@property(strong ,nonatomic)BJNetRequestOperation *uploadOperation;
+@property(strong ,nonatomic)BJNetRequestOperation *downloadOperation;
 
 @end
 
 @implementation IMFileCellMode
+
+- (void)dealloc
+{
+    if (self.type == IMFileCellModeType_Uploading) {
+        if (self.uploadOperation != nil) {
+            [self.uploadOperation cancel];
+            self.uploadOperation = nil;
+        }
+    }else if(self.type == IMFileCellModeType_Downloading)
+    {
+        if (self.downloadOperation != nil) {
+            [self.downloadOperation cancel];
+            self.downloadOperation = nil;
+        }
+    }
+}
 
 - (instancetype)initWithFileUploadInfo:(IMFileUploadInfo*)info
 {
@@ -552,7 +568,7 @@
 - (void)startUploadFile
 {
     WS(weakself);
-    [[BJIMManager shareInstance] uploadGroupFile:self.info.attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.info.filePath],self.info.attachment]] fileName:self.info.fileName callback:^(NSError *error,int64_t storage_id) {
+    self.uploadOperation = [[BJIMManager shareInstance] uploadGroupFile:self.info.attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.info.filePath],self.info.attachment]] fileName:self.info.fileName callback:^(NSError *error,int64_t storage_id) {
         if (error) {
             [weakself setModeType:IMFileCellModeType_UploadRetry];
         }else
@@ -599,7 +615,7 @@
     if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatDownloadFilePath]]) {
         [IMLinshiTool createDirectory:[BJChatFileCacheManager chatDownloadFilePath]];
     }
-    [[BJIMManager shareInstance] downloadGroupFile:self.groupFile.file_url filePath:[BJChatFileCacheManager downloadFileCacherPathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]] callback:^(NSError *error) {
+    self.downloadOperation = [[BJIMManager shareInstance] downloadGroupFile:self.groupFile.file_url filePath:[BJChatFileCacheManager downloadFileCacherPathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]] callback:^(NSError *error) {
         if (error) {
             [weakself setModeType:IMFileCellModeType_DownloadRetry];
         }else
