@@ -1,17 +1,13 @@
 //
 //  IMToast.h
-//  BJEducation_student
-//
-//  Created by bjhl on 15/12/12.
-//  Copyright © 2015年 Baijiahulian. All rights reserved.
+//  说明：toast通知控件封装
+//  Created by wangziliang on 15/12/12.
 //
 
 #import <UIKit/UIKit.h>
 
 @interface IMToast : UIView
 
-+(IMToast*)makeToast:(NSString*)content withView:(UIView*)view;
-
--(void)show;
++(IMToast*)showThenHidden:(NSString*)content withView:(UIView*)view afterDelay:(NSTimeInterval)delay;
 
 @end

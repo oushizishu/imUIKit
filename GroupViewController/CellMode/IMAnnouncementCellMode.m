@@ -8,7 +8,7 @@
 
 @interface IMAnnouncementCell()
 
-@property(strong ,nonatomic)UILabel *contentLable;
+@property(strong ,nonatomic)NSMutableArray<UILabel *> *contentArray;
 @property(strong ,nonatomic)UILabel *authorNameLable;
 @property(strong ,nonatomic)UILabel *releaseTimeLable;
 @property(strong ,nonatomic)UIButton *deleteBtn;
@@ -45,19 +45,22 @@
     IMAnnouncementCellMode *mode = (IMAnnouncementCellMode*)self.cellMode;
     
     CGRect sRect = [UIScreen mainScreen].bounds;
-    NSInteger count = 0;
-    if (mode.contentArray != nil) {
-        count = [mode.contentArray count];
-    }
     
-    if (count > 0) {
-        self.contentLable.hidden = NO;
-        self.contentLable.frame = CGRectMake(15, 15, sRect.size.width-30, count*20);
-        self.contentLable.numberOfLines = count;
-        self.contentLable.text = mode.groupNotice.content;
-    }else
-    {
-        self.contentLable.hidden = YES;
+    for (int i = 0; i < [self.contentArray count]; i++) {
+        UILabel *itemL = [self.contentArray objectAtIndex:i];
+        [itemL removeFromSuperview];
+    }
+    [self.contentArray removeAllObjects];
+    
+    UIFont *font = [UIFont systemFontOfSize:16.0f];
+    UIColor *fontColor = [UIColor blackColor];
+    for (int i = 0; i < [mode.contentArray count]; i++) {
+        UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+25*i, sRect.size.width-30, 20)];
+        itemL.font = font;
+        itemL.tintColor = fontColor;
+        itemL.text = [mode.contentArray objectAtIndex:i];
+        [self addSubview:itemL];
+        [self.contentArray addObject:itemL];
     }
     
     CGPoint startP = CGPointMake(sRect.size.width-15, [mode getCellHeight]-35);
@@ -99,17 +102,13 @@
     
 }
 
-- (UILabel *)contentLable
+- (NSMutableArray<UILabel *> *)contentArray
 {
-    if(_contentLable == nil)
+    if(_contentArray == nil)
     {
-        _contentLable = [[UILabel alloc] initWithFrame:CGRectZero];
-        _contentLable.textColor = [UIColor blackColor];
-        _contentLable.font = [UIFont systemFontOfSize:16.0f];
-        _contentLable.textAlignment = NSTextAlignmentLeft;
-        [self addSubview:_contentLable];
+        _contentArray = [[NSMutableArray alloc] init];
     }
-    return _contentLable;
+    return _contentArray;
 }
 
 - (UILabel *)authorNameLable
@@ -183,7 +182,7 @@
 {
     NSInteger count = [self.contentArray count];
     
-    return count*20+20+30;
+    return count*25+30+30;
 }
 
 -(BaseModeCell*)createModeCell

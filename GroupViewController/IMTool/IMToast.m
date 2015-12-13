@@ -1,9 +1,7 @@
 //
 //  IMToast.m
-//  BJEducation_student
 //
-//  Created by bjhl on 15/12/12.
-//  Copyright © 2015年 Baijiahulian. All rights reserved.
+//  Created by wangziliang on 15/12/12.
 //
 
 #import "IMToast.h"
@@ -20,13 +18,28 @@
 
 @interface IMToast()
 
+@property(strong ,nonatomic)UIImageView *imageView;
+@property(strong ,nonatomic)NSMutableArray<UILabel *> *contentLArray;
+
 @end
 
 @implementation IMToast
 
-+(IMToast*)makeToast:(NSString*)content withView:(UIView*)view
++(instancetype)shareInstance
 {
-    IMToast *toast = nil;
+    static IMToast *_imToast = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _imToast = [[self alloc] initWithFrame:CGRectZero];
+    });
+    return _imToast;
+}
+
++(IMToast*)showThenHidden:(NSString*)content withView:(UIView*)view afterDelay:(NSTimeInterval)delay
+{
+    IMToast *toast = [self shareInstance];
+    
+    toast.frame = CGRectZero;
     
     CGFloat contentW = view.frame.size.width-IMTOAST_FRAME_INTERVAL*2-IMTOAST_CONTENTINTERVAL_LEFT-IMTOAST_CONTENTINTERVAL_RIGHT;
     UIFont *font = [UIFont systemFontOfSize:16.0f];
@@ -41,50 +54,68 @@
                 array = [array subarrayWithRange:NSMakeRange(0, IMTOAST_CONTENTINTERVAL_MAXCOUNT)];
             }
             
-            toast = [[IMToast alloc] initWithFrame:CGRectMake((view.frame.size.width-contentW-IMTOAST_CONTENTINTERVAL_RIGHT-IMTOAST_CONTENTINTERVAL_LEFT)/2, 0,contentW+IMTOAST_CONTENTINTERVAL_RIGHT+IMTOAST_CONTENTINTERVAL_LEFT , ([array count]-1)*IMTOAST_CONTENTINTERVAL_SPROW+[array count]*IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_TOP+IMTOAST_CONTENTINTERVAL_BOTTOM) withContentArray:array];
+            [toast showThenHidden:CGRectMake((view.frame.size.width-contentW-IMTOAST_CONTENTINTERVAL_RIGHT-IMTOAST_CONTENTINTERVAL_LEFT)/2, 0,contentW+IMTOAST_CONTENTINTERVAL_RIGHT+IMTOAST_CONTENTINTERVAL_LEFT , ([array count]-1)*IMTOAST_CONTENTINTERVAL_SPROW+[array count]*IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_TOP+IMTOAST_CONTENTINTERVAL_BOTTOM) withWithContentArray:array afterDelay:delay];
         }
     }
     
-    if (toast != nil) {
-        [view addSubview:toast];
-        toast.hidden = YES;
-    }
+    [view addSubview:toast];
     return toast;
 }
 
--(instancetype)initWithFrame:(CGRect)frame withContentArray:(NSArray<NSString *> *)contentArray;
+-(instancetype)initWithFrame:(CGRect)frame
 {
-    self = [self initWithFrame:frame];
+    self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((IMTOAST_CONTENTINTERVAL_LEFT-20)/2, IMTOAST_CONTENTINTERVAL_TOP, 20, 20)];
-        [imageView setImage:[UIImage imageNamed:@"ic_horn"]];
-        [self addSubview:imageView];
-        
-        for (int i = 0; i < [contentArray count]; i++) {
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(IMTOAST_CONTENTINTERVAL_LEFT, IMTOAST_CONTENTINTERVAL_TOP+(IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_SPROW)*i, frame.size.width-(IMTOAST_CONTENTINTERVAL_LEFT+IMTOAST_CONTENTINTERVAL_RIGHT), IMTOAST_CONTENTINTERVAL_HEIGHTROW)];
-            label.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor blackColor];
-            label.font = [UIFont systemFontOfSize:16.0f];
-            label.textAlignment = NSTextAlignmentLeft;
-            label.text = [contentArray objectAtIndex:i];
-            [self addSubview:label];
-        }
-        
     }
     return self;
 }
 
--(void)show
+-(void)showThenHidden:(CGRect)frame withWithContentArray:(NSArray<NSString *> *)contentArray afterDelay:(NSTimeInterval)delay;
 {
-    self.hidden = NO;
-    [self performSelector:@selector(hindden) withObject:self afterDelay:10];
+    if (self.imageView != nil) {
+        [self.imageView removeFromSuperview];
+        self.imageView = nil;
+    }
+    
+    for (int i = 0; i < [self.contentLArray count]; i++) {
+        UILabel *itemL = [self.contentLArray objectAtIndex:i];
+        [itemL removeFromSuperview];
+    }
+    [self.contentLArray removeAllObjects];
+    
+    self.frame = frame;
+    
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake((IMTOAST_CONTENTINTERVAL_LEFT-20)/2, IMTOAST_CONTENTINTERVAL_TOP, 20, 20)];
+    [self.imageView setImage:[UIImage imageNamed:@"ic_horn"]];
+    [self addSubview:self.imageView];
+    
+    for (int i = 0; i < [contentArray count]; i++) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(IMTOAST_CONTENTINTERVAL_LEFT, IMTOAST_CONTENTINTERVAL_TOP+(IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_SPROW)*i, frame.size.width-(IMTOAST_CONTENTINTERVAL_LEFT+IMTOAST_CONTENTINTERVAL_RIGHT), IMTOAST_CONTENTINTERVAL_HEIGHTROW)];
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:16.0f];
+        label.textAlignment = NSTextAlignmentLeft;
+        label.text = [contentArray objectAtIndex:i];
+        [self addSubview:label];
+        [self.contentLArray addObject:label];
+    }
+    
+    [IMToast cancelPreviousPerformRequestsWithTarget:self selector:@selector(hidden) object:nil];
+    [self performSelector:@selector(hidden) withObject:nil afterDelay:delay];
 }
 
--(void)hindden
+-(void)hidden
 {
     [self removeFromSuperview];
+}
+
+- (NSMutableArray<UILabel *> *)contentLArray
+{
+    if (_contentLArray == nil) {
+        _contentLArray = [[NSMutableArray alloc] init];
+    }
+    return _contentLArray;
 }
 
 @end

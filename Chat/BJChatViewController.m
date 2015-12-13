@@ -33,6 +33,8 @@
 
 #import "BJChatLoadMoreHeadView.h"
 
+#import "IMToast.h"
+
 const int BJ_Chat_Time_Interval = 5;
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
@@ -42,7 +44,8 @@ BJChatInputProtocol,
 BJSendMessageProtocol,
 IMDeliveredMessageDelegate,
 IMGroupProfileChangedDelegate,
-IMUserInfoChangedDelegate>
+IMUserInfoChangedDelegate,
+IMNewGRoupNoticeDelegate>
 {
     BOOL _isFirstAppear; //生命周期第一次判断
     BOOL _hasPreparedMessages;
@@ -159,6 +162,7 @@ IMUserInfoChangedDelegate>
     [[BJIMManager shareInstance] addDeliveryMessageDelegate:self];
     if ([self.chatInfo getContactType] == BJContact_Group) {
         [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
+        [[BJIMManager shareInstance] addNewGroupNoticeDelegate:self];
     }
     [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
     
@@ -192,6 +196,15 @@ IMUserInfoChangedDelegate>
     //        cardMessage.messageBody = card;
     //        [self addNewMessages:@[cardMessage] isForward:NO];
     //    }
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    NSString *objectkey = [NSString stringWithFormat:@"NewGroupNotice_%lld",self.chatInfo.chatToGroup.groupId];
+    NSString *content =  [userDefaultes objectForKey:objectkey];
+    if (content != nil) {
+        [userDefaultes removeObjectForKey:objectkey];
+        [userDefaultes synchronize];
+        [IMToast showThenHidden:content withView:self.view afterDelay:10];
+    }
 }
 
 
@@ -590,6 +603,18 @@ IMUserInfoChangedDelegate>
         [self.messageList lastObject] == message &&
         [message isMySend] && errorCode == eError_suc) {
         [self scrollViewToBottom:YES needDelay:NO];
+    }
+}
+
+- (void)didNewGroupNotice
+{
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    NSString *objectkey = [NSString stringWithFormat:@"NewGroupNotice_%lld",self.chatInfo.chatToGroup.groupId];
+    NSString *content =  [userDefaultes objectForKey:objectkey];
+    if (content != nil) {
+        [userDefaultes removeObjectForKey:objectkey];
+        [userDefaultes synchronize];
+        [IMToast showThenHidden:content withView:self.view afterDelay:10];
     }
 }
 
