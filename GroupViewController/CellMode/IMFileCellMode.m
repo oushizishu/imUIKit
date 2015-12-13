@@ -102,25 +102,25 @@
         self.flagImageView.backgroundColor = [UIColor clearColor];
         [self.fileContentView addSubview:self.flagImageView];
         
-        self.fileNameLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 15, sRect.size.width-180, 20)];
+        self.fileNameLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 15, sRect.size.width-200, 20)];
         self.fileNameLable.font = [UIFont systemFontOfSize:16.0f];
         self.fileNameLable.textAlignment = NSTextAlignmentLeft;
         self.fileNameLable.textColor = [UIColor blackColor];
         [self.fileContentView addSubview:self.fileNameLable];
         
-        self.descriptionLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 35, sRect.size.width-180, 20)];
+        self.descriptionLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 35, sRect.size.width-200, 20)];
         self.descriptionLable.font = [UIFont systemFontOfSize:14.0f];
         self.descriptionLable.textAlignment = NSTextAlignmentLeft;
         self.descriptionLable.textColor = [UIColor grayColor];
         [self.fileContentView addSubview:self.descriptionLable];
         
-        self.creatDateLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 55, sRect.size.width-180, 20)];
+        self.creatDateLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 55, sRect.size.width-200, 20)];
         self.creatDateLable.font = [UIFont systemFontOfSize:14.0f];
         self.creatDateLable.textAlignment = NSTextAlignmentLeft;
         self.creatDateLable.textColor = [UIColor grayColor];
         [self.fileContentView addSubview:self.creatDateLable];
         
-        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake(sRect.size.width-75, 30, 60, 25)];
+        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 80, 20)];
         [self.operationBtn.layer setCornerRadius:2.0f];
         [self.operationBtn.layer setBorderColor:[UIColor grayColor].CGColor];
         [self.operationBtn.layer setBorderWidth:0.5f];
@@ -128,14 +128,14 @@
         [self.operationBtn addTarget:self action:@selector(operationAction) forControlEvents:UIControlEventTouchUpInside];
         [self.fileContentView addSubview:self.operationBtn];
         
-        self.operationTip = [[UILabel alloc] initWithFrame:CGRectMake(sRect.size.width-75, 30, 60, 20)];
+        self.operationTip = [[UILabel alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 80, 20)];
         self.operationTip.backgroundColor = [UIColor clearColor];
         self.operationTip.font = [UIFont systemFontOfSize:18.0f];
         self.operationTip.textColor = [UIColor grayColor];
         self.operationTip.textAlignment = NSTextAlignmentCenter;
         [self.fileContentView addSubview:self.operationTip];
         
-        self.progressView = [[IMProgressView alloc] initWithFrame:CGRectMake(sRect.size.width-75, 53, 60, 2)];
+        self.progressView = [[IMProgressView alloc] initWithFrame:CGRectMake(sRect.size.width-95, 53, 80, 2)];
         [self.fileContentView addSubview:self.progressView];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15, 89, sRect.size.width-15, 0.5)];
