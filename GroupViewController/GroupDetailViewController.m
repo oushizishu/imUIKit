@@ -18,6 +18,8 @@
 #import "GroupMemberListViewController.h"
 #import "GroupNameViewController.h"
 #import "IMActionSheet.h"
+#import "MBProgressHUD+IMKit.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 
@@ -375,7 +377,7 @@
     WS(weakSelf);
     [[BJIMManager shareInstance] setGroupMsgStatus:index groupId:[self.im_group_id longLongValue] callback:^(NSError *error) {
         if (error) {
-            [MBProgressHUD showError:@"设置失败" toView:weakSelf.view];
+            [MBProgressHUD imShowError:@"设置失败" toView:weakSelf.view];
         }else
         {
             weakSelf.groupDetail.msg_status = index;

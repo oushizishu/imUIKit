@@ -6,6 +6,7 @@
 //
 
 #import "IMGroupTeachersCellMode.h"
+#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 
 @interface GroupTeacherView()
 

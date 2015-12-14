@@ -5,6 +5,7 @@
 //
 
 #import "IMAnnouncementCellMode.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface IMAnnouncementCell()
 

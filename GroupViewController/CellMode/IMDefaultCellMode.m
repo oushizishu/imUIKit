@@ -5,6 +5,7 @@
 //
 
 #import "IMDefaultCellMode.h"
+#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 
 @interface IMDefaultCell()
 

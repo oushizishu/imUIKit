@@ -7,6 +7,8 @@
 
 #import "IMGroupMembersCellMode.h"
 #import <BJHL-IM-iOS-SDK/GroupDetail.h>
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 
 @interface IMGroupMembersCell()
 

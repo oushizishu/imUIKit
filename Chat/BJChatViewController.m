@@ -34,6 +34,7 @@
 #import "BJChatLoadMoreHeadView.h"
 
 #import "IMToast.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 const int BJ_Chat_Time_Interval = 5;
 

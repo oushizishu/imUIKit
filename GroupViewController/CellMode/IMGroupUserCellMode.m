@@ -7,6 +7,8 @@
 
 #import "IMGroupUserCellMode.h"
 #import "IMSingleSelectDialog.h"
+#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+#import <BJHL-IM-iOS-SDK/IMEnvironment.h>
 
 @interface IMGroupUserCell()
 

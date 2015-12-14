@@ -11,6 +11,9 @@
 #import "BJChatFileCacheManager.h"
 #import "IMLinshiTool.h"
 #import "IMFilePreviewViewController.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/NSDateFormatter+Category.h>
+#import "MBProgressHUD+IMKit.h"
 
 @interface GroupFileViewController()<CustomTableViewControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MyImagePickerViewControllerDelegate,IMFileCellModeDelegate>
 
@@ -267,7 +270,7 @@
             WS(weakSelf);
             [[BJIMManager shareInstance] deleteGroupFile:[self.im_group_id longLongValue] file_id:cellMode.groupFile.fileId callback:^(NSError *error) {
                 if (error) {
-                    [MBProgressHUD showError:@"删除失败" toView:weakSelf.view];
+                    [MBProgressHUD imShowError:@"删除失败" toView:weakSelf.view];
                 }else
                 {
                     [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];

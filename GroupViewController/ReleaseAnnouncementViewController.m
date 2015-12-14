@@ -6,6 +6,7 @@
 
 #import "ReleaseAnnouncementViewController.h"
 #import "UIColor+Util.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>
 

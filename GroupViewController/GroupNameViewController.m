@@ -5,6 +5,8 @@
 //
 
 #import "GroupNameViewController.h"
+#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface GroupNameViewController()
 

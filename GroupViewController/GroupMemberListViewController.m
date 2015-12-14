@@ -9,6 +9,7 @@
 #import "MBProgressHUD+IMKit.h"
 #import "IMGroupUserCellMode.h"
 #import "IMLinshiTool.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
 

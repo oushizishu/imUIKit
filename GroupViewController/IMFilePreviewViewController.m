@@ -7,6 +7,7 @@
 #import "IMFilePreviewViewController.h"
 #import "BJChatFileCacheManager.h"
 #import "IMLinshiTool.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
 @interface IMFilePreviewViewController()
 
