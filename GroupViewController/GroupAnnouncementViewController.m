@@ -9,6 +9,8 @@
 #import "IMAnnouncementCellMode.h"
 #import "ReleaseAnnouncementViewController.h"
 #import "UIColor+Util.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import "MBProgressHUD+IMKit.h"
 
 @interface GroupAnnouncementViewController()<CustomTableViewControllerDelegate>
 
@@ -83,7 +85,7 @@
     
     [[BJIMManager shareInstance] getGroupNotice:[self.im_group_id longLongValue] last_id:last_id page_size:10 callback:^(NSError *error, BOOL isAdmin, NSArray<GroupNotice *> *list, BOOL hasMore) {
         if (error) {
-            [MBProgressHUD showError:@"获取失败" toView:weakself.view];
+            [MBProgressHUD imShowError:@"获取失败" toView:weakself.view];
         }else
         {
             weakself.isAdmin = YES;//isAdmin;
