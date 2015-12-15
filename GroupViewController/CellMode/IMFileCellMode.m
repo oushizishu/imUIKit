@@ -31,6 +31,7 @@
 -(void)setProgressValue:(CGFloat)value
 {
     self.progressView.frame = CGRectMake(0, 0, self.frame.size.width*value, self.frame.size.height);
+    [self setNeedsDisplay];
 }
 
 -(UIView*)progressView
@@ -241,7 +242,7 @@
         self.creatDateLable.text = mode.info.createDate;
         self.operationBtn.hidden = YES;
         self.operationTip.hidden = NO;
-        self.operationTip.text = @"等待下载";
+        self.operationTip.text = @"等待上传";
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Uploading)
     {

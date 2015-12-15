@@ -14,6 +14,8 @@
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import <BJHL-Common-iOS-SDK/NSDateFormatter+Category.h>
 #import "MBProgressHUD+IMKit.h"
+#import "IMInputDialog.h"
+#import "IMActionSheet.h"
 
 @interface GroupFileViewController()<CustomTableViewControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MyImagePickerViewControllerDelegate,IMFileCellModeDelegate>
 
@@ -71,13 +73,30 @@
 
 - (void)uploadFile
 {
-    MyImagePickerViewController *imagePicker = [[MyImagePickerViewController alloc] init];
-    imagePicker.delegate = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:imagePicker];
-    [self presentViewController:nav animated:YES completion:nil];
-    //UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    //MyImagePickerViewController *imagePicker = [[MyImagePickerViewController alloc] init];
     //imagePicker.delegate = self;
-    //[self presentViewController:imagePicker animated:YES completion:nil];
+    //UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:imagePicker];
+    //[self presentViewController:nav animated:YES completion:nil];
+    
+    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
+    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        if (index == 0) {
+            [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage,( NSString *)kUTTypeMovie, nil];
+            [imagePicker setMediaTypes:mediaArray];
+        }else if(index == 1)
+        {
+            [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage, nil];
+            [imagePicker setMediaTypes:mediaArray];
+        }
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    } withCancelBlock:^{
+        
+    }];
 }
 
 - (void)requestGroupFiles
@@ -184,7 +203,46 @@
 
 - (void)addNewUploadFileMode:(NSData*)data withattachment:(NSString*)attachment
 {
-    
+    WS(weakSelf);
+    IMInputDialog *inputD = [[IMInputDialog alloc] init];
+    NSString *defaultContent = [NSString stringWithFormat:@"gsx_%.0f",[[NSDate date] timeIntervalSince1970]*100];
+    [inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
+        NSString *filePath = defaultContent;
+        
+        if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
+            [IMLinshiTool createDirectory:[BJChatFileCacheManager chatUploadFilePath]];
+        }
+        
+        [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
+        
+        IMFileUploadInfo *info = [[IMFileUploadInfo alloc] init];
+        info.group_id = [self.im_group_id longLongValue];
+        info.attachment = attachment;
+        info.filePath = filePath;
+        info.fileName = content;
+        info.info = @"来自自己";
+        
+        NSDate *date = [NSDate date];
+        NSDateFormatter *formatter = [NSDateFormatter defaultDateFormatter];
+        info.createDate = [formatter stringFromDate:date];
+        
+        IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
+        mode.fileDelegate = weakSelf;
+        
+        IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
+        if (firstFileMode != nil) {
+            [firstFileMode.sectionMode insertRows:[NSArray arrayWithObjects:mode, nil] withInsertCellMode:firstFileMode withInsertType:ArrayInsertPosition_Before];
+        }else
+        {
+            SectionMode *sMode = [[SectionMode alloc] init];
+            [sMode setRows:[NSArray arrayWithObjects:mode, nil]];
+            [weakSelf.customTableViewController setSections:[NSArray arrayWithObjects:sMode, nil]];
+        }
+        
+        [weakSelf.fileModeArray insertObject:mode atIndex:0];
+    } withInputCancel:^{
+        
+    }];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
@@ -203,6 +261,9 @@
             
         }
         
+        NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
+        
+        [self addNewUploadFileMode:jpgData withattachment:@"jpg"];
         // 保存图片到相册中
         //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
         //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
@@ -213,7 +274,12 @@
         NSURL* mediaURL = [info objectForKey:UIImagePickerControllerMediaURL];
         //创建ALAssetsLibrary对象并将视频保存到媒体库
         // Assets Library 框架包是提供了在应用程序中操作图片和视频的相关功能。相当于一个桥梁，链接了应用程序和多媒体文件。
-        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+        
+        NSData *videoData = [NSData dataWithContentsOfURL:mediaURL];
+        
+        [self addNewUploadFileMode:videoData withattachment:@"mov"];
+        
+        //ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
         
         // 将视频保存到相册中
         /*
@@ -229,10 +295,12 @@
         
     }
     
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (CustomTableViewController *)customTableViewController

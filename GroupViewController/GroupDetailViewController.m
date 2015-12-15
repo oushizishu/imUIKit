@@ -227,6 +227,7 @@
 
     }
     
+    
     //小心接收设置
     sMode = [[SectionMode alloc] init];
     sMode.headerHeight = 15;
