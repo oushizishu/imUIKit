@@ -222,6 +222,7 @@
     }
     for (int i = 0; i < [array count];  i++) {
         IMGroupUserCellMode *cellMode = [[IMGroupUserCellMode alloc] initWithGroupDetailMember:[array objectAtIndex:i]];
+        cellMode.groupUserDelegate = self;
         cellMode.operaterIsAdmin = self.isAdmin;
         cellMode.operaterIsMajor = self.isMajor;
         [self.groupUserArray addObject:cellMode];
@@ -262,7 +263,7 @@
     WS(weakSelf);
     [[BJIMManager shareInstance] setGroupAdmin:[self.im_group_id longLongValue] user_number:cellMode.GroupDetailMember.user_number user_role:cellMode.GroupDetailMember.user_role status:1 callback:^(NSError *error) {
         if (error) {
-            [MBProgressHUD imShowError:@"设置失败" toView:self.view];
+            [MBProgressHUD imShowError:@"设置失败" toView:weakSelf.view];
         }else
         {
             weakSelf.pageIndex = 1;
