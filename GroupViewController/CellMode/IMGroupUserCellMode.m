@@ -275,18 +275,18 @@
     IMSingleSelectDialog *dialog = [[IMSingleSelectDialog alloc] init];
     NSArray *array = nil;
     if (self.GroupDetailMember.is_admin) {
-        array = [NSArray arrayWithObjects:@"设置该成员为管理员",@"移交群给该成员", nil];
+        array = [NSArray arrayWithObjects:@"取消该成员为管理员",@"移交群给该成员", nil];
     }else
     {
-        array = [NSArray arrayWithObjects:@"取消该成员为管理员",@"移交群给该成员", nil];
+        array = [NSArray arrayWithObjects:@"设置该成员为管理员",@"移交群给该成员", nil];
     }
     [dialog showWithTitle:@"请选择将要进行的操作" withArray:array withSelectBlock:^(NSInteger index) {
         if (index == 0) {
             if (weakSelf.GroupDetailMember.is_admin) {
-                [self.groupUserDelegate setGroupUserAdmin:weakSelf];
+                [self.groupUserDelegate cancelGroupUserAmin:weakSelf];
             }else
             {
-                [self.groupUserDelegate cancelGroupUserAmin:weakSelf];
+                [self.groupUserDelegate setGroupUserAdmin:weakSelf];
             }
         }else if (index == 1)
         {

@@ -24,6 +24,13 @@
 @property (strong, nonatomic) NSMutableArray<IMFileCellMode *> *fileModeArray;
 @property (nonatomic) BOOL ifCanLoadMore;
 
+@property (strong, nonatomic) UIView *noHaveNoticeView;
+@property (strong, nonatomic) UIImageView *noNoticeImageView;
+@property (strong, nonatomic) UILabel *noNoticeTip;
+@property (strong, nonatomic) UIButton *releaseBtn;
+
+@property (weak ,nonatomic)UIView *curView;
+
 
 @end
 
@@ -154,6 +161,13 @@
     {
         self.ifCanLoadMore = NO;
     }
+    
+    if ([self.fileModeArray count]>0) {
+        [self switchCurView:self.customTableViewController.view];
+    }else
+    {
+        [self switchCurView:self.noHaveNoticeView];
+    }
 }
 
 - (void)userHitCellMode:(BaseCellMode *)cellMode
@@ -238,6 +252,8 @@
         IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
         mode.fileDelegate = weakSelf;
         
+        [self switchCurView:self.customTableViewController.view];
+        
         IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
         if (firstFileMode != nil) {
             [firstFileMode.sectionMode insertRows:[NSArray arrayWithObjects:mode, nil] withInsertCellMode:firstFileMode withInsertType:ArrayInsertPosition_Before];
@@ -312,6 +328,43 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (UIView*)noHaveNoticeView
+{
+    if (_noHaveNoticeView == nil) {
+        CGRect rectScreen = [UIScreen mainScreen].bounds;
+        CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
+        CGRect rectNav = self.navigationController.navigationBar.frame;
+        _noHaveNoticeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
+        _noHaveNoticeView.backgroundColor = [UIColor clearColor];
+        
+        _noNoticeImageView = [[UIImageView alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-160)/2, (_noHaveNoticeView.frame.size.height-300)/2, 160, 150)];
+        [_noNoticeImageView setImage:[UIImage imageNamed:@"hermes_ic_emotion_default"]];
+        [_noHaveNoticeView addSubview:_noNoticeImageView];
+        
+        _noNoticeTip = [[UILabel alloc] initWithFrame:CGRectMake(15,(_noHaveNoticeView.frame.size.height-300)/2+150+10 , _noHaveNoticeView.frame.size.width-30, 20)];
+        _noNoticeTip.backgroundColor= [UIColor clearColor];
+        _noNoticeTip.font = [UIFont systemFontOfSize:16.0f];
+        _noNoticeTip.text = @"还没发布任何群公告";
+        _noNoticeTip.textColor = [UIColor grayColor];
+        _noNoticeTip.textAlignment = NSTextAlignmentCenter;
+        [_noHaveNoticeView addSubview:_noNoticeTip];
+        
+        _releaseBtn = [[UIButton alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-200)/2, (_noHaveNoticeView.frame.size.height-300)/2+150+60, 200, 50)];
+        _releaseBtn.backgroundColor = [UIColor orangeColor];
+        [_releaseBtn.layer setCornerRadius:2.0f];
+        [_releaseBtn setTitle:@"发布公告" forState:UIControlStateNormal];
+        [_releaseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_releaseBtn addTarget:self action:@selector(hitReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
+        [_noHaveNoticeView addSubview:_releaseBtn];
+    }
+    return _noHaveNoticeView;
+}
+
+- (void)hitReleaseBtn
+{
+    [self uploadFile];
+}
+
 - (CustomTableViewController *)customTableViewController
 {
     if (_customTableViewController == nil) {
@@ -331,6 +384,17 @@
         _fileModeArray = [[NSMutableArray alloc] init];
     }
     return _fileModeArray;
+}
+
+- (void)switchCurView:(UIView*)toView
+{
+    if (self.curView != toView) {
+        if (self.curView != nil) {
+            [self.curView removeFromSuperview];
+        }
+        self.curView = toView;
+        [self.view addSubview:self.curView];
+    }
 }
 
 - (void)userPreviewGroupFile:(IMFileCellMode *)cellMode

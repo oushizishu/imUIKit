@@ -123,7 +123,6 @@
         
         [self.customTableViewController addSections:sectionModeArray];
         
-        self.ifCanLoadMore = YES;
     }
     
     if ([self.announcementArray count]>0) {
