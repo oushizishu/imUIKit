@@ -310,7 +310,7 @@
             [MBProgressHUD imShowError:@"移除失败" toView:self.view];
         }else
         {
-            [cellMode.sectionMode.customTableViewController removeSections:[NSArray arrayWithObjects:cellMode.sectionMode, nil]];
+            [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
         }
     }];
 }
