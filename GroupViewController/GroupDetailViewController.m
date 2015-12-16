@@ -65,6 +65,7 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self requestGroupDetails];
 }
 
 - (void)viewDidLoad
@@ -89,8 +90,6 @@
     if (self.group) {
         self.title = self.group.getContactName;
     }
-    
-    [self requestGroupDetails];
 }
 
 - (void)backAction:(id)aciton
