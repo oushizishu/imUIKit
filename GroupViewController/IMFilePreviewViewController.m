@@ -63,8 +63,10 @@
     self.title = @"文件预览";
     
     CGRect sRect = [UIScreen mainScreen].bounds;
+    CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
+    CGRect rectNav = self.navigationController.navigationBar.frame;
     
-    self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-50, sRect.size.width, 50)];
+    self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-(rectStatus.size.height+rectNav.size.height+50), sRect.size.width, 50)];
     self.operationView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.operationView];
     self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
