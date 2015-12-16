@@ -47,6 +47,11 @@
 
 @implementation GroupDetailViewController
 
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
 -(instancetype)initWithGroudId:(NSString*)groudId
 {
     self =[self init];
@@ -59,12 +64,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
     
@@ -392,7 +401,7 @@
         CGRect rectScreen = [UIScreen mainScreen].bounds;
         CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
         CGRect rectNav = self.navigationController.navigationBar.frame;
-        _customTableViewController = [[CustomTableViewController alloc] initWithFrame:CGRectMake(0, rectStatus.size.height+rectNav.size.height, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
+        _customTableViewController = [[CustomTableViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
         _customTableViewController.delegate = self;
         
         [self.view addSubview:self.customTableViewController.view];

@@ -39,12 +39,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
     
@@ -57,16 +61,14 @@
     self.title = @"群名称";
     
     CGRect sRect = [UIScreen mainScreen].bounds;
-    CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
-    CGRect rectNav = self.navigationController.navigationBar.frame;
     
-    self.faceImageView = [[UIImageView alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, rectStatus.size.height+rectNav.size.height+40, 100, 100)];
+    self.faceImageView = [[UIImageView alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 40, 100, 100)];
     self.faceImageView.layer.masksToBounds = YES;
     self.faceImageView.backgroundColor = [UIColor grayColor];
     [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
     [self.view addSubview:self.faceImageView];
     
-    self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, rectStatus.size.height+rectNav.size.height+150, 100, 20)];
+    self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 150, 100, 20)];
     self.tipLable.backgroundColor = [UIColor clearColor];
     self.tipLable.font = [UIFont systemFontOfSize:14.0f];
     self.tipLable.text = @"点击换头像";
@@ -74,7 +76,7 @@
     self.tipLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.tipLable];
     
-    UIView *textfieldBackView = [[UIView alloc] initWithFrame:CGRectMake(0, rectStatus.size.height+rectNav.size.height+200, sRect.size.width, 60)];
+    UIView *textfieldBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 200, sRect.size.width, 60)];
     textfieldBackView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:textfieldBackView];
     self.nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(15, 0, textfieldBackView.frame.size.width-30, textfieldBackView.frame.size.height)];

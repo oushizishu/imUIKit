@@ -41,12 +41,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
     
@@ -99,7 +103,7 @@
             imageViewSize = CGSizeMake(imageSize.width/scl, frameSize.height);
         }
         
-        self.imageView.frame = CGRectMake((frameSize.width-imageViewSize.width)/2, rectStatus.size.height+rectNav.size.height+(frameSize.height-imageViewSize.height)/2,imageViewSize.width,imageViewSize.height);
+        self.imageView.frame = CGRectMake((frameSize.width-imageViewSize.width)/2, (frameSize.height-imageViewSize.height)/2,imageViewSize.width,imageViewSize.height);
         [self.imageView setImage:preImage];
         
     }else if (self.groupFile.support_preview)

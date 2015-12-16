@@ -36,12 +36,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
@@ -59,7 +63,7 @@
     
     CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
     CGRect rectNav = self.navigationController.navigationBar.frame;
-    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, rectStatus.size.height+rectNav.size.height, self.view.frame.size.width, 200)];
+    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     self.editView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.editView];
     
