@@ -99,29 +99,29 @@
         self.fileContentView.backgroundColor = [UIColor clearColor];
         [self.fileCellView addSubview:self.fileContentView];
         
-        self.flagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 60, 60)];
+        self.flagImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
         self.flagImageView.backgroundColor = [UIColor clearColor];
         [self.fileContentView addSubview:self.flagImageView];
         
-        self.fileNameLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 15, sRect.size.width-200, 20)];
-        self.fileNameLable.font = [UIFont systemFontOfSize:16.0f];
+        self.fileNameLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 15, sRect.size.width-160, 20)];
+        self.fileNameLable.font = [UIFont systemFontOfSize:14.0f];
         self.fileNameLable.textAlignment = NSTextAlignmentLeft;
-        self.fileNameLable.textColor = [UIColor blackColor];
+        self.fileNameLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
         [self.fileContentView addSubview:self.fileNameLable];
         
-        self.descriptionLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 35, sRect.size.width-200, 20)];
-        self.descriptionLable.font = [UIFont systemFontOfSize:14.0f];
+        self.descriptionLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 35, sRect.size.width-160, 20)];
+        self.descriptionLable.font = [UIFont systemFontOfSize:12.0f];
         self.descriptionLable.textAlignment = NSTextAlignmentLeft;
-        self.descriptionLable.textColor = [UIColor grayColor];
+        self.descriptionLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
         [self.fileContentView addSubview:self.descriptionLable];
         
-        self.creatDateLable = [[UILabel alloc] initWithFrame:CGRectMake(90, 55, sRect.size.width-200, 20)];
-        self.creatDateLable.font = [UIFont systemFontOfSize:14.0f];
+        self.creatDateLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 55, sRect.size.width-160, 20)];
+        self.creatDateLable.font = [UIFont systemFontOfSize:12.0f];
         self.creatDateLable.textAlignment = NSTextAlignmentLeft;
-        self.creatDateLable.textColor = [UIColor grayColor];
+        self.creatDateLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY400];
         [self.fileContentView addSubview:self.creatDateLable];
         
-        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 80, 20)];
+        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 60, 30)];
         [self.operationBtn.layer setCornerRadius:2.0f];
         [self.operationBtn.layer setBorderColor:[UIColor grayColor].CGColor];
         [self.operationBtn.layer setBorderWidth:0.5f];

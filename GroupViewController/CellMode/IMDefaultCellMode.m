@@ -6,6 +6,9 @@
 
 #import "IMDefaultCellMode.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+#import "IMLinshiTool.h"
+
+#define IMDEFAULTCELLMODEHEIGHT 44
 
 @interface IMDefaultCell()
 
@@ -28,7 +31,7 @@
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         CGRect sRect = [UIScreen mainScreen].bounds;
         
-        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(15, 60, sRect.size.width-15, 0.5)];
+        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(15, IMDEFAULTCELLMODEHEIGHT, sRect.size.width-15, 0.5)];
         self.lineView.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
         [self addSubview:self.lineView];
     }
@@ -58,14 +61,14 @@
     
     if (mode.flagImage != nil) {
         self.flagImageView.hidden = NO;
-        self.flagImageView.frame = CGRectMake(startPoint.x, 10, 40, 40);
+        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-40)/2, 40, 40);
         self.flagImageView.image = mode.flagImage;
         startPoint.x += 40+10;
         maxW = maxW - (40+10);
     }else if(mode.imageUrl != nil)
     {
         self.flagImageView.hidden = NO;
-        self.flagImageView.frame = CGRectMake(startPoint.x, 10, 40, 40);
+        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-40)/2, 40, 40);
         [self.flagImageView setAliyunImageWithURL:mode.imageUrl placeholderImage:nil size:CGSizeMake(40, 40)];
         startPoint.x += 40+10;
         maxW = maxW - (40+10);
@@ -80,7 +83,7 @@
         if (titleSize.width > maxW) {
             titleSize.width = maxW;
         }
-        self.titleLable.frame = CGRectMake(startPoint.x, 20, titleSize.width, 20);
+        self.titleLable.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-20)/2, titleSize.width, 20);
         self.titleLable.text = mode.title;
         startPoint.x += titleSize.width+10;
         maxW = maxW - (titleSize.width+10);
@@ -92,7 +95,7 @@
     if (maxW > 0) {
         if (mode.value != nil && mode.value.length > 0) {
             self.valueLable.hidden = NO;
-            self.valueLable.frame = CGRectMake(startPoint.x, 20, maxW, 20);
+            self.valueLable.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-20)/2, maxW, 20);
             self.valueLable.text = mode.value;
         }else
         {
@@ -107,17 +110,17 @@
     if(mode.arrowType == CellArrowType_ToRigth)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+10), 20, 10, 20);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+10), (IMDEFAULTCELLMODEHEIGHT-20)/2, 10, 20);
         self.arrowImageView.image = [UIImage imageNamed:@"im_weakblack_rightarrow"];
     }else if(mode.arrowType == CellArrowType_ToUp)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), 25, 20, 10);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), (IMDEFAULTCELLMODEHEIGHT-10)/2, 20, 10);
         self.arrowImageView.image = [UIImage imageNamed:@"im_black_uparrow"];
     }else if(mode.arrowType == CellArrowType_ToBottom)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), 25, 20, 10);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), (IMDEFAULTCELLMODEHEIGHT-10)/2, 20, 10);
         self.arrowImageView.image = [UIImage imageNamed:@"im_black_bottomarrow"];
     }else
     {
@@ -184,7 +187,7 @@
     if (_titleLable == nil) {
         _titleLable = [[UILabel alloc] initWithFrame:CGRectZero];
         _titleLable.textAlignment = NSTextAlignmentLeft;
-        _titleLable.font = [UIFont systemFontOfSize:16];
+        _titleLable.font = [UIFont systemFontOfSize:IMFONTHEIGHT_BIG];
         _titleLable.textColor = [UIColor blackColor];
         [self addSubview:self.titleLable];
     }
@@ -196,7 +199,7 @@
     if (_valueLable == nil) {
         _valueLable = [[UILabel alloc] initWithFrame:CGRectZero];
         _valueLable.textAlignment = NSTextAlignmentRight;
-        _valueLable.font = [UIFont systemFontOfSize:16];
+        _valueLable.font = [UIFont systemFontOfSize:IMFONTHEIGHT_NORMAL];
         _valueLable.textColor = [UIColor grayColor];
         [self addSubview:_valueLable];
     }
@@ -233,7 +236,7 @@
 
 -(CGFloat)getCellHeight
 {
-    return 60.0f;
+    return IMDEFAULTCELLMODEHEIGHT;
 }
 
 -(BaseModeCell*)createModeCell

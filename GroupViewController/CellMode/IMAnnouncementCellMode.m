@@ -6,13 +6,55 @@
 
 #import "IMAnnouncementCellMode.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import "IMLinshiTool.h"
 
-@interface IMAnnouncementCell()
+@implementation IMUILable
+
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    if(touch.view == self)
+    {
+        CGPoint point = [touch locationInView:self];
+        if(point.x>=-10&&point.y>=-10&&point.x<=self.frame.size.width+10&&point.y<=self.frame.size.height+10)
+        {
+            if (self.delegate != nil) {
+                [self.delegate userHitLable:self];
+            }
+        }
+    }
+}
+
+-(void)touchesEstimatedPropertiesUpdated:(NSSet *)touches
+{
+    [super touchesEstimatedPropertiesUpdated:touches];
+}
+
+-(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
+}
+
+@end
+
+@interface IMAnnouncementCell()<IMUILableDelegate>
 
 @property(strong ,nonatomic)NSMutableArray<UILabel *> *contentArray;
 @property(strong ,nonatomic)UILabel *authorNameLable;
 @property(strong ,nonatomic)UILabel *releaseTimeLable;
-@property(strong ,nonatomic)UIButton *deleteBtn;
+@property(strong ,nonatomic)IMUILable *deleteL;
 
 @end
 
@@ -53,10 +95,10 @@
     }
     [self.contentArray removeAllObjects];
     
-    UIFont *font = [UIFont systemFontOfSize:16.0f];
-    UIColor *fontColor = [UIColor blackColor];
+    UIFont *font = [UIFont systemFontOfSize:14.0f];
+    UIColor *fontColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
     for (int i = 0; i < [mode.contentArray count]; i++) {
-        UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+25*i, sRect.size.width-30, 20)];
+        UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+20*i, sRect.size.width-30, 15)];
         itemL.font = font;
         itemL.tintColor = fontColor;
         itemL.text = [mode.contentArray objectAtIndex:i];
@@ -64,24 +106,24 @@
         [self.contentArray addObject:itemL];
     }
     
-    CGPoint startP = CGPointMake(sRect.size.width-15, [mode getCellHeight]-35);
+    CGPoint startP = CGPointMake(sRect.size.width-15, [mode getCellHeight]-30);
     
     if (mode.ifCanDelete) {
-        self.deleteBtn.hidden = NO;
-        CGRect deleteBtnFrame = self.deleteBtn.frame;
-        self.deleteBtn.frame = CGRectMake(startP.x-deleteBtnFrame.size.width, startP.y, deleteBtnFrame.size.width, deleteBtnFrame.size.height);
-        startP = CGPointMake(startP.x-deleteBtnFrame.size.width, startP.y);
+        self.deleteL.hidden = NO;
+        CGRect deleteLFrame = self.deleteL.frame;
+        self.deleteL.frame = CGRectMake(startP.x-deleteLFrame.size.width, startP.y, deleteLFrame.size.width, deleteLFrame.size.height);
+        startP = CGPointMake(startP.x-deleteLFrame.size.width, startP.y);
     }else
     {
-        self.deleteBtn.hidden = YES;
+        self.deleteL.hidden = YES;
     }
     
     if(mode.groupNotice != nil && mode.groupNotice.create_date != nil && mode.groupNotice.create_date.length>0)
     {
         self.releaseTimeLable.hidden = NO;
         
-        CGSize create_dateSize = [mode.groupNotice.create_date sizeWithFont:[UIFont systemFontOfSize:16.0f]];
-        self.releaseTimeLable.frame = CGRectMake(startP.x-create_dateSize.width, startP.y, create_dateSize.width, 20);
+        CGSize create_dateSize = [mode.groupNotice.create_date sizeWithFont:[UIFont systemFontOfSize:13.0f]];
+        self.releaseTimeLable.frame = CGRectMake(startP.x-create_dateSize.width, startP.y, create_dateSize.width, 15);
         self.releaseTimeLable.text = mode.groupNotice.create_date;
         startP = CGPointMake(startP.x-create_dateSize.width-15, startP.y);
     }else
@@ -93,8 +135,8 @@
     {
         self.authorNameLable.hidden = NO;
         
-        CGSize creatorSize = [mode.groupNotice.creator sizeWithFont:[UIFont systemFontOfSize:16.0f]];
-        self.authorNameLable.frame = CGRectMake(startP.x-creatorSize.width, startP.y, creatorSize.width, 20);
+        CGSize creatorSize = [mode.groupNotice.creator sizeWithFont:[UIFont systemFontOfSize:13.0f]];
+        self.authorNameLable.frame = CGRectMake(startP.x-creatorSize.width, startP.y, creatorSize.width, 15);
         self.authorNameLable.text = mode.groupNotice.creator;
     }else
     {
@@ -116,8 +158,8 @@
 {
     if (_authorNameLable == nil) {
         _authorNameLable = [[UILabel alloc] initWithFrame:CGRectZero];
-        _authorNameLable.textColor = [UIColor grayColor ];
-        _authorNameLable.font = [UIFont systemFontOfSize:16.0f];
+        _authorNameLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        _authorNameLable.font = [UIFont systemFontOfSize:13.0f];
         _authorNameLable.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_authorNameLable];
     }
@@ -128,27 +170,40 @@
 {
     if (_releaseTimeLable == nil) {
         _releaseTimeLable = [[UILabel alloc] initWithFrame:CGRectZero];
-        _releaseTimeLable.textColor = [UIColor grayColor ];
-        _releaseTimeLable.font = [UIFont systemFontOfSize:16.0f];
+        _releaseTimeLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        _releaseTimeLable.font = [UIFont systemFontOfSize:13.0f];
         _releaseTimeLable.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_releaseTimeLable];
     }
     return _releaseTimeLable;
 }
 
-- (UIButton *)deleteBtn
+- (UILabel *)deleteL
 {
-    if (_deleteBtn == nil) {
-        _deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
-        [_deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
-        [_deleteBtn setTitleColor:[UIColor colorWithHexString:@"#90caf9"] forState:UIControlStateNormal];
-        [_deleteBtn addTarget:self action:@selector(deleteAction) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_deleteBtn];
+    if (_deleteL == nil) {
+        CGSize deleteSize = [@"删除" sizeWithFont:[UIFont systemFontOfSize:13.0f]];
+        _deleteL = [[IMUILable alloc] initWithFrame:CGRectMake(0, 0, deleteSize.width+30, 15)];
+        _deleteL.textColor = [UIColor colorWithHexString:@"8cc8fd"];
+        _deleteL.font = [UIFont systemFontOfSize:13.0f];
+        _deleteL.textAlignment = NSTextAlignmentCenter;
+        _deleteL.text = @"删除";
+        _deleteL.delegate = self;
+        _deleteL.userInteractionEnabled = YES;
+        
+        [self addSubview:_deleteL];
     }
-    return _deleteBtn;
+    return _deleteL;
 }
 
-- (void)deleteAction
+- (void)userHitLable:(IMUILable *)lable
+{
+    if (self.cellMode != nil) {
+        IMAnnouncementCellMode *cellMode = (IMAnnouncementCellMode*)self.cellMode;
+        [cellMode deleteAnnouncement];
+    }
+}
+
+- (void)deleteLPressed:(id)sender
 {
     if (self.cellMode != nil) {
         IMAnnouncementCellMode *cellMode = (IMAnnouncementCellMode*)self.cellMode;
@@ -183,7 +238,7 @@
 {
     NSInteger count = [self.contentArray count];
     
-    return count*25+30+30;
+    return count*20+30+20;
 }
 
 -(BaseModeCell*)createModeCell
@@ -197,7 +252,7 @@
     if (_contentArray == nil) {
         if (self.groupNotice != nil && self.groupNotice.content != nil&& self.groupNotice.content.length > 0) {
             CGRect sRect = [UIScreen mainScreen].bounds;
-            _contentArray = [self splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:16.0f] withMaxWid:sRect.size.width-30];
+            _contentArray = [self splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:14.0f] withMaxWid:sRect.size.width-30];
         }
     }
     return _contentArray;

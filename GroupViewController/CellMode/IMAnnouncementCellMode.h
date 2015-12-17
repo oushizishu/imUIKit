@@ -8,6 +8,20 @@
 #import <Mantle.h>
 #import <BJHL-IM-iOS-SDK/GroupDetail.h>
 
+@class IMUILable;
+
+@protocol IMUILableDelegate <NSObject>
+
+- (void)userHitLable:(IMUILable*)lable;
+
+@end
+
+@interface IMUILable : UILabel
+
+@property(weak ,nonatomic) id<IMUILableDelegate> delegate;
+
+@end
+
 @interface IMAnnouncementCell : BaseModeCell
 
 @end

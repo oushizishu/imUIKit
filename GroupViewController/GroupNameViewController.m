@@ -7,6 +7,7 @@
 #import "GroupNameViewController.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import "IMLinshiTool.h"
 
 @interface GroupNameViewController()
 
@@ -62,26 +63,28 @@
     
     CGRect sRect = [UIScreen mainScreen].bounds;
     
-    self.faceImageView = [[UIImageView alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 40, 100, 100)];
+    self.faceImageView = [[UIImageView alloc] initWithFrame:CGRectMake((sRect.size.width-70)/2, 40, 70, 70)];
+    [self.faceImageView.layer setCornerRadius:3.0f];
     self.faceImageView.layer.masksToBounds = YES;
     self.faceImageView.backgroundColor = [UIColor grayColor];
     [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
     [self.view addSubview:self.faceImageView];
     
-    self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 150, 100, 20)];
+    self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 120, 100, 20)];
     self.tipLable.backgroundColor = [UIColor clearColor];
-    self.tipLable.font = [UIFont systemFontOfSize:14.0f];
+    self.tipLable.font = [UIFont systemFontOfSize:13.0f];
     self.tipLable.text = @"点击换头像";
-    self.tipLable.textColor = [UIColor grayColor];
+    self.tipLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
     self.tipLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.tipLable];
     
-    UIView *textfieldBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 200, sRect.size.width, 60)];
+    UIView *textfieldBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 160, sRect.size.width, 44)];
     textfieldBackView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:textfieldBackView];
     self.nameTextField = [[UITextField alloc] initWithFrame:CGRectMake(15, 0, textfieldBackView.frame.size.width-30, textfieldBackView.frame.size.height)];
     self.nameTextField.backgroundColor = [UIColor clearColor];
     self.nameTextField.text = self.groupDetail.group_name;
+    self.nameTextField.font = [UIFont systemFontOfSize:13.0f];
     [textfieldBackView addSubview:self.nameTextField];
     
     User *owner = [IMEnvironment shareInstance].owner;

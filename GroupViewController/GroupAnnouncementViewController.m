@@ -11,6 +11,7 @@
 #import "UIColor+Util.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "MBProgressHUD+IMKit.h"
+#import "IMLinshiTool.h"
 
 @interface GroupAnnouncementViewController()<CustomTableViewControllerDelegate>
 
@@ -187,20 +188,20 @@
         _noHaveNoticeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
         _noHaveNoticeView.backgroundColor = [UIColor clearColor];
         
-        _noNoticeImageView = [[UIImageView alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-160)/2, (_noHaveNoticeView.frame.size.height-300)/2, 160, 150)];
+        _noNoticeImageView = [[UIImageView alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-80)/2, (_noHaveNoticeView.frame.size.height-175)/2, 75, 80)];
         [_noNoticeImageView setImage:[UIImage imageNamed:@"hermes_ic_emotion_default"]];
         [_noHaveNoticeView addSubview:_noNoticeImageView];
         
-        _noNoticeTip = [[UILabel alloc] initWithFrame:CGRectMake(15,(_noHaveNoticeView.frame.size.height-300)/2+150+10 , _noHaveNoticeView.frame.size.width-30, 20)];
+        _noNoticeTip = [[UILabel alloc] initWithFrame:CGRectMake(15,(_noHaveNoticeView.frame.size.height-175)/2+90 , _noHaveNoticeView.frame.size.width-30, 15)];
         _noNoticeTip.backgroundColor= [UIColor clearColor];
-        _noNoticeTip.font = [UIFont systemFontOfSize:16.0f];
+        _noNoticeTip.font = [UIFont systemFontOfSize:13.0f];
         _noNoticeTip.text = @"还没发布任何群公告";
-        _noNoticeTip.textColor = [UIColor grayColor];
+        _noNoticeTip.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
         _noNoticeTip.textAlignment = NSTextAlignmentCenter;
         [_noHaveNoticeView addSubview:_noNoticeTip];
         
-        _releaseBtn = [[UIButton alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-200)/2, (_noHaveNoticeView.frame.size.height-300)/2+150+60, 200, 50)];
-        _releaseBtn.backgroundColor = [UIColor orangeColor];
+        _releaseBtn = [[UIButton alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-120)/2, (_noHaveNoticeView.frame.size.height-175)/2+90+15+30, 120, 40)];
+        _releaseBtn.backgroundColor = [UIColor colorWithHexString:@"#ff9100"];
         [_releaseBtn.layer setCornerRadius:2.0f];
         [_releaseBtn setTitle:@"发布公告" forState:UIControlStateNormal];
         [_releaseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
