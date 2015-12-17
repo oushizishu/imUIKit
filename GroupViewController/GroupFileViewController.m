@@ -243,7 +243,8 @@
         info.attachment = attachment;
         info.filePath = filePath;
         info.fileName = content;
-        info.info = @"来自自己";
+        
+        info.info = [NSString stringWithFormat:@"%@ 来自自己",[IMLinshiTool getSizeStrWithFileSize:[data length]]];
         
         NSDate *date = [NSDate date];
         NSDateFormatter *formatter = [NSDateFormatter defaultDateFormatter];
@@ -344,7 +345,7 @@
         _noNoticeTip = [[UILabel alloc] initWithFrame:CGRectMake(15,(_noHaveNoticeView.frame.size.height-175)/2+90 , _noHaveNoticeView.frame.size.width-30, 15)];
         _noNoticeTip.backgroundColor= [UIColor clearColor];
         _noNoticeTip.font = [UIFont systemFontOfSize:13.0f];
-        _noNoticeTip.text = @"还没发布任何群公告";
+        _noNoticeTip.text = @"还没添加任何群文件";
         _noNoticeTip.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
         _noNoticeTip.textAlignment = NSTextAlignmentCenter;
         [_noHaveNoticeView addSubview:_noNoticeTip];
@@ -352,7 +353,7 @@
         _releaseBtn = [[UIButton alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-120)/2, (_noHaveNoticeView.frame.size.height-175)/2+90+15+30, 120, 40)];
         _releaseBtn.backgroundColor = [UIColor colorWithHexString:@"#ff9100"];
         [_releaseBtn.layer setCornerRadius:2.0f];
-        [_releaseBtn setTitle:@"发布公告" forState:UIControlStateNormal];
+        [_releaseBtn setTitle:@"上传文件" forState:UIControlStateNormal];
         [_releaseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_releaseBtn addTarget:self action:@selector(hitReleaseBtn) forControlEvents:UIControlEventTouchUpInside];
         [_noHaveNoticeView addSubview:_releaseBtn];

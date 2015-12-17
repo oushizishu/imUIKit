@@ -98,8 +98,8 @@
             [MBProgressHUD imShowError:@"获取失败" toView:weakself.view];
         }else
         {
-            weakself.isAdmin = YES;//isAdmin;
-            weakself.ifCanLoadMore = YES;//hasMore;
+            weakself.isAdmin = isAdmin;
+            weakself.ifCanLoadMore = hasMore;
             [weakself addGroupNotice:list];
         }
     }];

@@ -8,6 +8,18 @@
 #import "BaseCellMode.h"
 #import <BJHL-IM-iOS-SDK/GroupDetail.h>
 
+@protocol IMUIViewDelegate <NSObject>
+
+- (void)userHitView:(UIView*)view;
+
+@end
+
+@interface IMUIView : UIView
+
+@property(weak ,nonatomic) id<IMUIViewDelegate> delegate;
+
+@end
+
 @class IMFileCellMode;
 
 @protocol IMFileCellModeDelegate <NSObject>

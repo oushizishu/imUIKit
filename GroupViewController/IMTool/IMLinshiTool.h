@@ -34,4 +34,8 @@
 
 + (NSArray*)splitMsg:(NSString*)showMsg withFont:(UIFont*)font withMaxWid:(CGFloat)width;
 
++(long long) fileSizeAtPath:(NSString*) filePath;
+
++(NSString*)getSizeStrWithFileSize:(long long)fileSize;
+
 @end

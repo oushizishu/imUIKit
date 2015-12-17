@@ -172,15 +172,14 @@
             }
         }
         
-        self.customTableViewController.Offset = 0;
-        
+        NSMutableArray *sectionTitleArray = [[NSMutableArray alloc] init];
         NSMutableArray *sectionModeArray = [[NSMutableArray alloc] init];
         if ([managerArray count] > 0) {
             SectionMode *sMode = [[SectionMode alloc] init];
-            sMode.headerHeight = 15.0f;
+            sMode.headerHeight = 0.0f;
             [sMode setRows:managerArray];
             [sectionModeArray addObject:sMode];
-            self.customTableViewController.Offset = 1;
+            [sectionTitleArray addObject:@"☆"];
         }
         
         for (int i = 0; i < [sortedArray count]; i++) {
@@ -188,13 +187,13 @@
             NSString *title = [sectionTitles objectAtIndex:i];
             SectionMode *sMode = [[SectionMode alloc] init];
             
-            sMode.headerHeight = 30.0f;
+            sMode.headerHeight = 33.0f;
             sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
             sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
-            UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, 100, 20)];
+            UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 9, 100, 15)];
             showTitleL.backgroundColor = [UIColor clearColor];
             showTitleL.textAlignment = NSTextAlignmentLeft;
-            showTitleL.font = [UIFont systemFontOfSize:16.0f];
+            showTitleL.font = [UIFont systemFontOfSize:12.0f];
             showTitleL.tintColor = [UIColor grayColor];
             showTitleL.text = title;
             [sMode.headerView addSubview:showTitleL];
@@ -203,7 +202,9 @@
             [sectionModeArray addObject:sMode];
         }
         
-        self.sectionTitleArray = sectionTitles;
+        [sectionTitleArray addObjectsFromArray:sectionTitles];
+        
+        self.sectionTitleArray = sectionTitleArray;
         self.sectionModeArray = sectionModeArray;
         
         

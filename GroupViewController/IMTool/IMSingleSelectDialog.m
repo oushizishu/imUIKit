@@ -53,7 +53,7 @@
         self.selectState = NO;
         
         self.contenrtLabel = [[UILabel alloc] initWithFrame:CGRectMake(frame.size.width/6+20+10, 0, frame.size.width*2/3-(20+10), 20)];
-        self.contenrtLabel.font = [UIFont systemFontOfSize:16.0f];
+        self.contenrtLabel.font = [UIFont systemFontOfSize:14.0f];
         self.contenrtLabel.textColor = [UIColor blackColor];
         self.contenrtLabel.textAlignment = NSTextAlignmentLeft;
         self.contenrtLabel.text = content;
@@ -130,25 +130,25 @@
     }
     CGFloat scrollH = 35*arrayCount;
     
-    if (scrollH > (sRect.size.height*2/3-100)) {
-        scrollH = sRect.size.height*2/3-100;
+    if (scrollH > (sRect.size.height*2/3-88)) {
+        scrollH = sRect.size.height*2/3-88;
     }
     
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(55, (sRect.size.height-(scrollH+100))/2, sRect.size.width-110, scrollH+100)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(55, (sRect.size.height-(scrollH+88))/2, sRect.size.width-110, scrollH+88)];
     self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
     self.contentView.layer.masksToBounds = YES;
     [self.contentView.layer setCornerRadius:5.0f];
     [self.view addSubview:self.contentView];
     
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, self.contentView.frame.size.width, 20)];
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 12, self.contentView.frame.size.width, 20)];
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.font = [UIFont systemFontOfSize:16.0f];
+    self.titleLabel.font = [UIFont systemFontOfSize:13.0f];
     self.titleLabel.textColor = [UIColor grayColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.text = title;
     [self.contentView addSubview:self.titleLabel];
     
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 50, self.contentView.frame.size.width, scrollH)];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 44, self.contentView.frame.size.width, scrollH)];
     self.scrollView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.scrollView];
     
@@ -169,22 +169,22 @@
         [self.curSelectItem setItemSelectState:YES];
     }
     
-    UIView *lineW = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-50, self.contentView.frame.size.width, 0.5)];
+    UIView *lineW = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-44, self.contentView.frame.size.width, 0.5)];
     lineW.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
     [self.contentView addSubview:lineW];
     
-    UIView *lineH = [[UIView alloc] initWithFrame:CGRectMake(self.contentView.frame.size.width/2, self.contentView.frame.size.height-50, 0.5, 50)];
+    UIView *lineH = [[UIView alloc] initWithFrame:CGRectMake(self.contentView.frame.size.width/2, self.contentView.frame.size.height-44, 0.5, 50)];
     lineH.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
     [self.contentView addSubview:lineH];
     
-    self.cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-50, self.contentView.frame.size.width/2, 50)];
+    self.cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-44, self.contentView.frame.size.width/2, 44)];
     self.cancelBtn.backgroundColor = [UIColor clearColor];
     [self.cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
     [self.cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.cancelBtn addTarget:self action:@selector(cancelBtnAction) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.cancelBtn];
     
-    self.comfireBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.contentView.frame.size.width/2, self.contentView.frame.size.height-50, self.contentView.frame.size.width/2, 50)];
+    self.comfireBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.contentView.frame.size.width/2, self.contentView.frame.size.height-44, self.contentView.frame.size.width/2, 44)];
     self.comfireBtn.backgroundColor = [UIColor clearColor];
     [self.comfireBtn setTitle:@"确定" forState:UIControlStateNormal];
     [self.comfireBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];

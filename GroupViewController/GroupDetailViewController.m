@@ -248,7 +248,7 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
     footerView.backgroundColor = [UIColor clearColor];
     
-    self.exitBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 15, self.view.frame.size.width-30, 50)];
+    self.exitBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 15, self.view.frame.size.width-30, 44)];
     User *owner = [IMEnvironment shareInstance].owner;
     if (owner.userId == self.groupDetail.user_id && owner.userRole == self.groupDetail.user_role) {
         [self.exitBtn setTitle:@"退出并解散群组" forState:UIControlStateNormal];
@@ -364,11 +364,29 @@
     {
         WS(weakSelf);
         IMActionSheet  *actionSheet = [[IMActionSheet alloc] init];
-        NSArray *array = [NSArray arrayWithObjects:@"接收所有消息并提醒",@"只接收老师消息",@"接收所有消息并不提醒",@"不接收此群消息", nil];
+        NSArray *array = nil;
+        User *owner = [IMEnvironment shareInstance].owner;
+        if (owner.userRole == eUserRole_Student) {
+            array = [NSArray arrayWithObjects:@"接收所有消息并提醒",@"只接收老师消息",@"接收所有消息并不提醒",@"不接收此群消息", nil];
+        }else
+        {
+            array = [NSArray arrayWithObjects:@"接收所有消息并提醒",@"接收所有消息并不提醒",@"不接收此群消息", nil];
+        }
+        
         NSInteger curIndex = (int)self.groupDetail.msg_status;
         [actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
             if (index >= 0 && index <= 3 && curIndex != index) {
-                [weakSelf setGroupMsgStatus:index];
+                if (owner.userRole == eUserRole_Student) {
+                    [weakSelf setGroupMsgStatus:index];
+                }else
+                {
+                    if (index >= 1) {
+                        [weakSelf setGroupMsgStatus:index+1];
+                    }else
+                    {
+                        [weakSelf setGroupMsgStatus:index+1];
+                    }
+                }
             }
         } withCancelBlock:^{
             

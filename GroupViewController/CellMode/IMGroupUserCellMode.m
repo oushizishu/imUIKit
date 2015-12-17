@@ -9,6 +9,7 @@
 #import "IMSingleSelectDialog.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import <BJHL-IM-iOS-SDK/IMEnvironment.h>
+#import "IMLinshiTool.h"
 
 @interface IMGroupUserCell()
 
@@ -43,47 +44,48 @@
         
         CGRect sRect = [UIScreen mainScreen].bounds;
         
-        self.cellView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width+80*2, 60)];
+        self.cellView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width+75*2, 55)];
         [self addSubview:self.cellView];
         
-        self.faceViewImage = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 40, 40)];
+        self.faceViewImage = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 36, 36)];
+        [self.faceViewImage.layer setCornerRadius:2.0f];
         self.faceViewImage.layer.masksToBounds = YES;
-        self.faceViewImage.backgroundColor = [UIColor grayColor];
+        self.faceViewImage.backgroundColor = [UIColor whiteColor];
         [self.cellView addSubview:self.faceViewImage];
         
         self.userNameL = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.userNameL.font = [UIFont systemFontOfSize:16.0f];
-        self.userNameL.textColor = [UIColor blackColor];
+        self.userNameL.font = [UIFont systemFontOfSize:14.0f];
+        self.userNameL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
         self.userNameL.textAlignment = NSTextAlignmentLeft;
         [self.cellView addSubview:self.userNameL];
         
         self.userRoleL = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.userRoleL.font = [UIFont systemFontOfSize:16.0f];
-        self.userRoleL.textColor = [UIColor grayColor];
+        self.userRoleL.font = [UIFont systemFontOfSize:14.0f];
+        self.userRoleL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY400];
         self.userRoleL.textAlignment = NSTextAlignmentLeft;
         [self.cellView addSubview:self.userRoleL];
         
-        self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 80, 60)];
+        self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 75, 55)];
         self.deleteView.backgroundColor = [UIColor colorWithHexString:@"#f95e5e"];
         [self.cellView addSubview:self.deleteView];
-        self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 20, 60, 20)];
+        self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
         [self.deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
         self.deleteBtn.backgroundColor = [UIColor clearColor];
         [self.deleteBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.deleteBtn addTarget:self action:@selector(deleteAction) forControlEvents:UIControlEventTouchUpInside];
         [self.deleteView addSubview:self.deleteBtn];
         
-        self.moreView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width+80, 0, 80, 60)];
+        self.moreView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width+75, 0, 75, 55)];
         self.moreView.backgroundColor = [UIColor colorWithHexString:@"#6d6d6e"];
         [self.cellView addSubview:self.moreView];
-        self.moreBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 20, 60, 20)];
+        self.moreBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
         [self.moreBtn setTitle:@"更多" forState:UIControlStateNormal];
         self.moreBtn.backgroundColor = [UIColor clearColor];
         [self.moreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.moreBtn addTarget:self action:@selector(moreAction) forControlEvents:UIControlEventTouchUpInside];
         [self.moreView addSubview:self.moreBtn];
         
-        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 59.5, sRect.size.width, 0.5)];
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 54.5, sRect.size.width, 0.5)];
         lineView.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
         [self.cellView addSubview:lineView];
         
@@ -100,7 +102,7 @@
                 [UIView beginAnimations:@"move" context:nil];
                 [UIView setAnimationDuration:0.2];
                 CGRect frame = self.cellView.frame;
-                self.cellView.frame=CGRectMake(-80,frame.origin.y, frame.size.width,frame.size.height);
+                self.cellView.frame=CGRectMake(-75,frame.origin.y, frame.size.width,frame.size.height);
                 [UIView commitAnimations];
                 mode.ifShowMenu = YES;
             }else if ([mode getMenuType] == KIMGroupUserCellModeMenuType_DeleteAndMore)
@@ -108,7 +110,7 @@
                 [UIView beginAnimations:@"move" context:nil];
                 [UIView setAnimationDuration:0.2];
                 CGRect frame = self.cellView.frame;
-                self.cellView.frame=CGRectMake(-160,frame.origin.y, frame.size.width,frame.size.height);
+                self.cellView.frame=CGRectMake(-150,frame.origin.y, frame.size.width,frame.size.height);
                 [UIView commitAnimations];
                 mode.ifShowMenu = YES;
             }
@@ -217,7 +219,7 @@
 
 -(CGFloat)getCellHeight
 {
-    return 60.0f;
+    return 55.0f;
 }
 
 -(BaseModeCell*)createModeCell

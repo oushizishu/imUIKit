@@ -75,7 +75,7 @@
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake(15, self.editView.frame.size.height-35, self.editView.frame.size.width-30, 20)];
     self.tipLable.textAlignment = NSTextAlignmentRight;
     self.tipLable.textColor = [UIColor grayColor];
-    self.tipLable.text = @"剩余500字";
+    self.tipLable.text = @"剩余250字";
     self.tipLable.font = [UIFont systemFontOfSize:16.0f];
     [self.editView addSubview:self.tipLable];
     
@@ -101,10 +101,10 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    if (textView.text.length>500) {
-        textView.text = [textView.text substringWithRange:NSMakeRange(0, 500)];
+    if (textView.text.length>250) {
+        textView.text = [textView.text substringWithRange:NSMakeRange(0, 250)];
     }
-    self.tipLable.text = [NSString stringWithFormat:@"剩余%ld字",500-textView.text.length];
+    self.tipLable.text = [NSString stringWithFormat:@"剩余%ld字",250-textView.text.length];
 }
 
 @end

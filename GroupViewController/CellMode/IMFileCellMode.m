@@ -10,6 +10,46 @@
 #import "BJChatFileCacheManager.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
+@implementation IMUIView
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+}
+
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    if(touch.view == self)
+    {
+        CGPoint point = [touch locationInView:self];
+        if(point.x>=-10&&point.y>=-10&&point.x<=self.frame.size.width+10&&point.y<=self.frame.size.height+10)
+        {
+            if (self.delegate != nil) {
+                [self.delegate userHitView:self];
+            }
+        }
+    }
+}
+
+-(void)touchesEstimatedPropertiesUpdated:(NSSet *)touches
+{
+    [super touchesEstimatedPropertiesUpdated:touches];
+}
+
+-(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
+}
+
+@end
+
 @interface IMProgressView()
 
 @property(strong ,nonatomic)UIView *progressView;
@@ -50,7 +90,7 @@
 
 @end
 
-@interface IMFileCell()
+@interface IMFileCell()<IMUIViewDelegate>
 
 @property(strong ,nonatomic)UIView *fileCellView;
 
@@ -61,7 +101,8 @@
 @property(strong ,nonatomic)UILabel *descriptionLable;
 @property(strong ,nonatomic)UILabel *creatDateLable;
 
-@property(strong ,nonatomic)UIButton *operationBtn;
+@property(strong ,nonatomic)IMUIView *operationView;
+@property(strong ,nonatomic)UILabel *operationL;
 
 @property(strong ,nonatomic)UILabel *operationTip;
 @property(strong ,nonatomic)IMProgressView *progressView;
@@ -121,22 +162,29 @@
         self.creatDateLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY400];
         [self.fileContentView addSubview:self.creatDateLable];
         
-        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 60, 30)];
-        [self.operationBtn.layer setCornerRadius:2.0f];
-        [self.operationBtn.layer setBorderColor:[UIColor grayColor].CGColor];
-        [self.operationBtn.layer setBorderWidth:0.5f];
-        [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.operationBtn addTarget:self action:@selector(operationAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.fileContentView addSubview:self.operationBtn];
+        self.operationView = [[IMUIView alloc] initWithFrame:CGRectMake(sRect.size.width-70, 30, 60, 30)];
+        self.operationView.delegate = self;
+        self.operationView.backgroundColor = [UIColor clearColor];
+        [self.operationView.layer setCornerRadius:2.0f];
+        [self.operationView.layer setBorderColor:[UIColor colorWithHexString:IMCOLOT_GREY400].CGColor];
+        [self.operationView.layer setBorderWidth:0.5f];
+        [self.fileContentView addSubview:self.operationView];
         
-        self.operationTip = [[UILabel alloc] initWithFrame:CGRectMake(sRect.size.width-95, 30, 80, 20)];
+        self.operationL = [[UILabel alloc] initWithFrame:CGRectMake(0, 7, self.operationView.frame.size.width, 15)];
+        self.operationL.backgroundColor = [UIColor clearColor];
+        self.operationL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+        self.operationL.font = [UIFont systemFontOfSize:14.0f];
+        self.operationL.textAlignment = NSTextAlignmentCenter;
+        [self.operationView addSubview:self.operationL];
+        
+        self.operationTip = [[UILabel alloc] initWithFrame:CGRectMake(sRect.size.width-70, 35, 60, 15)];
         self.operationTip.backgroundColor = [UIColor clearColor];
-        self.operationTip.font = [UIFont systemFontOfSize:18.0f];
-        self.operationTip.textColor = [UIColor grayColor];
+        self.operationTip.font = [UIFont systemFontOfSize:14.0f];
+        self.operationTip.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
         self.operationTip.textAlignment = NSTextAlignmentCenter;
         [self.fileContentView addSubview:self.operationTip];
         
-        self.progressView = [[IMProgressView alloc] initWithFrame:CGRectMake(sRect.size.width-95, 53, 80, 2)];
+        self.progressView = [[IMProgressView alloc] initWithFrame:CGRectMake(sRect.size.width-70, 58, 60, 2)];
         [self.fileContentView addSubview:self.progressView];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15, 89, sRect.size.width-15, 0.5)];
@@ -175,6 +223,14 @@
             [UIView commitAnimations];
             mode.ifShowMenu = NO;
         }
+    }
+}
+
+- (void)userHitView:(UIView *)view
+{
+    if (self.cellMode != nil) {
+        IMFileCellMode *cellMode = (IMFileCellMode*)self.cellMode;
+        [cellMode userCilckOperationBtn];
     }
 }
 
@@ -229,8 +285,8 @@
         self.fileNameLable.text = mode.info.fileName;
         self.descriptionLable.text = mode.info.info;
         self.creatDateLable.text = mode.info.createDate;
-        self.operationBtn.hidden = NO;
-        [self.operationBtn setTitle:@"上传" forState:UIControlStateNormal];
+        self.operationView.hidden = NO;
+        self.operationL.text = @"上传";
         self.operationTip.hidden = YES;
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_UploadWait)
@@ -240,9 +296,9 @@
         self.fileNameLable.text = mode.info.fileName;
         self.descriptionLable.text = mode.info.info;
         self.creatDateLable.text = mode.info.createDate;
-        self.operationBtn.hidden = YES;
+        self.operationView.hidden = YES;
         self.operationTip.hidden = NO;
-        self.operationTip.text = @"等待上传";
+        self.operationTip.text = @"等待";
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Uploading)
     {
@@ -251,7 +307,7 @@
         self.fileNameLable.text = mode.info.fileName;
         self.descriptionLable.text = mode.info.info;
         self.creatDateLable.text = mode.info.createDate;
-        self.operationBtn.hidden = YES;
+        self.operationView.hidden = YES;
         self.operationTip.hidden = NO;
         self.operationTip.text = @"上传中";
         self.progressView.hidden = NO;
@@ -263,8 +319,8 @@
         self.fileNameLable.text = mode.info.fileName;
         self.descriptionLable.text = mode.info.info;
         self.creatDateLable.text = mode.info.createDate;
-        self.operationBtn.hidden = NO;
-        [self.operationBtn setTitle:@"上传重试" forState:UIControlStateNormal];
+        self.operationView.hidden = NO;
+        self.operationL.text = @"上传";
         self.operationTip.hidden = YES;
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_AddFile)
@@ -274,9 +330,9 @@
         self.fileNameLable.text = mode.info.fileName;
         self.descriptionLable.text = mode.info.info;
         self.creatDateLable.text = mode.info.createDate;
-        self.operationBtn.hidden = YES;
+        self.operationView.hidden = YES;
         self.operationTip.hidden = NO;
-        self.operationTip.text = @"添加文件";
+        self.operationTip.text = @"添加中";
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Download)
     {
@@ -285,8 +341,8 @@
         self.fileNameLable.text = mode.groupFile.filename;
         self.descriptionLable.text = mode.groupFile.info;
         self.creatDateLable.text = mode.groupFile.create_time;
-        self.operationBtn.hidden = NO;
-        [self.operationBtn setTitle:@"下载" forState:UIControlStateNormal];
+        self.operationView.hidden = NO;
+        self.operationL.text = @"下载";
         self.operationTip.hidden = YES;
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_DownloadWait)
@@ -296,9 +352,9 @@
         self.fileNameLable.text = mode.groupFile.filename;
         self.descriptionLable.text = mode.groupFile.info;
         self.creatDateLable.text = mode.groupFile.create_time;
-        self.operationBtn.hidden = YES;
+        self.operationView.hidden = YES;
         self.operationTip.hidden = NO;
-        self.operationTip.text = @"等待下载";
+        self.operationTip.text = @"等待";
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Downloading)
     {
@@ -307,7 +363,7 @@
         self.fileNameLable.text = mode.groupFile.filename;
         self.descriptionLable.text = mode.groupFile.info;
         self.creatDateLable.text = mode.groupFile.create_time;
-        self.operationBtn.hidden = YES;
+        self.operationView.hidden = YES;
         self.operationTip.hidden = NO;
         self.operationTip.text = @"下载中";
         self.progressView.hidden = NO;
@@ -319,8 +375,8 @@
         self.fileNameLable.text = mode.groupFile.filename;
         self.descriptionLable.text = mode.groupFile.info;
         self.creatDateLable.text = mode.groupFile.create_time;
-        self.operationBtn.hidden = NO;
-        [self.operationBtn setTitle:@"下载重试" forState:UIControlStateNormal];
+        self.operationView.hidden = NO;
+        self.operationL.text = @"下载";
         self.operationTip.hidden = YES;
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Preview)
@@ -330,8 +386,8 @@
         self.fileNameLable.text = mode.groupFile.filename;
         self.descriptionLable.text = mode.groupFile.info;
         self.creatDateLable.text = mode.groupFile.create_time;
-        self.operationBtn.hidden = NO;
-        [self.operationBtn setTitle:@"查看" forState:UIControlStateNormal];
+        self.operationView.hidden = NO;
+        self.operationL.text = @"查看";
         self.operationTip.hidden = YES;
         self.progressView.hidden = YES;
     }else if(modeType == IMFileCellModeType_Deleteing)
@@ -343,7 +399,7 @@
             self.fileNameLable.text = mode.groupFile.filename;
             self.descriptionLable.text = mode.groupFile.info;
             self.creatDateLable.text = mode.groupFile.create_time;
-            self.operationBtn.hidden = YES;
+            self.operationView.hidden = YES;
             self.operationTip.hidden = NO;
             self.operationTip.text = @"删除中";
             self.progressView.hidden = YES;
@@ -354,7 +410,7 @@
             self.fileNameLable.text = mode.info.fileName;
             self.descriptionLable.text = mode.info.info;
             self.creatDateLable.text = mode.info.createDate;
-            self.operationBtn.hidden = YES;
+            self.operationView.hidden = YES;
             self.operationTip.hidden = NO;
             self.operationTip.text = @"删除中";
             self.progressView.hidden = YES;
@@ -426,7 +482,6 @@
     }
     return reImage;
 }
-
 
 @end
 

@@ -5728,4 +5728,40 @@ NSString *IMFindLetter(int nCode)
     return retArray;
 }
 
++(long long) fileSizeAtPath:(NSString*) filePath{
+    struct stat st;
+    if(lstat([filePath cStringUsingEncoding:NSUTF8StringEncoding], &st) == 0){
+        return st.st_size;
+    }
+    return 0;
+}
+
++(NSString*)getSizeStrWithFileSize:(long long)fileSize
+{
+    CGFloat oneG = 1024.0f*1024.0f*1024.0f;
+    CGFloat oneM = 1024.0f*1024.0f;
+    CGFloat oneK = 1024.0f;
+    
+    NSString *reSizeStr = nil;
+    CGFloat fFileSize = (CGFloat)fileSize;
+    if (fFileSize > 0) {
+        if (fFileSize >= oneG) {
+            CGFloat countG = fFileSize/oneG;
+            reSizeStr = [NSString stringWithFormat:@"%.2fG",countG];
+        }else if (fFileSize >= oneM) {
+            CGFloat countM = fFileSize/oneM;
+            reSizeStr = [NSString stringWithFormat:@"%.2fM",countM];
+        }else if(fFileSize >= oneK)
+        {
+            CGFloat countK = fFileSize/oneK;
+            reSizeStr = [NSString stringWithFormat:@"%.2fK",countK];
+        }else
+        {
+            reSizeStr = [NSString stringWithFormat:@"%.2fB",fFileSize];
+        }
+    }
+    
+    return reSizeStr;
+}
+
 @end
