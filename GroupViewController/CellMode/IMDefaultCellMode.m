@@ -61,17 +61,17 @@
     
     if (mode.flagImage != nil) {
         self.flagImageView.hidden = NO;
-        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-40)/2, 40, 40);
+        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-36)/2, 36, 36);
         self.flagImageView.image = mode.flagImage;
         startPoint.x += 40+10;
         maxW = maxW - (40+10);
     }else if(mode.imageUrl != nil)
     {
         self.flagImageView.hidden = NO;
-        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-40)/2, 40, 40);
-        [self.flagImageView setAliyunImageWithURL:mode.imageUrl placeholderImage:nil size:CGSizeMake(40, 40)];
-        startPoint.x += 40+10;
-        maxW = maxW - (40+10);
+        self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-36)/2, 36, 36);
+        [self.flagImageView setAliyunImageWithURL:mode.imageUrl placeholderImage:nil size:CGSizeMake(36, 36)];
+        startPoint.x += 36+10;
+        maxW = maxW - (36+10);
     }else
     {
         self.flagImageView.hidden = YES;
@@ -153,17 +153,17 @@
     if(type == CellArrowType_ToRigth)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+10), 20, 10, 20);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+10), (IMDEFAULTCELLMODEHEIGHT-20)/2, 10, 20);
         self.arrowImageView.image = [UIImage imageNamed:@"im_weakblack_rightarrow"];
     }else if(type == CellArrowType_ToUp)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), 25, 20, 10);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), (IMDEFAULTCELLMODEHEIGHT-10)/2, 20, 10);
         self.arrowImageView.image = [UIImage imageNamed:@"im_black_uparrow"];
     }else if(type == CellArrowType_ToBottom)
     {
         self.arrowImageView.hidden = NO;
-        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), 25, 20, 10);
+        self.arrowImageView.frame = CGRectMake(sRect.size.width-(15+20), (IMDEFAULTCELLMODEHEIGHT-10)/2, 20, 10);
         self.arrowImageView.image = [UIImage imageNamed:@"im_black_bottomarrow"];
     }else
     {
