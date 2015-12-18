@@ -250,7 +250,7 @@
     
     self.exitBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 15, self.view.frame.size.width-30, 44)];
     User *owner = [IMEnvironment shareInstance].owner;
-    if (owner.userId == self.groupDetail.user_id && owner.userRole == self.groupDetail.user_role) {
+    if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
         [self.exitBtn setTitle:@"退出并解散群组" forState:UIControlStateNormal];
     }else
     {
@@ -270,7 +270,7 @@
 {
     //WS(weakSelf);
     User *owner = [IMEnvironment shareInstance].owner;
-    if (owner.userId == self.groupDetail.user_id && owner.userRole == self.groupDetail.user_role) {
+    if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
         
         [[BJIMManager shareInstance] disbandGroupWithGroupId:[self.im_group_id longLongValue]];
         [self backAction:nil];
