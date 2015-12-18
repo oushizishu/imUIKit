@@ -19,6 +19,7 @@
 @property (strong, nonatomic) UIImageView *faceImageView;
 @property (strong, nonatomic) UILabel *tipLable;
 @property (strong, nonatomic) UITextField *nameTextField;
+@property (strong, nonatomic) UIButton *saveBtn;
 
 @property (assign, nonatomic) int64_t storage_id;
 @property (strong, nonatomic) NSString *storage_url;
@@ -76,6 +77,10 @@
     [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
     [self.view addSubview:self.faceImageView];
     
+    UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(faceImagePressed:)];
+    self.faceImageView.userInteractionEnabled = YES;
+    [self.faceImageView addGestureRecognizer:tapG];
+    
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 120, 100, 20)];
     self.tipLable.backgroundColor = [UIColor clearColor];
     self.tipLable.font = [UIFont systemFontOfSize:13.0f];
@@ -94,25 +99,35 @@
     [textfieldBackView addSubview:self.nameTextField];
     
     User *owner = [IMEnvironment shareInstance].owner;
-    if (owner.userId != self.groupDetail.user_id || owner.userRole != self.groupDetail.user_role) {
+    if (owner.userId != self.groupDetail.user_number || owner.userRole != self.groupDetail.user_role) {
         self.nameTextField.userInteractionEnabled = NO;
     }else
     {
-        UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction)];
+        self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+        [self.saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+        [self.saveBtn addTarget:self action:@selector(saveAction) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.saveBtn];
+        
+        //UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStylePlain target:self action:@selector(saveAction)];
         self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+        
+        self.saveBtn.userInteractionEnabled = NO;
+        
     }
     
 }
 
-- (void)hitFaceImage
+- (void)faceImagePressed:(id)sender
 {
+    [self.view endEditing:YES];
     IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
     [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
             [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
-            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage,( NSString *)kUTTypeMovie, nil];
+            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage, nil];
             [imagePicker setMediaTypes:mediaArray];
         }else if(index == 1)
         {
@@ -132,6 +147,12 @@
     WS(weakself);
     NSString *filePath = [NSString stringWithFormat:@"group_%@_faceimage_%f",self.im_group_id,[[NSDate date] timeIntervalSince1970]];
     
+    if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
+        [IMLinshiTool createDirectory:[BJChatFileCacheManager chatUploadFilePath]];
+    }
+    
+    [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
+    
     [[BJIMManager shareInstance] uploadGroupFile:attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] fileName:filePath callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
         if (error) {
             [MBProgressHUD imShowError:@"图片上传失败" toView:weakself.view];
@@ -139,15 +160,21 @@
         {
             weakself.storage_id = storage_id;
             weakself.storage_url = storage_url;
-            [weakself.faceImageView setAliyunImageWithURL:weakself.storage_url placeholderImage:nil];
+            [weakself setGRoupFaceImageUrl:[UIImage imageWithData:data]];
         }
     } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpected) {
     }];
 }
 
+- (void)setGRoupFaceImageUrl:(UIImage*)image
+{
+    self.saveBtn.userInteractionEnabled = YES;
+    [self.faceImageView setImage:image];
+}
+
 - (void)saveAction
 {
-    
+    [self.view endEditing:YES];
 }
 
 - (void)backAction:(id)aciton
@@ -172,6 +199,8 @@
         }
         
         NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
+        
+        //NSData *pngData = UIImagePNGRepresentation(theImage);
         
         [self uploadFile:jpgData withattachment:@"jpg"];
         // 保存图片到相册中
