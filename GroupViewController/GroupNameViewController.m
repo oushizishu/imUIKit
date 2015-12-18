@@ -8,14 +8,20 @@
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMLinshiTool.h"
+#import "IMActionSheet.h"
+#import "BJChatFileCacheManager.h"
+#import "MBProgressHUD+IMKit.h"
 
-@interface GroupNameViewController()
+@interface GroupNameViewController()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (strong, nonatomic) NSString *im_group_id;
 @property (strong, nonatomic) GroupDetail *groupDetail;
 @property (strong, nonatomic) UIImageView *faceImageView;
 @property (strong, nonatomic) UILabel *tipLable;
 @property (strong, nonatomic) UITextField *nameTextField;
+
+@property (assign, nonatomic) int64_t storage_id;
+@property (strong, nonatomic) NSString *storage_url;
 
 @end
 
@@ -98,6 +104,47 @@
     
 }
 
+- (void)hitFaceImage
+{
+    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
+    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        if (index == 0) {
+            [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage,( NSString *)kUTTypeMovie, nil];
+            [imagePicker setMediaTypes:mediaArray];
+        }else if(index == 1)
+        {
+            [imagePicker setSourceType:UIImagePickerControllerSourceTypeCamera];
+            NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage, nil];
+            [imagePicker setMediaTypes:mediaArray];
+        }
+        imagePicker.delegate = self;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    } withCancelBlock:^{
+        
+    }];
+}
+
+- (void)uploadFile:(NSData*)data withattachment:(NSString*)attachment
+{
+    WS(weakself);
+    NSString *filePath = [NSString stringWithFormat:@"group_%@_faceimage_%f",self.im_group_id,[[NSDate date] timeIntervalSince1970]];
+    
+    [[BJIMManager shareInstance] uploadGroupFile:attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] fileName:filePath callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
+        if (error) {
+            [MBProgressHUD imShowError:@"图片上传失败" toView:weakself.view];
+        }else
+        {
+            weakself.storage_id = storage_id;
+            weakself.storage_url = storage_url;
+            [weakself.faceImageView setAliyunImageWithURL:weakself.storage_url placeholderImage:nil];
+        }
+    } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpected) {
+    }];
+}
+
 - (void)saveAction
 {
     
@@ -106,6 +153,39 @@
 - (void)backAction:(id)aciton
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    // 判断获取类型：图片
+    if ([mediaType isEqualToString:( NSString *)kUTTypeImage]){
+        UIImage *theImage = nil;
+        // 判断，图片是否允许修改
+        if ([picker allowsEditing]){
+            //获取用户编辑之后的图像
+            theImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        } else {
+            // 照片的元数据参数
+            theImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+            
+        }
+        
+        NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
+        
+        [self uploadFile:jpgData withattachment:@"jpg"];
+        // 保存图片到相册中
+        //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
+        //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
+        
+    }
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

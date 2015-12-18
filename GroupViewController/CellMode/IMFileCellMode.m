@@ -624,7 +624,7 @@
 - (void)startUploadFile
 {
     WS(weakself);
-    self.uploadOperation = [[BJIMManager shareInstance] uploadGroupFile:self.info.attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.info.filePath],self.info.attachment]] fileName:self.info.fileName callback:^(NSError *error,int64_t storage_id) {
+    self.uploadOperation = [[BJIMManager shareInstance] uploadGroupFile:self.info.attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.info.filePath],self.info.attachment]] fileName:self.info.fileName callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
         if (error) {
             [weakself setModeType:IMFileCellModeType_UploadRetry];
         }else
