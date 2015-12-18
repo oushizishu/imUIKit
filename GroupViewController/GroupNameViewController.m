@@ -22,7 +22,6 @@
 @property (strong, nonatomic) UIButton *saveBtn;
 
 @property (assign, nonatomic) int64_t storage_id;
-@property (strong, nonatomic) NSString *storage_url;
 
 @end
 
@@ -34,6 +33,8 @@
     if (self) {
         self.groupDetail = groupDetail;
         self.im_group_id = groudId;
+        
+        self.storage_id = 0;
     }
     return self;
 }
@@ -96,6 +97,9 @@
     self.nameTextField.backgroundColor = [UIColor clearColor];
     self.nameTextField.text = self.groupDetail.group_name;
     self.nameTextField.font = [UIFont systemFontOfSize:13.0f];
+    
+    [self.nameTextField addTarget:self action:@selector(textFieldChanged:) forControlEvents:UIControlEventEditingChanged];
+    
     [textfieldBackView addSubview:self.nameTextField];
     
     User *owner = [IMEnvironment shareInstance].owner;
@@ -103,8 +107,8 @@
         self.nameTextField.userInteractionEnabled = NO;
     }else
     {
-        self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-        [self.saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
+        [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
         [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
         [self.saveBtn addTarget:self action:@selector(saveAction) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.saveBtn];
@@ -114,6 +118,27 @@
         
         self.saveBtn.userInteractionEnabled = NO;
         
+    }
+    
+}
+
+- (void)textFieldChanged:(id)sender{
+    
+    if (self.storage_id == 0) {
+        if ([self.nameTextField.text isEqualToString:self.groupDetail.group_name]) {
+            self.saveBtn.userInteractionEnabled = NO;
+            [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+        }else
+        {
+            if (self.nameTextField.text.length > 0) {
+                self.saveBtn.userInteractionEnabled = YES;
+                [self.saveBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+            }else
+            {
+                self.saveBtn.userInteractionEnabled = NO;
+                [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+            }
+        }
     }
     
 }
@@ -159,7 +184,6 @@
         }else
         {
             weakself.storage_id = storage_id;
-            weakself.storage_url = storage_url;
             [weakself setGRoupFaceImageUrl:[UIImage imageWithData:data]];
         }
     } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpected) {
@@ -169,12 +193,28 @@
 - (void)setGRoupFaceImageUrl:(UIImage*)image
 {
     self.saveBtn.userInteractionEnabled = YES;
+    [self.saveBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     [self.faceImageView setImage:image];
 }
 
 - (void)saveAction
 {
+    WS(weakSelf);
     [self.view endEditing:YES];
+    [[BJIMManager shareInstance] setGroupNameAvatar:[self.im_group_id longLongValue]
+                                          groupName:self.nameTextField.text
+                                             avatar:self.storage_id
+                                           callback:^(NSError *error){
+                                               if (error) {
+                                                   [MBProgressHUD imShowError:@"保存失败" toView:weakSelf.view];
+                                               }else
+                                               {
+                                                   weakSelf.storage_id = 0;
+                                                   weakSelf.groupDetail.group_name = weakSelf.nameTextField.text;
+                                                   weakSelf.saveBtn.userInteractionEnabled = NO;
+                                                   [weakSelf.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+                                               }
+                                           }];
 }
 
 - (void)backAction:(id)aciton

@@ -291,7 +291,7 @@
 -(void)deleteAnnouncement
 {
     WS(weakSelf);
-    [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId callback:^(NSError *error) {
+    [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId group_id:0 callback:^(NSError *error) {
         if (error) {
             
         }else
