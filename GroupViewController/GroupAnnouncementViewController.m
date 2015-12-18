@@ -117,6 +117,7 @@
             if (self.isAdmin) {
                 announcementMode.ifCanDelete = YES;
             }
+            announcementMode.groupId = [self.im_group_id longLongValue];
             [seMode addRows:[NSArray arrayWithObjects:announcementMode, nil]];
             [sectionModeArray addObject:seMode];
             [self.announcementArray addObject:announcementMode];

@@ -29,6 +29,7 @@
 @interface IMAnnouncementCellMode : BaseCellMode
 
 @property(strong ,nonatomic)GroupNotice *groupNotice;
+@property(assign ,nonatomic)int64_t groupId;
 
 @property(nonatomic)BOOL ifCanDelete;
 
