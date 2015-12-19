@@ -224,18 +224,20 @@ IMNewGRoupNoticeDelegate>
 
 - (void)showGroupNewNotice
 {
-    User *owner = [IMEnvironment shareInstance].owner;
-    NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
-    
-    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
-    
-    if ([userDefaultes objectForKey:objectkey] != nil) {
-        NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
-        if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
-            [notice setObject:@"NO" forKey:@"ifAutoShow"];
-            [userDefaultes setObject:[notice jsonString] forKey:objectkey];
-            [userDefaultes synchronize];
-            [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+    if (self.ifForeground) {
+        User *owner = [IMEnvironment shareInstance].owner;
+        NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
+        
+        NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+        
+        if ([userDefaultes objectForKey:objectkey] != nil) {
+            NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
+            if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
+                [notice setObject:@"NO" forKey:@"ifAutoShow"];
+                [userDefaultes setObject:[notice jsonString] forKey:objectkey];
+                [userDefaultes synchronize];
+                [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+            }
         }
     }
 }
