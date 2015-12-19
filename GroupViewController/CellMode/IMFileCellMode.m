@@ -442,16 +442,18 @@
                 reImage = [UIImage imageNamed:@"ic_file_img"];
             }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"excel"])
             {
-                reImage = [UIImage imageNamed:@"ic_file_pdf"];
+                reImage = [UIImage imageNamed:@"ic_file_excel"];
             }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"pdf"])
             {
-                reImage = [UIImage imageNamed:@"ic_file_ppt"];
+                reImage = [UIImage imageNamed:@"ic_file_pdf"];
             }
             else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"txt"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_txt"];
             }
-            else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"word"])
+            else if([[cellMode.info.attachment lowercaseString] isEqualToString:@"doc"]
+                    || [[cellMode.info.attachment lowercaseString] isEqualToString:@"pptx"]
+                    || [[cellMode.info.attachment lowercaseString] isEqualToString:@"docx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_word"];
             }
@@ -468,13 +470,12 @@
             }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"pdf"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_pdf"];
-            }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"excel"])
-            {
-                reImage = [UIImage imageNamed:@"ic_file_ppt"];
             }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"txt"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_txt"];
-            }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"word"])
+            }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"doc"]
+                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"pptx"]
+                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"docx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_word"];
             }
