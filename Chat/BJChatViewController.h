@@ -12,8 +12,6 @@
 @property (strong, nonatomic, readonly) BJChatInfo *chatInfo;
 - (instancetype)initWithChatInfo:(BJChatInfo *)chatInfo;
 
-//展示群组新的通知
-- (void)showGroupNewNotice;
 //展示群组通知
 - (void)showGroupNotice;
 
