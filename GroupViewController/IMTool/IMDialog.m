@@ -17,7 +17,6 @@
 @property (strong ,nonatomic)UIButton *cancelBtn;
 @property (strong ,nonatomic)UIButton *comfireBtn;
 
-
 @property (copy, nonatomic) IMDialogComfire comfire;
 @property (copy, nonatomic) IMDialogCancel cancel;
 
@@ -49,8 +48,27 @@
     [self.contentView.layer setCornerRadius:5.0f];
     [self.view addSubview:self.contentView];
     
+    CGFloat maxW = self.contentView.frame.size.width-30;
     
+    UIFont *font = [UIFont systemFontOfSize:15.0f];
+    NSArray *splA = [IMLinshiTool splitMsg:content withFont:font withMaxWid:maxW];
     
+    NSMutableArray *splMA = [[NSMutableArray alloc] init];
+    if ([splA count] > 3) {
+        [splMA addObjectsFromArray:[splA subarrayWithRange:NSMakeRange(0, 3)]];
+    }else
+    {
+        [splMA addObjectsFromArray:splA];
+    }
+    
+    for (int i = 0; i < [splMA count]; i++) {
+        UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(15, ((150-20*3)/4)*(i+1)+i*20, self.contentView.frame.size.width-30, 20)];
+        lable.font = font;
+        lable.textAlignment = NSTextAlignmentLeft;
+        lable.text = [splMA objectAtIndex:i];
+        lable.textColor =[UIColor colorWithHexString:IMCOLOT_GREY600];
+        [self.contentView addSubview:lable];
+    }
     
     UIView *lineW = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-44, self.contentView.frame.size.width, 0.5)];
     lineW.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
@@ -84,8 +102,8 @@
 {
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
-    if (self.comfire) {
-        self.comfire();
+    if (self.cancel) {
+        self.cancel();
     }
 }
 
@@ -93,8 +111,8 @@
 {
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
-    if (self.cancel) {
-        self.cancel(index);
+    if (self.comfire) {
+        self.comfire();
     }
     
 }

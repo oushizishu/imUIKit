@@ -20,6 +20,7 @@
 #import "IMActionSheet.h"
 #import "MBProgressHUD+IMKit.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import "IMDialog.h"
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 
@@ -268,37 +269,59 @@
 
 - (void)hitExitBtn
 {
-    //WS(weakSelf);
     User *owner = [IMEnvironment shareInstance].owner;
+    NSString *content = nil;
     if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
-        
-        [[BJIMManager shareInstance] disbandGroupWithGroupId:[self.im_group_id longLongValue]];
-        [self backAction:nil];
-        /*
-        [[BJIMManager shareInstance] postDisBandGroup:[self.im_group_id longLongValue] callback:^(NSError *err) {
-            if (err) {
-                [MBProgressHUD imShowError:@"解散失败" toView:weakSelf.view];
-            }else
-            {
-                [weakSelf backAction:nil];
-            }
-        }];
-         */
+        content = @"是否要解散该群组？";
     }else
     {
-        [[BJIMManager shareInstance] leaveGroupWithGroupId:[self.im_group_id longLongValue]];
-        [self backAction:nil];
-        /*
-        [[BJIMManager shareInstance] postLeaveGroup:[self.im_group_id longLongValue] callback:^(NSError *err) {
-            if (err) {
-                [MBProgressHUD imShowError:@"退出失败" toView:weakSelf.view];
-            }else
-            {
-                [weakSelf backAction:nil];
-            }
-        }];
-         */
+        content = @"是否要离开该群组？";
     }
+    
+    WS(weakSelf);
+    IMDialog *dialog = [[IMDialog alloc] init];
+    [dialog showWithContent:content withSelectBlock:^{
+        if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
+            [weakSelf userDisbandGroup];
+        }else
+        {
+            [weakSelf userleaveGroup];
+        }
+    } withCancelBlock:^{
+        
+    }];
+}
+
+- (void)userleaveGroup
+{
+    [[BJIMManager shareInstance] leaveGroupWithGroupId:[self.im_group_id longLongValue]];
+    [self backAction:nil];
+    /*
+     [[BJIMManager shareInstance] postLeaveGroup:[self.im_group_id longLongValue] callback:^(NSError *err) {
+     if (err) {
+     [MBProgressHUD imShowError:@"退出失败" toView:weakSelf.view];
+     }else
+     {
+     [weakSelf backAction:nil];
+     }
+     }];
+     */
+}
+
+- (void)userDisbandGroup
+{
+    [[BJIMManager shareInstance] disbandGroupWithGroupId:[self.im_group_id longLongValue]];
+    [self backAction:nil];
+    /*
+     [[BJIMManager shareInstance] postDisBandGroup:[self.im_group_id longLongValue] callback:^(NSError *err) {
+     if (err) {
+     [MBProgressHUD imShowError:@"解散失败" toView:weakSelf.view];
+     }else
+     {
+     [weakSelf backAction:nil];
+     }
+     }];
+     */
 }
 
 
