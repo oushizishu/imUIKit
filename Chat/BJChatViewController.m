@@ -73,6 +73,8 @@ IMNewGRoupNoticeDelegate>
 
 @property (strong, nonatomic) UIWebView *webView;//webView实现打电话,可以直接返回到应用
 
+@property (assign, nonatomic) BOOL ifForeground;
+
 @end
 
 @implementation BJChatViewController
@@ -121,6 +123,7 @@ IMNewGRoupNoticeDelegate>
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    self.ifForeground = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -132,6 +135,7 @@ IMNewGRoupNoticeDelegate>
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = YES;
     }
+    self.ifForeground = NO;
 }
 
 //第一次调用viewWillAppear
