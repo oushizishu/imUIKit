@@ -78,10 +78,6 @@
     [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
     [self.view addSubview:self.faceImageView];
     
-    UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(faceImagePressed:)];
-    self.faceImageView.userInteractionEnabled = YES;
-    [self.faceImageView addGestureRecognizer:tapG];
-    
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 120, 100, 20)];
     self.tipLable.backgroundColor = [UIColor clearColor];
     self.tipLable.font = [UIFont systemFontOfSize:13.0f];
@@ -107,6 +103,10 @@
         self.nameTextField.userInteractionEnabled = NO;
     }else
     {
+        UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(faceImagePressed:)];
+        self.faceImageView.userInteractionEnabled = YES;
+        [self.faceImageView addGestureRecognizer:tapG];
+        
         self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
         [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
