@@ -35,6 +35,7 @@
 
 #import "IMToast.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-IM-iOS-SDK/NSDictionary+Json.h>
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -198,14 +199,7 @@ IMNewGRoupNoticeDelegate>
     //        [self addNewMessages:@[cardMessage] isForward:NO];
     //    }
     
-    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
-    NSString *objectkey = [NSString stringWithFormat:@"NewGroupNotice_%lld",self.chatInfo.chatToGroup.groupId];
-    NSString *content =  [userDefaultes objectForKey:objectkey];
-    if (content != nil) {
-        [userDefaultes removeObjectForKey:objectkey];
-        [userDefaultes synchronize];
-        [IMToast showThenHidden:content withView:self.view afterDelay:10];
-    }
+    [self showGroupNewNotice];
 }
 
 
@@ -223,6 +217,42 @@ IMNewGRoupNoticeDelegate>
  // Pass the selected object to the new view controller.
  }
  */
+
+- (void)showGroupNewNotice
+{
+    User *owner = [IMEnvironment shareInstance].owner;
+    NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+    if ([userDefaultes objectForKey:objectkey] != nil) {
+        NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
+        if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
+            [notice setObject:@"NO" forKey:@"ifAutoShow"];
+            [userDefaultes setObject:[notice jsonString] forKey:objectkey];
+            [userDefaultes synchronize];
+            [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+        }
+    }
+}
+
+- (void)showGroupNotice
+{
+    User *owner = [IMEnvironment shareInstance].owner;
+    NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+    if ([userDefaultes objectForKey:objectkey] != nil) {
+        NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
+        if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
+            [notice setObject:@"NO" forKey:@"ifAutoShow"];
+            [userDefaultes setObject:[notice jsonString] forKey:objectkey];
+            [userDefaultes synchronize];
+        }
+        [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+    }
+}
 
 #pragma mark - 消息操作方法
 - (NSInteger)addNewMessages:(NSArray *)messages isForward:(BOOL)forward;
@@ -609,14 +639,7 @@ IMNewGRoupNoticeDelegate>
 
 - (void)didNewGroupNotice
 {
-    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
-    NSString *objectkey = [NSString stringWithFormat:@"NewGroupNotice_%lld",self.chatInfo.chatToGroup.groupId];
-    NSString *content =  [userDefaultes objectForKey:objectkey];
-    if (content != nil) {
-        [userDefaultes removeObjectForKey:objectkey];
-        [userDefaultes synchronize];
-        [IMToast showThenHidden:content withView:self.view afterDelay:10];
-    }
+    [self showGroupNewNotice];
 }
 
 - (void)willSendMessage:(IMMessage *)message;
