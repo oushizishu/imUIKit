@@ -226,49 +226,55 @@
 
 - (void)addNewUploadFileMode:(NSData*)data withattachment:(NSString*)attachment
 {
-    WS(weakSelf);
-    IMInputDialog *inputD = [[IMInputDialog alloc] init];
-    NSString *defaultContent = [NSString stringWithFormat:@"gsx_%.0f",[[NSDate date] timeIntervalSince1970]*100];
-    [inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
-        NSString *filePath = defaultContent;
-        
-        if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
-            [IMLinshiTool createDirectory:[BJChatFileCacheManager chatUploadFilePath]];
-        }
-        
-        [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
-        
-        IMFileUploadInfo *info = [[IMFileUploadInfo alloc] init];
-        info.group_id = [self.im_group_id longLongValue];
-        info.attachment = attachment;
-        info.filePath = filePath;
-        info.fileName = content;
-        
-        info.info = [NSString stringWithFormat:@"%@ 来自自己",[IMLinshiTool getSizeStrWithFileSize:[data length]]];
-        
-        NSDate *date = [NSDate date];
-        NSDateFormatter *formatter = [NSDateFormatter defaultDateFormatter];
-        info.createDate = [formatter stringFromDate:date];
-        
-        IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
-        mode.fileDelegate = weakSelf;
-        
-        [self switchCurView:self.customTableViewController.view];
-        
-        IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
-        if (firstFileMode != nil) {
-            [firstFileMode.sectionMode insertRows:[NSArray arrayWithObjects:mode, nil] withInsertCellMode:firstFileMode withInsertType:ArrayInsertPosition_Before];
-        }else
-        {
-            SectionMode *sMode = [[SectionMode alloc] init];
-            [sMode setRows:[NSArray arrayWithObjects:mode, nil]];
-            [weakSelf.customTableViewController setSections:[NSArray arrayWithObjects:sMode, nil]];
-        }
-        
-        [weakSelf.fileModeArray insertObject:mode atIndex:0];
-    } withInputCancel:^{
-        
-    }];
+    if([data length] > 1024*1024*20)
+    {
+        [MBProgressHUD imShowError:@"文件大小不能超过20M" toView:self.view];
+    }else
+    {
+        WS(weakSelf);
+        IMInputDialog *inputD = [[IMInputDialog alloc] init];
+        NSString *defaultContent = [NSString stringWithFormat:@"gsx_%.0f",[[NSDate date] timeIntervalSince1970]*100];
+        [inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
+            NSString *filePath = defaultContent;
+            
+            if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
+                [IMLinshiTool createDirectory:[BJChatFileCacheManager chatUploadFilePath]];
+            }
+            
+            [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
+            
+            IMFileUploadInfo *info = [[IMFileUploadInfo alloc] init];
+            info.group_id = [self.im_group_id longLongValue];
+            info.attachment = attachment;
+            info.filePath = filePath;
+            info.fileName = content;
+            
+            info.info = [NSString stringWithFormat:@"%@ 来自自己",[IMLinshiTool getSizeStrWithFileSize:[data length]]];
+            
+            NSDate *date = [NSDate date];
+            NSDateFormatter *formatter = [NSDateFormatter defaultDateFormatter];
+            info.createDate = [formatter stringFromDate:date];
+            
+            IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
+            mode.fileDelegate = weakSelf;
+            
+            [self switchCurView:self.customTableViewController.view];
+            
+            IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
+            if (firstFileMode != nil) {
+                [firstFileMode.sectionMode insertRows:[NSArray arrayWithObjects:mode, nil] withInsertCellMode:firstFileMode withInsertType:ArrayInsertPosition_Before];
+            }else
+            {
+                SectionMode *sMode = [[SectionMode alloc] init];
+                [sMode setRows:[NSArray arrayWithObjects:mode, nil]];
+                [weakSelf.customTableViewController setSections:[NSArray arrayWithObjects:sMode, nil]];
+            }
+            
+            [weakSelf.fileModeArray insertObject:mode atIndex:0];
+        } withInputCancel:^{
+            
+        }];
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
