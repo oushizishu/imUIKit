@@ -180,6 +180,7 @@
     
     NSString *fileName = [NSString stringWithFormat:@"faceimage.%@",attachment];
     
+    /*
     [[BJIMManager shareInstance] uploadGroupFile:attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] fileName:fileName callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
         if (error) {
             [MBProgressHUD imShowError:@"图片上传失败" toView:weakself.view];
@@ -189,6 +190,17 @@
             [weakself setGRoupFaceImageUrl:[UIImage imageWithData:data]];
         }
     } progress:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpected) {
+    }];
+    */
+    
+    [[BJIMManager shareInstance] uploadImageFile:fileName filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
+        if (error) {
+            [MBProgressHUD imShowError:@"图片上传失败" toView:weakself.view];
+        }else
+        {
+            weakself.storage_id = storage_id;
+            [weakself setGRoupFaceImageUrl:[UIImage imageWithData:data]];
+        }
     }];
 }
 
@@ -240,11 +252,11 @@
             
         }
         
-        //NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
+        NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
         
-        NSData *pngData = UIImagePNGRepresentation(theImage);
+        //NSData *pngData = UIImagePNGRepresentation(theImage);
         
-        [self uploadFile:pngData withattachment:@"png"];
+        [self uploadFile:jpgData withattachment:@"jpg"];
         // 保存图片到相册中
         //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
         //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
