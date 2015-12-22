@@ -7,6 +7,8 @@
 #import "IMAnnouncementCellMode.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMLinshiTool.h"
+#import "IMDialog.h"
+#import "MBProgressHUD+IMKit.h"
 
 @implementation IMUILable
 
@@ -296,14 +298,19 @@
 
 -(void)deleteAnnouncement
 {
-    WS(weakSelf);
-    [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId group_id:self.groupId callback:^(NSError *error) {
-        if (error) {
-            
-        }else
-        {
-            [weakSelf.sectionMode.customTableViewController removeSections:[NSArray arrayWithObjects:weakSelf.sectionMode, nil]];
-        }
+    IMDialog *dialog = [[IMDialog alloc] init];
+    [dialog showWithContent:@"是否删除公告" withSelectBlock:^{
+        WS(weakSelf);
+        [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId group_id:self.groupId callback:^(NSError *error) {
+            if (error) {
+                [MBProgressHUD imShowError:@"删除失败"];
+            }else
+            {
+                [weakSelf.sectionMode.customTableViewController removeSections:[NSArray arrayWithObjects:weakSelf.sectionMode, nil]];
+            }
+        }];
+    } withCancelBlock:^{
+        
     }];
 }
 

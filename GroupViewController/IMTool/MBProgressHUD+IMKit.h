@@ -8,6 +8,7 @@
 
 @interface MBProgressHUD(IMKit)
 
++ (void)imShowError:(NSString *)error;
 
 + (void)imShowError:(NSString *)error toView:(UIView *)view;
 /**

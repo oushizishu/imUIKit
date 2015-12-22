@@ -8,6 +8,11 @@
 
 @implementation MBProgressHUD(IMKit)
 
++ (void)imShowError:(NSString *)error
+{
+    [self imShow:error icon:@"error.png" view:[UIApplication sharedApplication].keyWindow];
+}
+
 #pragma mark 显示错误信息
 + (void)imShowError:(NSString *)error toView:(UIView *)view{
     [self imShow:error icon:@"error.png" view:view];

@@ -16,6 +16,7 @@
 #import "MBProgressHUD+IMKit.h"
 #import "IMInputDialog.h"
 #import "IMActionSheet.h"
+#import "IMDialog.h"
 
 @interface GroupFileViewController()<CustomTableViewControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MyImagePickerViewControllerDelegate,IMFileCellModeDelegate>
 
@@ -413,22 +414,27 @@
 
 - (void)userDeleteGroupFile:(IMFileCellMode *)cellMode
 {
-    if ([self.fileModeArray containsObject:cellMode] && cellMode.sectionMode != nil) {
-        if (cellMode.groupFile != nil) {
-            WS(weakSelf);
-            [[BJIMManager shareInstance] deleteGroupFile:[self.im_group_id longLongValue] file_id:cellMode.groupFile.fileId callback:^(NSError *error) {
-                if (error) {
-                    [MBProgressHUD imShowError:@"删除失败" toView:weakSelf.view];
-                }else
-                {
-                    [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
-                }
-            }];
-        }else
-        {
-            [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+    IMDialog *dialog = [[IMDialog alloc] init];
+     WS(weakSelf);
+    [dialog showWithContent:@"是否删除该文件" withSelectBlock:^{
+        if ([self.fileModeArray containsObject:cellMode] && cellMode.sectionMode != nil) {
+            if (cellMode.groupFile != nil) {
+                [[BJIMManager shareInstance] deleteGroupFile:[self.im_group_id longLongValue] file_id:cellMode.groupFile.fileId callback:^(NSError *error) {
+                    if (error) {
+                        [MBProgressHUD imShowError:@"删除失败" toView:weakSelf.view];
+                    }else
+                    {
+                        [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+                    }
+                }];
+            }else
+            {
+                [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+            }
         }
-    }
+    } withCancelBlock:^{
+        
+    }];
 }
 
 @end
