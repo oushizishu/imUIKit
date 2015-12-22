@@ -136,7 +136,13 @@
         self.authorNameLable.hidden = NO;
         
         CGSize creatorSize = [mode.groupNotice.creator sizeWithFont:[UIFont systemFontOfSize:13.0f]];
-        self.authorNameLable.frame = CGRectMake(startP.x-creatorSize.width, startP.y, creatorSize.width, 15);
+        if (startP.x-15.0f<creatorSize.width) {
+            self.authorNameLable.frame = CGRectMake(15.0f, startP.y, startP.x-15.0f, 15);
+        }else
+        {
+            self.authorNameLable.frame = CGRectMake(startP.x-creatorSize.width, startP.y, creatorSize.width, 15);
+        }
+        
         self.authorNameLable.text = mode.groupNotice.creator;
     }else
     {
