@@ -7,6 +7,7 @@
 #import "ReleaseAnnouncementViewController.h"
 #import "UIColor+Util.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import "MBProgressHUD+IMKit.h"
 
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>
 
@@ -14,6 +15,7 @@
 @property(strong ,nonatomic)UIView *editView;
 @property(strong ,nonatomic)UITextView *textView;
 @property(strong ,nonatomic)UILabel *tipLable;
+@property(assign ,nonatomic)BOOL ifCanRrelease;
 
 @end
 
@@ -24,6 +26,7 @@
     self = [super init];
     if (self) {
         self.im_group_Id = groupId;
+        self.ifCanRrelease = YES;
     }
     return self;
 }
@@ -83,15 +86,18 @@
 
 - (void)releaseAnnouncement
 {
-    WS(weakSelf);
-    [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {
-        if (error) {
-            
-        }else
-        {
-            [weakSelf backAction:nil];
-        }
-    }];
+    if (self.ifCanRrelease) {
+        WS(weakSelf);
+        [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {
+            if (error) {
+                weakSelf.ifCanRrelease = NO;
+                [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.view];
+            }else
+            {
+                [weakSelf backAction:nil];
+            }
+        }];
+    }
 }
 
 - (void)backAction:(id)aciton
