@@ -89,6 +89,12 @@
 - (void)releaseAnnouncement
 {
     if (self.ifCanRrelease) {
+        
+        if (self.textView.text == nil || [self.textView.text length] == 0) {
+            [MBProgressHUD imShowError:@"请输入公告内容" toView:self.view];
+            return;
+        }
+        
         WS(weakSelf);
         self.ifCanRrelease = NO;
         [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {

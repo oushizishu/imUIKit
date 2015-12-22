@@ -73,7 +73,7 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"上传文件" style:UIBarButtonItemStylePlain target:self action:@selector(uploadFile)];
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"上传文件" style:UIBarButtonItemStyleDone target:self action:@selector(uploadFile)];
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
     self.title = @"群文件";
