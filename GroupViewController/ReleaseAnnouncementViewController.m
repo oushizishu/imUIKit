@@ -88,9 +88,10 @@
 {
     if (self.ifCanRrelease) {
         WS(weakSelf);
+        self.ifCanRrelease = NO;
         [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {
             if (error) {
-                weakSelf.ifCanRrelease = NO;
+                weakSelf.ifCanRrelease = YES;
                 [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.view];
             }else
             {
