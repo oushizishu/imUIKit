@@ -155,7 +155,7 @@
     hView.backgroundColor = [UIColor whiteColor];
     [sMode.headerView addSubview:hView];
     UILabel *groupL = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, 100, 20)];
-    groupL.text = @"群成员";
+    groupL.text = [NSString stringWithFormat:@"群成员 %lld人",self.groupDetail.membercount];
     groupL.textColor = [UIColor grayColor];
     groupL.font = [UIFont systemFontOfSize:14.0f];
     groupL.textAlignment = NSTextAlignmentLeft;
