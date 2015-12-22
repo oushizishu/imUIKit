@@ -15,6 +15,8 @@
 #define IMCOLOT_GREY400 @"#9d9e9e"
 #define IMCOLOT_GREY100 @"#f2f4f5"
 
+#define IMCOLOT_ORANGE @"#ff9100"
+
 
 @interface IMLinshiTool : NSObject
 

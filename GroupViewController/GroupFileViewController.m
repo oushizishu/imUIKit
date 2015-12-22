@@ -25,6 +25,8 @@
 @property (strong, nonatomic) NSMutableArray<IMFileCellMode *> *fileModeArray;
 @property (nonatomic) BOOL ifCanLoadMore;
 
+@property (strong, nonatomic) UIButton *uploadFileBtn;
+
 @property (strong, nonatomic) UIView *noHaveNoticeView;
 @property (strong, nonatomic) UIImageView *noNoticeImageView;
 @property (strong, nonatomic) UILabel *noNoticeTip;
@@ -74,7 +76,12 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"上传文件" style:UIBarButtonItemStyleDone target:self action:@selector(uploadFile)];
+    self.uploadFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 25)];
+    [self.uploadFileBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_ORANGE] forState:UIControlStateNormal];
+    [self.uploadFileBtn setTitle:@"上传文件" forState:UIControlStateNormal];
+    [self.uploadFileBtn addTarget:self action:@selector(uploadFile) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.uploadFileBtn];
+    
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
     self.title = @"群文件";
