@@ -134,7 +134,7 @@
         scrollH = sRect.size.height*2/3-88;
     }
     
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(55, (sRect.size.height-(scrollH+88))/2, sRect.size.width-110, scrollH+88)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width/8, (sRect.size.height-(scrollH+88))/2, sRect.size.width-sRect.size.width/4, scrollH+88)];
     self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
     self.contentView.layer.masksToBounds = YES;
     [self.contentView.layer setCornerRadius:5.0f];
@@ -199,11 +199,11 @@
 
 - (void)cancelBtnAction
 {
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userCancelBlock) {
         self.userCancelBlock();
     }
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 - (void)comfireBtnAction
@@ -212,11 +212,12 @@
     if (self.selectItemArray != nil && [self.selectItemArray containsObject:self.curSelectItem]) {
         index = [self.selectItemArray indexOfObject:self.curSelectItem];
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userSelectBlock) {
         self.userSelectBlock(index);
     }
+    
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
     
 }
 

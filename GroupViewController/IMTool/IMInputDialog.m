@@ -40,7 +40,7 @@
     self.userComplete = complete;
     self.userCancel = cancel;
     
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(55, (sRect.size.height-100)/2-100, sRect.size.width-110, 100)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width/8, (sRect.size.height-100)/2-100, sRect.size.width-sRect.size.width/4, 100)];
     self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
     self.contentView.layer.masksToBounds = YES;
     [self.contentView.layer setCornerRadius:5.0f];
@@ -86,21 +86,20 @@
 
 - (void)cancelBtnAction
 {
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userCancel) {
         self.userCancel();
     }
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 - (void)comfireBtnAction
 {
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userComplete) {
         self.userComplete(self.textField.text);
     }
-    
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 @end

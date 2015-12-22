@@ -192,11 +192,11 @@
 
 - (void)cancelBtnAction
 {
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userCancelBlock) {
         self.userCancelBlock();
     }
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 - (void)actionSheetHitItem:(IMActionSheetItem *)item
@@ -205,11 +205,11 @@
     if (self.selectItemArray != nil && [self.selectItemArray containsObject:item]) {
         index = [self.selectItemArray indexOfObject:item];
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     if (self.userSelectBlock) {
         self.userSelectBlock(index);
     }
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 
 
