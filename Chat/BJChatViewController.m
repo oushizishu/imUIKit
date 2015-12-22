@@ -125,6 +125,7 @@ IMNewGRoupNoticeDelegate>
 {
     [super viewDidAppear:animated];
     self.ifForeground = YES;
+    [self showGroupNewNotice];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -203,8 +204,6 @@ IMNewGRoupNoticeDelegate>
     //        cardMessage.messageBody = card;
     //        [self addNewMessages:@[cardMessage] isForward:NO];
     //    }
-    
-    [self showGroupNewNotice];
 }
 
 
