@@ -127,7 +127,7 @@
             CGRect rectScreen = [UIScreen mainScreen].bounds;
             CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
             CGRect rectNav = self.navigationController.navigationBar.frame;
-            weakself.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, rectNav.size.height+rectStatus.size.height, rectScreen.size.width, rectScreen.size.height-rectNav.size.height-rectStatus.size.height-50)];
+            weakself.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, rectScreen.size.width, rectScreen.size.height-rectNav.size.height-rectStatus.size.height-50)];
             [weakself.view addSubview:weakself.webView];
             NSURL *requestUrl =[NSURL URLWithString:url];
             NSURLRequest *request =[NSURLRequest requestWithURL:requestUrl];
