@@ -389,14 +389,17 @@
         IMActionSheet  *actionSheet = [[IMActionSheet alloc] init];
         NSArray *array = nil;
         User *owner = [IMEnvironment shareInstance].owner;
+        NSInteger curIndex = (int)self.groupDetail.msg_status;
         if (owner.userRole == eUserRole_Student) {
             array = [NSArray arrayWithObjects:@"接收所有消息并提醒",@"只接收老师消息",@"接收所有消息并不提醒",@"不接收此群消息", nil];
         }else
         {
             array = [NSArray arrayWithObjects:@"接收所有消息并提醒",@"接收所有消息并不提醒",@"不接收此群消息", nil];
+            if (curIndex == 2 || curIndex == 3) {
+                curIndex = curIndex - 1;
+            }
         }
         
-        NSInteger curIndex = (int)self.groupDetail.msg_status;
         [actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
             if (index >= 0 && index <= 3 && curIndex != index) {
                 if (owner.userRole == eUserRole_Student) {
@@ -407,7 +410,7 @@
                         [weakSelf setGroupMsgStatus:index+1];
                     }else
                     {
-                        [weakSelf setGroupMsgStatus:index+1];
+                        [weakSelf setGroupMsgStatus:index];
                     }
                 }
             }
