@@ -309,13 +309,18 @@
 {
     IMDialog *dialog = [[IMDialog alloc] init];
     
+    WS(weakSelf);
+    
     [dialog showWithContent:@"是否移除该成员" withSelectBlock:^{
         [[BJIMManager shareInstance] removeGroupMember:[self.im_group_id longLongValue] user_number:cellMode.GroupDetailMember.user_number user_role:cellMode.GroupDetailMember.user_role callback:^(NSError *error) {
             if (error) {
                 [MBProgressHUD imShowError:@"移除失败" toView:self.view];
             }else
             {
-                [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+                weakSelf.pageIndex = 1;
+                [weakSelf.groupUserArray removeAllObjects];
+                [weakSelf requestGroupMembers];
+
             }
         }];
     } withCancelBlock:^{
