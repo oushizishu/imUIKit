@@ -82,6 +82,8 @@
     self.tipLable.font = [UIFont systemFontOfSize:16.0f];
     [self.editView addSubview:self.tipLable];
     
+    [self.textView becomeFirstResponder];
+    
 }
 
 - (void)releaseAnnouncement
