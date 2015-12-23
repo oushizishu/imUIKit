@@ -88,6 +88,12 @@
 
 @implementation IMFileUploadInfo
 
+- (void)setInfo:(NSString *)info
+{
+    _info = info;
+    self.bakInfo = _info;
+}
+
 @end
 
 @interface IMFileCell()<IMUIViewDelegate>
@@ -620,6 +626,7 @@
         [self startDownloadFile];
     }else if (self.type == IMFileCellModeType_Upload || self.type == IMFileCellModeType_UploadRetry)
     {
+        self.info.info = self.info.bakInfo;
         [self setModeType:IMFileCellModeType_UploadWait];
         [self startUploadFile];
     }
@@ -637,6 +644,7 @@
     WS(weakself);
     self.uploadOperation = [[BJIMManager shareInstance] uploadGroupFile:self.info.attachment filePath:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.info.filePath],self.info.attachment]] fileName:self.info.fileName callback:^(NSError *error,int64_t storage_id,NSString *storage_url) {
         if (error) {
+            weakself.info.info = @"上传失败，请重试";
             [weakself setModeType:IMFileCellModeType_UploadRetry];
         }else
         {
@@ -659,6 +667,7 @@
     WS(weakself);
     [[BJIMManager shareInstance] addGroupFile:self.info.group_id storage_id:self.info.storage_id fileName:self.info.fileName callback:^(NSError *error, GroupFile *groupFile) {
         if (error) {
+             weakself.info.info = @"文件添加失败，请重试";
             [weakself setModeType:IMFileCellModeType_UploadRetry];
         }else{
             weakself.groupFile = groupFile;

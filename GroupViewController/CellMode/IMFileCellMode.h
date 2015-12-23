@@ -43,6 +43,7 @@
 @property (strong ,nonatomic) NSString *filePath;
 @property (strong ,nonatomic) NSString *attachment;
 @property (strong ,nonatomic) NSString *info;
+@property (strong ,nonatomic) NSString *bakInfo;
 @property (strong ,nonatomic) NSString *createDate;
 
 @end

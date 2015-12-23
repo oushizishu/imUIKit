@@ -76,7 +76,7 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    self.uploadFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 25)];
+    self.uploadFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 20)];
     [self.uploadFileBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_ORANGE] forState:UIControlStateNormal];
     [self.uploadFileBtn setTitle:@"上传文件" forState:UIControlStateNormal];
     [self.uploadFileBtn addTarget:self action:@selector(uploadFile) forControlEvents:UIControlEventTouchUpInside];
@@ -285,8 +285,15 @@
     }
 }
 
+- (void)afterDelay:(NSArray*)array
+{
+    [self addNewUploadFileMode:[array firstObject] withattachment:[array lastObject]];
+}
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     // 判断获取类型：图片
     if ([mediaType isEqualToString:( NSString *)kUTTypeImage]){
@@ -303,7 +310,8 @@
         
         NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
         
-        [self addNewUploadFileMode:jpgData withattachment:@"jpg"];
+        //[self addNewUploadFileMode:jpgData withattachment:@"jpg"];
+        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:jpgData,@"jpg", nil] afterDelay:0.2];
         // 保存图片到相册中
         //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
         //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
@@ -317,7 +325,8 @@
         
         NSData *videoData = [NSData dataWithContentsOfURL:mediaURL];
         
-        [self addNewUploadFileMode:videoData withattachment:@"mov"];
+        //[self addNewUploadFileMode:videoData withattachment:@"mov"];
+        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:videoData,@"mov", nil] afterDelay:0.2];
         
         //ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
         
@@ -334,8 +343,6 @@
          */
         
     }
-    
-    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -432,11 +439,13 @@
                     }else
                     {
                         [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+                        [weakSelf.fileModeArray removeObject:cellMode];
                     }
                 }];
             }else
             {
                 [cellMode.sectionMode removeRows:[NSArray arrayWithObjects:cellMode, nil]];
+                [weakSelf.fileModeArray removeObject:cellMode];
             }
         }
     } withCancelBlock:^{
