@@ -440,7 +440,9 @@
                 || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"png"]
                 ) {
                 reImage = [UIImage imageNamed:@"ic_file_img"];
-            }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"excel"])
+            }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"excel"]
+                     || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xls"]
+                     || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xlsx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_excel"];
             }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"pdf"])
@@ -450,12 +452,12 @@
             else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"txt"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_txt"];
+            }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"pptx"]
+                     || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"ppt"])
+            {
+                reImage = [UIImage imageNamed:@"ic_file_ppt"];
             }
             else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"doc"]
-                    || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"pptx"]
-                    || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"ppt"]
-                    || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xls"]
-                    || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xlsx"]
                     || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"docx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_word"];
@@ -467,7 +469,9 @@
                 || [[cellMode.info.attachment lowercaseString] isEqualToString:@"jpeg"]
                 || [[cellMode.info.attachment lowercaseString] isEqualToString:@"png"]) {
                 reImage = [UIImage imageNamed:@"ic_file_img"];
-            }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"excel"])
+            }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"excel"]
+                      || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xls"]
+                      || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"xlsx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_excel"];
             }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"pdf"])
@@ -476,11 +480,11 @@
             }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"txt"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_txt"];
+            }else if([[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"pptx"]
+                     || [[cellMode.groupFile.file_type lowercaseString] isEqualToString:@"ppt"])
+            {
+                reImage = [UIImage imageNamed:@"ic_file_ppt"];
             }else if ([[cellMode.info.attachment lowercaseString] isEqualToString:@"doc"]
-                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"pptx"]
-                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"ppt"]
-                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"xls"]
-                      || [[cellMode.info.attachment lowercaseString] isEqualToString:@"xlsx"]
                       || [[cellMode.info.attachment lowercaseString] isEqualToString:@"docx"])
             {
                 reImage = [UIImage imageNamed:@"ic_file_word"];
