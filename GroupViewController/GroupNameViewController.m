@@ -223,10 +223,13 @@
                                                    [MBProgressHUD imShowError:@"保存失败" toView:weakSelf.view];
                                                }else
                                                {
+                                                   [weakSelf backAction:nil];
+                                                   /*
                                                    weakSelf.storage_id = 0;
                                                    weakSelf.groupDetail.group_name = weakSelf.nameTextField.text;
                                                    weakSelf.saveBtn.userInteractionEnabled = NO;
                                                    [weakSelf.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+                                                    */
                                                }
                                            }];
 }
