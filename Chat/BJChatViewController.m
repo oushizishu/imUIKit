@@ -37,6 +37,7 @@
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import <BJHL-IM-iOS-SDK/NSDictionary+Json.h>
 #import <BJHL-IM-iOS-SDK/NSString+Json.h>
+#import "MBProgressHUD+IMKit.h"
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -640,6 +641,10 @@ IMNewGRoupNoticeDelegate>
         [self.messageList lastObject] == message &&
         [message isMySend] && errorCode == eError_suc) {
         [self scrollViewToBottom:YES needDelay:NO];
+    }
+    
+    if (errorCode != 0) { //发送失败，提醒
+        [MBProgressHUD imShowError:errorMessage toView:self.view];
     }
 }
 
