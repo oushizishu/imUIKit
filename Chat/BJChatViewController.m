@@ -644,7 +644,7 @@ IMNewGRoupNoticeDelegate>
     }
     
     if (errorCode != 0) { //发送失败，提醒
-        [MBProgressHUD imShowError:errorMessage toView:self.view];
+        [MBProgressHUD imShowError:errorMessage];
     }
 }
 
