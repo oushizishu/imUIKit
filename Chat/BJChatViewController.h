@@ -13,4 +13,8 @@ typedef void (^OpenURL)(NSString*url);
 @property (strong, nonatomic, readonly) BJChatInfo *chatInfo;
 @property (nonatomic,copy)OpenURL openURL;
 - (instancetype)initWithChatInfo:(BJChatInfo *)chatInfo;
+
+//展示群组通知
+- (void)showGroupNotice;
+
 @end

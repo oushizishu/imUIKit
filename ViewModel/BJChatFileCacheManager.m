@@ -13,6 +13,10 @@
 #define BJChatFile_Audio @"Audio"
 #define BJChatFile_Images @"Images"
 
+#define BJChatFile_UploadFile @"UploadFile"
+#define BJChatFile_DownloadFile @"DownloadFile"
+#define BJChatFile_GroupFile @"GroupFile"
+
 @implementation BJChatFileCacheManager
 
 + (void)createDir:(NSString *)path
@@ -47,6 +51,21 @@
     return [[self chatRootPath] stringByAppendingPathComponent:BJChatFile_Audio];
 }
 
++ (NSString *)chatUploadFilePath
+{
+    return [[self chatRootPath] stringByAppendingPathComponent:BJChatFile_UploadFile];
+}
+
++ (NSString *)chatDownloadFilePath
+{
+    return [[self chatRootPath] stringByAppendingPathComponent:BJChatFile_DownloadFile];
+}
+
++ (NSString *)chatGroupFilePath
+{
+    return [[self chatRootPath] stringByAppendingPathComponent:BJChatFile_GroupFile];
+}
+
 + (NSString *)imageCachePathWithName:(NSString *)imageName;
 {
     if (imageName.length<=0) {
@@ -63,6 +82,33 @@
     }
     return [[self chatAudiosPath] stringByAppendingPathComponent:audioName];
 
+}
+
++ (NSString *)uploadFileCachePathwithName:(NSString *)fileName
+{
+    if (fileName.length<=0) {
+        NSAssert(0, @"文件名称不能为空");
+        return nil;
+    }
+    return [[self chatUploadFilePath] stringByAppendingPathComponent:fileName];
+}
+
++ (NSString *)downloadFileCacherPathWithName:(NSString *)fileName
+{
+    if (fileName.length<=0) {
+        NSAssert(0, @"文件名称不能为空");
+        return nil;
+    }
+    return [[self chatDownloadFilePath] stringByAppendingPathComponent:fileName];
+}
+
++ (NSString *)groupFileCachePathWithName:(NSString *)fileName
+{
+    if (fileName.length<=0) {
+        NSAssert(0, @"文件名称不能为空");
+        return nil;
+    }
+    return [[self chatGroupFilePath] stringByAppendingPathComponent:fileName];
 }
 
 #pragma mark - 相对路径

@@ -36,6 +36,12 @@
 
 #import "BJChatLoadMoreHeadView.h"
 
+#import "IMToast.h"
+#import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-IM-iOS-SDK/NSDictionary+Json.h>
+#import <BJHL-IM-iOS-SDK/NSString+Json.h>
+#import "MBProgressHUD+IMKit.h"
+
 const int BJ_Chat_Time_Interval = 5;
 
 @interface BJChatViewController ()<UITableViewDataSource,UITableViewDelegate,
@@ -45,7 +51,8 @@ BJChatInputProtocol,
 BJSendMessageProtocol,
 IMDeliveredMessageDelegate,
 IMGroupProfileChangedDelegate,
-IMUserInfoChangedDelegate>
+IMUserInfoChangedDelegate,
+IMNewGRoupNoticeDelegate>
 {
     BOOL _isFirstAppear; //生命周期第一次判断
     BOOL _hasPreparedMessages;
@@ -70,6 +77,8 @@ IMUserInfoChangedDelegate>
 @property (assign, nonatomic) BOOL isLoadMore;
 
 @property (strong, nonatomic) UIWebView *webView;//webView实现打电话,可以直接返回到应用
+
+@property (assign, nonatomic) BOOL ifForeground;
 
 @end
 
@@ -116,6 +125,13 @@ IMUserInfoChangedDelegate>
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.ifForeground = YES;
+    [self showGroupNewNotice];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -125,6 +141,7 @@ IMUserInfoChangedDelegate>
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan = YES;
     }
+    self.ifForeground = NO;
 }
 
 //第一次调用viewWillAppear
@@ -135,7 +152,7 @@ IMUserInfoChangedDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
@@ -157,6 +174,7 @@ IMUserInfoChangedDelegate>
     [[BJIMManager shareInstance] addDeliveryMessageDelegate:self];
     if ([self.chatInfo getContactType] == BJContact_Group) {
         [[BJIMManager shareInstance] addGroupProfileChangedDelegate:self];
+        [[BJIMManager shareInstance] addNewGroupNoticeDelegate:self];
     }
     [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
     
@@ -207,6 +225,44 @@ IMUserInfoChangedDelegate>
  // Pass the selected object to the new view controller.
  }
  */
+
+- (void)showGroupNewNotice
+{
+    if (self.ifForeground) {
+        User *owner = [IMEnvironment shareInstance].owner;
+        NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
+        
+        NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+        
+        if ([userDefaultes objectForKey:objectkey] != nil) {
+            NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
+            if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
+                [notice setObject:@"NO" forKey:@"ifAutoShow"];
+                [userDefaultes setObject:[notice jsonString] forKey:objectkey];
+                [userDefaultes synchronize];
+                [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+            }
+        }
+    }
+}
+
+- (void)showGroupNotice
+{
+    User *owner = [IMEnvironment shareInstance].owner;
+    NSString *objectkey = [NSString stringWithFormat:@"UserId_%lld_userRole_%ld_NewGroupNotice_%lld",owner.userId,owner.userRole,self.chatInfo.chatToGroup.groupId];
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+    if ([userDefaultes objectForKey:objectkey] != nil) {
+        NSMutableDictionary *notice =  [[NSMutableDictionary alloc] initWithDictionary:[[userDefaultes objectForKey:objectkey] jsonValue]];
+        if ([[notice objectForKey:@"ifAutoShow"] isEqualToString:@"YES"]) {
+            [notice setObject:@"NO" forKey:@"ifAutoShow"];
+            [userDefaultes setObject:[notice jsonString] forKey:objectkey];
+            [userDefaultes synchronize];
+        }
+        [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+    }
+}
 
 #pragma mark - 消息操作方法
 - (NSInteger)addNewMessages:(NSArray *)messages isForward:(BOOL)forward;
@@ -599,6 +655,15 @@ IMUserInfoChangedDelegate>
     if (errorCode != eError_suc &&  errorMessage.length > 0) {
         [MBProgressHUD showWindowErrorThenHide:errorMessage];
     }
+    
+    if (errorCode != 0) { //发送失败，提醒
+        [MBProgressHUD imShowError:errorMessage];
+    }
+}
+
+- (void)didNewGroupNotice
+{
+    [self showGroupNewNotice];
 }
 
 - (void)willSendMessage:(IMMessage *)message;
@@ -797,7 +862,9 @@ IMUserInfoChangedDelegate>
         {
             _conversation = [[BJIMManager shareInstance] getConversationUserId:self.chatInfo.getToId role:self.chatInfo.getToRole];
             if (_conversation) {
-                self.navigationItem.title = _conversation.chatToUser.name;
+
+                self.title = (_conversation.chatToUser.remarkName && _conversation.chatToUser.remarkName.length > 0)?
+                _conversation.chatToUser.remarkName:_conversation.chatToUser.name;
             }
         }
     }
