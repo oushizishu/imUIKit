@@ -101,6 +101,7 @@
     User *owner = [IMEnvironment shareInstance].owner;
     if (owner.userId != self.groupDetail.user_number || owner.userRole != self.groupDetail.user_role) {
         self.nameTextField.userInteractionEnabled = NO;
+        self.tipLable.hidden = YES;
     }else
     {
         UITapGestureRecognizer *tapG = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(faceImagePressed:)];
