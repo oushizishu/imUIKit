@@ -258,6 +258,9 @@ IMNewGRoupNoticeDelegate>
             [userDefaultes synchronize];
         }
         [IMToast showThenHidden:[notice objectForKey:@"content"] withView:self.view afterDelay:10];
+    }else
+    {
+        [IMToast showThenHidden:@"暂无公告" withView:self.view afterDelay:10];
     }
 }
 
