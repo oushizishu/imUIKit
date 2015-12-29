@@ -42,7 +42,7 @@
     self.tableView.dataSource=self;
     self.tableView.tableHeaderView = self.tableHeaderView;
     self.tableView.tableFooterView = self.tableFooterView;
-    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    //self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     self.tableView.sectionIndexColor = [UIColor grayColor];
     [self.view addSubview:self.tableView];
 }

@@ -90,7 +90,12 @@
         self.userCancel();
     }
     [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version < 7.0f || version >= 8.0f)
+    {
+        [self removeFromParentViewController];
+    }
 }
 
 - (void)comfireBtnAction
@@ -99,7 +104,12 @@
         self.userComplete(self.textField.text);
     }
     [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version < 7.0f || version >= 8.0f)
+    {
+        [self removeFromParentViewController];
+    }
 }
 
 @end

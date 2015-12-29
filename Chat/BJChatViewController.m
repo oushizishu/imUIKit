@@ -646,7 +646,8 @@ IMNewGRoupNoticeDelegate>
         [self scrollViewToBottom:YES needDelay:NO];
     }
     
-    if (errorCode != 0) { //发送失败，提醒
+    
+    if (errorCode != 0 && errorCode != 510007 && errorCode != 510008) { //发送失败，提醒
         [MBProgressHUD imShowError:errorMessage];
     }
 }

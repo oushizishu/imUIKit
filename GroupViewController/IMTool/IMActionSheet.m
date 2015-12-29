@@ -196,7 +196,11 @@
         self.userCancelBlock();
     }
     [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version < 7.0f || version >= 8.0f)
+    {
+        [self removeFromParentViewController];
+    }
 }
 
 - (void)actionSheetHitItem:(IMActionSheetItem *)item
@@ -209,7 +213,11 @@
         self.userSelectBlock(index);
     }
     [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version < 7.0f || version >= 8.0f)
+    {
+        [self removeFromParentViewController];
+    }
 }
 
 
