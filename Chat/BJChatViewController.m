@@ -327,7 +327,7 @@ IMNewGRoupNoticeDelegate>
 -(NSString*)customformattedTime:(NSDate*)time
 {
     NSDateFormatter* formatter = [NSDateFormatter dateFormatter];
-    [formatter setDateFormat:@"YYYYMMdd"];
+    [formatter setDateFormat:@"yyyyMMdd"];
     NSString * dateNow = [formatter stringFromDate:[NSDate date]];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setDay:[[dateNow substringWithRange:NSMakeRange(6,2)] intValue]];

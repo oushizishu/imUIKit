@@ -9,7 +9,7 @@
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 
-@interface IMFilePreviewViewController()
+@interface IMFilePreviewViewController()<UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) NSString *im_group_id;
 @property (strong ,nonatomic)GroupFile *groupFile;
@@ -18,6 +18,7 @@
 @property (strong ,nonatomic)UIWebView *webView;
 @property (strong ,nonatomic)UIView *operationView;
 @property (strong ,nonatomic)UIButton *operationBtn;
+@property (strong ,nonatomic)UIDocumentInteractionController *docInteractionController;
 
 @end
 
@@ -72,9 +73,67 @@
     self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
     [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.operationBtn setTitle:@"用其他应用打开" forState:UIControlStateNormal];
+    [self.operationBtn addTarget:self action:@selector(openFile) forControlEvents:UIControlEventTouchUpInside];
     [self.operationView addSubview:self.operationBtn];
     
     [self previewGroupFile];
+}
+
+
+- (void)openFile
+{
+    NSString *path = [BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]];
+    
+    NSURL *fileUrl = [NSURL fileURLWithPath:path];
+    
+    [ self setupDocumentControllerWithURL:fileUrl];
+    
+    CGRect rect = CGRectMake ( 0 , 0 , self.view.frame.size.width , self.view.frame.size.height );
+    
+    [self.docInteractionController presentOptionsMenuFromRect:rect inView:self.view  animated:YES];//包含快速预览菜单
+    
+    //[ self . docInteractionController presentOpenInMenuFromRect :rect inView : self . view animated : YES ];
+}
+
+- ( void )setupDocumentControllerWithURL:( NSURL *)url
+
+{
+    
+    if ( self.docInteractionController == nil ){
+        
+        self.docInteractionController = [ UIDocumentInteractionController interactionControllerWithURL :url];
+        
+        self.docInteractionController.delegate = self ;
+    }
+    
+    else {
+        
+        self.docInteractionController.URL = url;
+        
+    }
+    
+}
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- ( UIViewController *)documentInteractionControllerViewControllerForPreview:( UIDocumentInteractionController *)interactionController{
+    
+    return self ;
+    
+}
+
+// 不显示 copy print
+
+- ( BOOL )documentInteractionController:( UIDocumentInteractionController *)controller canPerformAction:( SEL )action{
+    
+    return NO ;
+    
+}
+
+- ( BOOL )documentInteractionController:( UIDocumentInteractionController *)controller performAction:( SEL )action{
+    
+    return NO ;
+    
 }
 
 - (void)previewGroupFile
@@ -83,7 +142,9 @@
         || [self.groupFile.file_type isEqualToString:@"jpeg"]
         || [self.groupFile.file_type isEqualToString:@"png"]) {
         
-        UIImage *preImage = [UIImage imageWithContentsOfFile:[BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]]];
+        NSString *path = [BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]];
+        
+        UIImage *preImage = [UIImage imageWithContentsOfFile:path];
         
         CGSize imageSize = preImage.size;
         
