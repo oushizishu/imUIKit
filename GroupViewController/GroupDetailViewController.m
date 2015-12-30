@@ -97,7 +97,14 @@
     [[BJIMManager shareInstance] getGroupProfile:[_im_group_id longLongValue]];
     self.group = [[BJIMManager shareInstance] getGroup:[_im_group_id longLongValue]];
     if (self.group) {
-        self.title = self.group.getContactName;
+        //self.title = self.group.getContactName;
+        CGRect sRect = [UIScreen mainScreen].bounds;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+        label.font = [UIFont systemFontOfSize:18.0f];
+        label.text = self.group.getContactName;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        self.navigationItem.titleView = label;
     }
 }
 

@@ -62,10 +62,16 @@
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(releaseAnnouncement)];
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
-    self.title = @"发布群公告";
+    //self.title = @"发布群公告";
     
-    CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
-    CGRect rectNav = self.navigationController.navigationBar.frame;
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"发布群公告";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
+    
     self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 160)];
     self.editView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.editView];

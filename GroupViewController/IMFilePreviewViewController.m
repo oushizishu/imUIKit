@@ -61,20 +61,31 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    self.title = @"文件预览";
+    //self.title = @"文件预览";
     
     CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"文件预览";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
+    
     CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
     CGRect rectNav = self.navigationController.navigationBar.frame;
     
-    self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-(rectStatus.size.height+rectNav.size.height+50), sRect.size.width, 50)];
-    self.operationView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.operationView];
-    self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
-    [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.operationBtn setTitle:@"用其他应用打开" forState:UIControlStateNormal];
-    [self.operationBtn addTarget:self action:@selector(openFile) forControlEvents:UIControlEventTouchUpInside];
-    [self.operationView addSubview:self.operationBtn];
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version >= 7.0f)
+    {
+        self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-(rectStatus.size.height+rectNav.size.height+50), sRect.size.width, 50)];
+        self.operationView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:self.operationView];
+        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
+        [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.operationBtn setTitle:@"用其他应用打开" forState:UIControlStateNormal];
+        [self.operationBtn addTarget:self action:@selector(openFile) forControlEvents:UIControlEventTouchUpInside];
+        [self.operationView addSubview:self.operationBtn];
+    }
     
     [self previewGroupFile];
 }

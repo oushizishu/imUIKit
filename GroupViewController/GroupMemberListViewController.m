@@ -77,7 +77,14 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    self.title = @"群成员";
+    //self.title = @"群成员";
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"群成员";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
     
     [self requestGroupMembers];
     

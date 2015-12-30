@@ -87,7 +87,14 @@
     
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
-    self.title = @"群文件";
+    //self.title = @"群文件";
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"群文件";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
     
     [self requestGroupFiles];
     
