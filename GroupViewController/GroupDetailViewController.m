@@ -21,6 +21,7 @@
 #import "MBProgressHUD+IMKit.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
+#import <TKAlertViewController.h>
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 
@@ -272,6 +273,17 @@
 
 - (void)hitExitBtn
 {
+    TKAlertViewController *alertv = [[TKAlertViewController alloc] initWithTitle:@"是否删除该文件" message:nil];
+    [alertv addCancelButtonWithTitle:@"取消" handler:^{
+        
+    }];
+    [alertv addButtonWithTitle:@"确认" handler:^{
+        
+    }];
+    
+    [alertv show];
+    return;
+    
     User *owner = [IMEnvironment shareInstance].owner;
     NSString *content = nil;
     if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {

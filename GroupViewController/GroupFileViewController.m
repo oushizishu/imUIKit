@@ -314,7 +314,7 @@
         NSData *jpgData = UIImageJPEGRepresentation(theImage, 0.75);
         
         //[self addNewUploadFileMode:jpgData withattachment:@"jpg"];
-        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:jpgData,@"jpg", nil] afterDelay:0.2];
+        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:jpgData,@"jpg", nil] afterDelay:0.5];
         // 保存图片到相册中
         //SEL selectorToCall = @selector(imageWasSavedSuccessfully:didFinishSavingWithError:contextInfo:);
         //UIImageWriteToSavedPhotosAlbum(theImage, self,selectorToCall, NULL);
@@ -329,7 +329,7 @@
         NSData *videoData = [NSData dataWithContentsOfURL:mediaURL];
         
         //[self addNewUploadFileMode:videoData withattachment:@"mov"];
-        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:videoData,@"mov", nil] afterDelay:0.2];
+        [self performSelector:@selector(afterDelay:) withObject:[NSArray arrayWithObjects:videoData,@"mov", nil] afterDelay:0.5];
         
         //ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
         
