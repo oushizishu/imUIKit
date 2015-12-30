@@ -102,7 +102,7 @@
     for (int i = 0; i < [mode.contentArray count]; i++) {
         UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+20*i, sRect.size.width-30, 15)];
         itemL.font = font;
-        itemL.tintColor = fontColor;
+        itemL.textColor = fontColor;
         itemL.text = [mode.contentArray objectAtIndex:i];
         [self addSubview:itemL];
         [self.contentArray addObject:itemL];
@@ -262,7 +262,7 @@
     if (_contentArray == nil) {
         if (self.groupNotice != nil && self.groupNotice.content != nil&& self.groupNotice.content.length > 0) {
             CGRect sRect = [UIScreen mainScreen].bounds;
-            _contentArray = [self splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:14.0f] withMaxWid:sRect.size.width-30];
+            _contentArray = [IMLinshiTool splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:14.0f] withMaxWid:sRect.size.width-30];
         }
     }
     return _contentArray;

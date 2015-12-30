@@ -66,11 +66,11 @@
     
     CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
     CGRect rectNav = self.navigationController.navigationBar.frame;
-    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
+    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 160)];
     self.editView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.editView];
     
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 140)];
+    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 130)];
     self.textView.font = [UIFont systemFontOfSize:16.0f];
     self.textView.delegate = self;
     [self.editView addSubview:self.textView];
@@ -116,7 +116,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (textView.text.length>250) {
         textView.text = [textView.text substringWithRange:NSMakeRange(0, 250)];
     }
