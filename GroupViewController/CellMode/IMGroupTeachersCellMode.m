@@ -86,6 +86,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }

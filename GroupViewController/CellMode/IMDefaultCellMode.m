@@ -29,6 +29,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         CGRect sRect = [UIScreen mainScreen].bounds;
         
         self.lineView = [[UIView alloc] initWithFrame:CGRectMake(15, IMDEFAULTCELLMODEHEIGHT, sRect.size.width-15, 0.5)];
