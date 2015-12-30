@@ -116,6 +116,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (textView.text.length>250) {
         textView.text = [textView.text substringWithRange:NSMakeRange(0, 250)];
     }

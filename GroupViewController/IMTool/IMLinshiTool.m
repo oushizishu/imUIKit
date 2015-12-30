@@ -5704,6 +5704,14 @@ NSString *IMFindLetter(int nCode)
     if (showMsg != nil) {
         NSMutableString *subStr = [[NSMutableString alloc] init];
         for (int i=0; i<[showMsg length]; i++) {
+            NSString *character = [showMsg substringWithRange:NSMakeRange(i, 1)];
+            if ([character isEqualToString:@"\n"]) {
+                if ([subStr length]>0) {
+                    [retArray addObject:subStr];
+                    subStr = [[NSMutableString alloc] init];
+                }
+                continue;
+            }
             CGSize size = [[NSString stringWithFormat:@"%@%@",subStr,[showMsg substringWithRange:NSMakeRange(i, 1)]] sizeWithFont:font];
             if (size.width>width) {
                 if ([subStr length]>0) {

@@ -72,6 +72,10 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self requestGroupDetails];
 }
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
 
 - (void)viewDidLoad
 {
@@ -273,16 +277,16 @@
 
 - (void)hitExitBtn
 {
-    TKAlertViewController *alertv = [[TKAlertViewController alloc] initWithTitle:@"是否删除该文件" message:nil];
-    [alertv addCancelButtonWithTitle:@"取消" handler:^{
-        
-    }];
-    [alertv addButtonWithTitle:@"确认" handler:^{
-        
-    }];
-    
-    [alertv show];
-    return;
+//    TKAlertViewController *alertv = [[TKAlertViewController alloc] initWithTitle:@"是否删除该文件" message:nil];
+//    [alertv addCancelButtonWithTitle:@"取消" handler:^{
+//        
+//    }];
+//    [alertv addButtonWithTitle:@"确认" handler:^{
+//        
+//    }];
+//    
+//    [alertv show];
+//    return;
     
     User *owner = [IMEnvironment shareInstance].owner;
     NSString *content = nil;
