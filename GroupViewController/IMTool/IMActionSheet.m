@@ -192,31 +192,39 @@
 
 - (void)cancelBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
+    
     if (self.userCancelBlock) {
         self.userCancelBlock();
-    }
-    [self.view removeFromSuperview];
-    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if(version < 7.0f || version >= 8.0f)
-    {
-        [self removeFromParentViewController];
     }
 }
 
 - (void)actionSheetHitItem:(IMActionSheetItem *)item
 {
+    
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
+    
+    
     NSInteger index = -1;
     if (self.selectItemArray != nil && [self.selectItemArray containsObject:item]) {
         index = [self.selectItemArray indexOfObject:item];
     }
     if (self.userSelectBlock) {
         self.userSelectBlock(index);
-    }
-    [self.view removeFromSuperview];
-    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if(version < 7.0f || version >= 8.0f)
-    {
-        [self removeFromParentViewController];
     }
 }
 

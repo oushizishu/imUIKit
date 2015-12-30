@@ -58,6 +58,9 @@
                     [mString appendString:[array objectAtIndex:i]];
                 }
                 [mArray addObject:mString];
+            }else
+            {
+                [mArray addObjectsFromArray:array];
             }
             
             [toast showThenHidden:CGRectMake((view.frame.size.width-contentW-IMTOAST_CONTENTINTERVAL_RIGHT-IMTOAST_CONTENTINTERVAL_LEFT)/2, 0,contentW+IMTOAST_CONTENTINTERVAL_RIGHT+IMTOAST_CONTENTINTERVAL_LEFT , ([array count]-1)*IMTOAST_CONTENTINTERVAL_SPROW+[array count]*IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_TOP+IMTOAST_CONTENTINTERVAL_BOTTOM) withWithContentArray:mArray afterDelay:delay];

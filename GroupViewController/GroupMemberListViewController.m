@@ -29,6 +29,8 @@
 @property (nonatomic) BOOL isAdmin;
 @property (nonatomic) BOOL isMajor;
 
+@property (strong, nonatomic) IMDialog *dialog;
+
 @end
 
 @implementation GroupMemberListViewController
@@ -300,7 +302,11 @@
         showTitleL.backgroundColor = [UIColor clearColor];
         showTitleL.textAlignment = NSTextAlignmentLeft;
         showTitleL.font = [UIFont systemFontOfSize:12.0f];
-        showTitleL.tintColor = [UIColor grayColor];
+        CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+        if(version >= 7.0f)
+        {
+            showTitleL.tintColor = [UIColor grayColor];
+        }
         showTitleL.text = title;
         [sMode.headerView addSubview:showTitleL];
         
@@ -408,11 +414,11 @@
 
 - (void)removeGroupUser:(IMGroupUserCellMode *)cellMode
 {
-    IMDialog *dialog = [[IMDialog alloc] init];
+    self.dialog = [[IMDialog alloc] init];
     
     WS(weakSelf);
     
-    [dialog showWithContent:@"是否移除该成员" withSelectBlock:^{
+    [self.dialog showWithContent:@"是否移除该成员" withSelectBlock:^{
         [[BJIMManager shareInstance] removeGroupMember:[self.im_group_id longLongValue] user_number:cellMode.GroupDetailMember.user_number user_role:cellMode.GroupDetailMember.user_role callback:^(NSError *error) {
             if (error) {
                 [MBProgressHUD imShowError:@"移除失败" toView:self.view];

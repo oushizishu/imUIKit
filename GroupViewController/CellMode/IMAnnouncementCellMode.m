@@ -223,6 +223,8 @@
 
 @interface IMAnnouncementCellMode()
 
+@property (strong, nonatomic) IMDialog *dialog;
+
 @end
 
 @implementation IMAnnouncementCellMode
@@ -298,8 +300,8 @@
 
 -(void)deleteAnnouncement
 {
-    IMDialog *dialog = [[IMDialog alloc] init];
-    [dialog showWithContent:@"是否删除公告" withSelectBlock:^{
+    self.dialog = [[IMDialog alloc] init];
+    [self.dialog showWithContent:@"是否删除公告" withSelectBlock:^{
         WS(weakSelf);
         [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId group_id:self.groupId callback:^(NSError *error) {
             if (error) {

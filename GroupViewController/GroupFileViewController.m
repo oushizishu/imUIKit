@@ -34,6 +34,9 @@
 
 @property (weak ,nonatomic)UIView *curView;
 
+@property (strong, nonatomic) IMActionSheet *actionSheet;
+@property (strong, nonatomic) IMDialog *dialog;
+@property (strong, nonatomic) IMInputDialog *inputD;
 
 @end
 
@@ -102,9 +105,9 @@
     //UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:imagePicker];
     //[self presentViewController:nav animated:YES completion:nil];
     
-    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    self.actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
-    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+    [self.actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
             [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
@@ -240,9 +243,9 @@
     }else
     {
         WS(weakSelf);
-        IMInputDialog *inputD = [[IMInputDialog alloc] init];
+        self.inputD = [[IMInputDialog alloc] init];
         NSString *defaultContent = [NSString stringWithFormat:@"gsx_%.0f",[[NSDate date] timeIntervalSince1970]*100];
-        [inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
+        [self.inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
             NSString *filePath = defaultContent;
             
             if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
@@ -428,9 +431,9 @@
 
 - (void)userDeleteGroupFile:(IMFileCellMode *)cellMode
 {
-    IMDialog *dialog = [[IMDialog alloc] init];
+    self.dialog = [[IMDialog alloc] init];
      WS(weakSelf);
-    [dialog showWithContent:@"是否删除该文件" withSelectBlock:^{
+    [self.dialog showWithContent:@"是否删除该文件" withSelectBlock:^{
         if ([self.fileModeArray containsObject:cellMode] && cellMode.sectionMode != nil) {
             if (cellMode.groupFile != nil) {
                 [[BJIMManager shareInstance] deleteGroupFile:[self.im_group_id longLongValue] file_id:cellMode.groupFile.fileId callback:^(NSError *error) {

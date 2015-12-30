@@ -86,30 +86,34 @@
 
 - (void)cancelBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     if (self.userCancel) {
         self.userCancel();
     }
-    [self.view removeFromSuperview];
     
-    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if(version < 7.0f || version >= 8.0f)
-    {
-        [self removeFromParentViewController];
-    }
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
 }
 
 - (void)comfireBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     if (self.userComplete) {
         self.userComplete(self.textField.text);
     }
-    [self.view removeFromSuperview];
     
-    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if(version < 7.0f || version >= 8.0f)
-    {
-        [self removeFromParentViewController];
-    }
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
 }
 
 @end

@@ -23,6 +23,8 @@
 
 @property (assign, nonatomic) int64_t storage_id;
 
+@property (strong ,nonatomic) IMActionSheet *actionSheet;
+
 @end
 
 @implementation GroupNameViewController
@@ -147,9 +149,9 @@
 - (void)faceImagePressed:(id)sender
 {
     [self.view endEditing:YES];
-    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    self.actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
-    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+    [self.actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
             [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];

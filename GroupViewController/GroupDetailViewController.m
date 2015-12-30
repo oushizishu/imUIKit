@@ -44,6 +44,9 @@
 
 @property (strong, nonatomic) UIButton *exitBtn;
 
+@property (strong, nonatomic) IMActionSheet  *actionSheet;
+@property (strong, nonatomic) IMDialog *dialog;
+
 @end
 
 @implementation GroupDetailViewController
@@ -279,8 +282,8 @@
     }
     
     WS(weakSelf);
-    IMDialog *dialog = [[IMDialog alloc] init];
-    [dialog showWithContent:content withSelectBlock:^{
+    self.dialog = [[IMDialog alloc] init];
+    [self.dialog showWithContent:content withSelectBlock:^{
         if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
             [weakSelf userDisbandGroup];
         }else
@@ -386,7 +389,7 @@
     }else if (cellMode == self.groupSettingMode)
     {
         WS(weakSelf);
-        IMActionSheet  *actionSheet = [[IMActionSheet alloc] init];
+        self.actionSheet = [[IMActionSheet alloc] init];
         NSArray *array = nil;
         User *owner = [IMEnvironment shareInstance].owner;
         NSInteger curIndex = (int)self.groupDetail.msg_status;
@@ -400,7 +403,7 @@
             }
         }
         
-        [actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
+        [self.actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
             if (index >= 0 && index <= 3 && curIndex != index) {
                 if (owner.userRole == eUserRole_Student) {
                     [weakSelf setGroupMsgStatus:index];
