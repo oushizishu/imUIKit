@@ -14,7 +14,7 @@
 #define IMTOAST_CONTENTINTERVAL_RIGHT 20
 #define IMTOAST_CONTENTINTERVAL_SPROW 5
 #define IMTOAST_CONTENTINTERVAL_HEIGHTROW 20
-#define IMTOAST_CONTENTINTERVAL_MAXCOUNT 5
+#define IMTOAST_CONTENTINTERVAL_MAXCOUNT 2
 
 @interface IMToast()
 
@@ -45,16 +45,22 @@
     UIFont *font = [UIFont systemFontOfSize:16.0f];
     if (contentW > 20) {
         NSArray *array = [IMLinshiTool splitMsg:content withFont:font withMaxWid:contentW];
+        NSMutableArray *mArray = [[NSMutableArray alloc] init];
         
         if (array != nil && [array count] > 0) {
             if ([array count] == 1) {
                 contentW = [content sizeWithFont:font].width;
             }
             if ([array count]>IMTOAST_CONTENTINTERVAL_MAXCOUNT) {
-                array = [array subarrayWithRange:NSMakeRange(0, IMTOAST_CONTENTINTERVAL_MAXCOUNT)];
+                [mArray addObjectsFromArray:[array subarrayWithRange:NSMakeRange(0, IMTOAST_CONTENTINTERVAL_MAXCOUNT-1)]];
+                NSMutableString *mString = [[NSMutableString alloc] init];
+                for (int i = IMTOAST_CONTENTINTERVAL_MAXCOUNT-1; i < [array count]; i++) {
+                    [mString appendString:[array objectAtIndex:i]];
+                }
+                [mArray addObject:mString];
             }
             
-            [toast showThenHidden:CGRectMake((view.frame.size.width-contentW-IMTOAST_CONTENTINTERVAL_RIGHT-IMTOAST_CONTENTINTERVAL_LEFT)/2, 0,contentW+IMTOAST_CONTENTINTERVAL_RIGHT+IMTOAST_CONTENTINTERVAL_LEFT , ([array count]-1)*IMTOAST_CONTENTINTERVAL_SPROW+[array count]*IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_TOP+IMTOAST_CONTENTINTERVAL_BOTTOM) withWithContentArray:array afterDelay:delay];
+            [toast showThenHidden:CGRectMake((view.frame.size.width-contentW-IMTOAST_CONTENTINTERVAL_RIGHT-IMTOAST_CONTENTINTERVAL_LEFT)/2, 0,contentW+IMTOAST_CONTENTINTERVAL_RIGHT+IMTOAST_CONTENTINTERVAL_LEFT , ([array count]-1)*IMTOAST_CONTENTINTERVAL_SPROW+[array count]*IMTOAST_CONTENTINTERVAL_HEIGHTROW+IMTOAST_CONTENTINTERVAL_TOP+IMTOAST_CONTENTINTERVAL_BOTTOM) withWithContentArray:mArray afterDelay:delay];
         }
     }
     
