@@ -22,6 +22,10 @@
 
 @implementation IMInputDialog
 
+- (void)dealloc
+{
+    
+}
 - (BOOL)shouldAutorotate
 {
     return NO;
@@ -31,6 +35,10 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
 }
 
 -(void)showWithDefaultContent:(NSString*)content withInputComplete:(IMUserInputComplete)complete withInputCancel:(IMUserInputCancel)cancel;

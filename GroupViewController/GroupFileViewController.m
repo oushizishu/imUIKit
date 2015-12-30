@@ -42,6 +42,11 @@
 
 @implementation GroupFileViewController
 
+- (void)dealloc
+{
+    NSLog(@"dealloc");
+}
+
 -(instancetype)initWithGroudId:(NSString*)groudId
 {
     self = [super init];
@@ -114,6 +119,7 @@
     
     self.actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
+    WS(weakSelf);
     [self.actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
@@ -126,8 +132,8 @@
             NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage, nil];
             [imagePicker setMediaTypes:mediaArray];
         }
-        imagePicker.delegate = self;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        imagePicker.delegate = weakSelf;
+        [weakSelf presentViewController:imagePicker animated:YES completion:nil];
     } withCancelBlock:^{
         
     }];
@@ -262,7 +268,7 @@
             [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
             
             IMFileUploadInfo *info = [[IMFileUploadInfo alloc] init];
-            info.group_id = [self.im_group_id longLongValue];
+            info.group_id = [weakSelf.im_group_id longLongValue];
             info.attachment = attachment;
             info.filePath = filePath;
             info.fileName = content;
@@ -276,7 +282,7 @@
             IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
             mode.fileDelegate = weakSelf;
             
-            [self switchCurView:self.customTableViewController.view];
+            [weakSelf switchCurView:weakSelf.customTableViewController.view];
             
             IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
             if (firstFileMode != nil) {
@@ -290,7 +296,6 @@
             
             [weakSelf.fileModeArray insertObject:mode atIndex:0];
         } withInputCancel:^{
-            
         }];
     }
 }

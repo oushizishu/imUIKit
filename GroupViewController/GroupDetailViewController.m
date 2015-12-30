@@ -122,7 +122,7 @@
             [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:self.view];
         }else
         {
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakself.view animated:YES];
             weakself.groupDetail = groupDetail;
             [weakself refreshGroupDetails];
         }
