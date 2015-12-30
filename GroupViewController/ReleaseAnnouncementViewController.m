@@ -124,7 +124,7 @@
 {
     textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (textView.text.length>250) {
-        textView.text = [textView.text substringWithRange:NSMakeRange(0, 250)];
+        textView.text = [textView.text substringWithRange:NSMakeRange(0, 249)];
     }
     self.tipLable.text = [NSString stringWithFormat:@"剩余%ld字",250-textView.text.length];
 }
