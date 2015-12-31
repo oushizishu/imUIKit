@@ -8,6 +8,7 @@
 #import "UIColor+Util.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "MBProgressHUD+IMKit.h"
+#import "IMLinshiTool.h"
 
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>
 
@@ -76,7 +77,7 @@
     self.editView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.editView];
     
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 130)];
+    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 100)];
     self.textView.font = [UIFont systemFontOfSize:16.0f];
     self.textView.delegate = self;
     [self.editView addSubview:self.textView];
@@ -95,9 +96,17 @@
 - (void)releaseAnnouncement
 {
     if (self.ifCanRrelease) {
-        
         if (self.textView.text == nil || [self.textView.text length] == 0) {
-            [MBProgressHUD imShowError:@"请输入公告内容" toView:self.view];
+            [MBProgressHUD imShowError:@"请输入公告内容" toView:self.textView];
+            //[MBProgressHUD imShowError:@"请输入公告内容"];
+            return;
+        }
+        
+        CGRect sRect = [UIScreen mainScreen].bounds;
+        NSArray *spA = [IMLinshiTool splitMsg:self.textView.text withFont:[UIFont systemFontOfSize:16.0f] withMaxWid:sRect.size.width-30];
+        if (spA == nil || [spA count] == 0) {
+            [MBProgressHUD imShowError:@"未输入有效内容" toView:self.textView];
+            //[MBProgressHUD imShowError:@"未输入有效内容"];
             return;
         }
         
@@ -106,7 +115,8 @@
         [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {
             if (error) {
                 weakSelf.ifCanRrelease = YES;
-                [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.view];
+                [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.textView];
+                //[MBProgressHUD imShowError:@"公告发布失败"];
             }else
             {
                 [weakSelf backAction:nil];
@@ -126,7 +136,11 @@
     if (textView.text.length>250) {
         textView.text = [textView.text substringWithRange:NSMakeRange(0, 249)];
     }
-    self.tipLable.text = [NSString stringWithFormat:@"剩余%ld字",250-textView.text.length];
+    NSInteger surplusCount = 0;
+    if (250>textView.text.length) {
+        surplusCount = 250-textView.text.length;
+    }
+    self.tipLable.text = [NSString stringWithFormat:@"剩余%d字",surplusCount];
 }
 
 @end
