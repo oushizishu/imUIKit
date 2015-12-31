@@ -106,7 +106,6 @@
         }else
         {
             weakself.isAdmin = isAdmin;
-            weakself.isAdmin = YES;
             weakself.ifCanLoadMore = hasMore;
             [weakself addGroupNotice:list];
         }
