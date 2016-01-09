@@ -10,6 +10,8 @@
 #import "MBProgressHUD+IMKit.h"
 #import "IMLinshiTool.h"
 
+#define MAXCHARACTERCOUNT 250
+
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>
 
 @property(strong ,nonatomic)NSString *im_group_Id;
@@ -85,7 +87,7 @@
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake(15, self.editView.frame.size.height-35, self.editView.frame.size.width-30, 20)];
     self.tipLable.textAlignment = NSTextAlignmentRight;
     self.tipLable.textColor = [UIColor grayColor];
-    self.tipLable.text = @"剩余250字";
+    self.tipLable.text = [NSString stringWithFormat:@"剩余%d字",MAXCHARACTERCOUNT];
     self.tipLable.font = [UIFont systemFontOfSize:16.0f];
     [self.editView addSubview:self.tipLable];
     
@@ -102,6 +104,7 @@
             return;
         }
         
+        /*
         CGRect sRect = [UIScreen mainScreen].bounds;
         NSArray *spA = [IMLinshiTool splitMsg:self.textView.text withFont:[UIFont systemFontOfSize:16.0f] withMaxWid:sRect.size.width-30];
         if (spA == nil || [spA count] == 0) {
@@ -109,6 +112,14 @@
             //[MBProgressHUD imShowError:@"未输入有效内容"];
             return;
         }
+        
+        NSMutableString *content = [[NSMutableString alloc] init];
+        
+        
+        for (int i = 0; i < [spA count]; i++) {
+            [content appendString:[spA objectAtIndex:i]];
+        }
+        */
         
         WS(weakSelf);
         self.ifCanRrelease = NO;
@@ -130,17 +141,23 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if (textView.text.length >= MAXCHARACTERCOUNT && text.length > range.length) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (void)textViewDidChange:(UITextView *)textView
 {
-    textView.text = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if (textView.text.length>250) {
-        textView.text = [textView.text substringWithRange:NSMakeRange(0, 249)];
-    }
     NSInteger surplusCount = 0;
-    if (250>textView.text.length) {
-        surplusCount = 250-textView.text.length;
+    if (MAXCHARACTERCOUNT>textView.text.length) {
+        surplusCount = MAXCHARACTERCOUNT-textView.text.length;
     }
     self.tipLable.text = [NSString stringWithFormat:@"剩余%d字",surplusCount];
+    
 }
 
 @end
