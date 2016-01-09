@@ -250,6 +250,9 @@
                 self.inputTextView.text = @"";
                 [self textViewDidChange:self.inputTextView];
                 [self.inputTextView resignFirstResponder];
+                
+                // 友盟统计：消息-联系人聊天界面-语音
+                [MobClick event:@"20111"];
             }
             else{
                 //键盘也算一种底部扩展页面
@@ -284,6 +287,9 @@
                 } completion:^(BOOL finished) {
                     
                 }];
+                
+                // 友盟统计：消息-联系人聊天界面-表情
+                [MobClick event:@"20112"];
             } else {
                 if (!self.styleChangeButton.selected) {
                     [self.inputTextView becomeFirstResponder];

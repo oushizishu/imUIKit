@@ -93,6 +93,9 @@
     self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
 #endif
+    
+    // 友盟统计：消息-联系人聊天界面-拍照
+    [MobClick event:@"20113"];
 }
 
 - (void)showPictureView
@@ -104,6 +107,9 @@
     self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage,(NSString *)kUTTypeJPEG,(NSString *)kUTTypePNG];
     [self.navigationController presentViewController:self.imagePicker animated:YES completion:NULL];
+    
+    // 友盟统计：消息-联系人聊天界面-相册
+    [MobClick event:@"20114"];
 }
 
 - (void)showMyCardView{
@@ -114,6 +120,9 @@
     CardSimpleItem * item = [[CardSimpleItem alloc] init];
     item.url = [NSString stringWithFormat:@"%@/%lld", [BJDeployEnv sharedInstance].baseMAPIURLStr, CommonInstance.mainAccount.personId];
     [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+    
+    // 友盟统计：消息-联系人聊天界面-我的名片
+    [MobClick event:@"20115"];
 }
 
 - (void)showCourseView{
@@ -124,6 +133,9 @@
         [weakSelf sendCourseViewWithURL:url];
     };
     [self.navigationController pushViewController:send animated:YES];
+    
+    // 友盟统计：消息-联系人聊天界面-推广班课
+    [MobClick event:@"20117"];
 }
 
 - (void)showCouponView{
