@@ -16,6 +16,9 @@
 #define BJ_CELLPADDING 4 // Cell之间间距
 #define BJ_NAME_LABEL_FONT_SIZE 14 // 字体
 
+extern const float HEAD_SIZE;
+extern const float HEAD_PADDING;
+
 @interface BJChatBaseCell : UITableViewCell<BJChatViewCellProtocol>
 @property (strong, nonatomic)IMMessage *message;
 @property (strong, nonatomic)NSIndexPath *indexPath;

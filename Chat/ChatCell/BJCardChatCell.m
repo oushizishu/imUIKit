@@ -14,9 +14,8 @@
 #import "UIResponder+BJIMChatRouter.h"
 const float ImageWH = 60;
 const float Interval = 10;
-const float CardWidth = 217;
+//const float CardWidth = 217;
 const float CardHeight = 130;
-const float ContentWidth = 130;
 const float IntervalTitleWithImage = 5;
 
 @interface BJCardChatCell ()
@@ -36,9 +35,15 @@ const float IntervalTitleWithImage = 5;
 {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
+    CGFloat CardWidth = self.bubbleContainerView.frame.size.width - Interval*2;
    
-    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
-    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
+    //必须设置为2时，sizeThatFits的计算才会正确
+    self.titleLabel.numberOfLines = 2;
+    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth, self.titleLabel.font.pointSize+1)];
+    titleSize.height = self.titleLabel.font.pointSize+1;
+    self.titleLabel.numberOfLines = 1;
+    
+    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth, CardHeight-55)];
     [self.contentLabel sizeToFit];
     CGRect rect = self.bubbleContainerView.frame;
     rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
@@ -50,15 +55,16 @@ const float IntervalTitleWithImage = 5;
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
-    frame.size = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
+    frame.size = titleSize;
     frame.origin.y = 10;
+    
     self.titleLabel.frame = frame;
     
     if (self.message.cardThumb.length<=0) {
         [self.cardImageView setHidden:YES];
         frame = self.contentLabel.frame;
         frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, CardHeight-35)];
+        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth, CardHeight-35)];
         frame.origin.x = Interval;
         self.contentLabel.frame = frame;
     }else
@@ -66,7 +72,7 @@ const float IntervalTitleWithImage = 5;
         [self.cardImageView setHidden:NO];
         frame = self.contentLabel.frame;
         frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-35)];
+        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth - 10 - ImageWH, CardHeight-35)];
         frame.origin.x = Interval+ImageWH+5;
         self.contentLabel.frame = frame;
     }
@@ -117,7 +123,8 @@ const float IntervalTitleWithImage = 5;
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJCardChatCell class])];
     if (self) {
         CGRect rect = self.bubbleContainerView.frame;
-        rect.size.width = CardWidth;
+        CGFloat width = [UIScreen mainScreen].bounds.size.width - (HEAD_PADDING*2+HEAD_SIZE*2+10);
+        rect.size.width = width;
         rect.size.height = CardHeight;
         self.bubbleContainerView.frame = rect;
     }
@@ -127,6 +134,7 @@ const float IntervalTitleWithImage = 5;
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     [super setCellInfo:info indexPath:indexPath];
+
     self.cardImageView.image = nil;
     self.titleLabel.text = self.message.cardTitle;
     self.contentLabel.text = self.message.cardContent;
@@ -148,9 +156,9 @@ const float IntervalTitleWithImage = 5;
 - (UILabel *)titleLabel
 {
     if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, CardWidth-Interval*2, 40)];
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, 100, 40)];
         [_titleLabel setFont:[UIFont systemFontOfSize:16]];
-        _titleLabel.numberOfLines = 2;
+        _titleLabel.numberOfLines = 1;
         _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
     }
@@ -160,7 +168,7 @@ const float IntervalTitleWithImage = 5;
 - (UILabel *)contentLabel
 {
     if (!_contentLabel) {
-        _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, ContentWidth, CardHeight-55)];
+        _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, 100, CardHeight-55)];
         _contentLabel.backgroundColor = [UIColor clearColor];;
         [_contentLabel setFont:[UIFont systemFontOfSize:14]];
         _contentLabel.numberOfLines = 4;
