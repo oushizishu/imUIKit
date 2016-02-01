@@ -38,10 +38,10 @@ const float IntervalTitleWithImage = 5;
     CGFloat CardWidth = self.bubbleContainerView.frame.size.width - Interval*2;
    
     //必须设置为2时，sizeThatFits的计算才会正确
-    self.titleLabel.numberOfLines = 2;
+//    self.titleLabel.numberOfLines = 2;
     CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth, self.titleLabel.font.pointSize+1)];
-    titleSize.height = self.titleLabel.font.pointSize+1;
-    self.titleLabel.numberOfLines = 1;
+//    titleSize.height = self.titleLabel.font.pointSize+1;
+//    self.titleLabel.numberOfLines = 1;
     
     CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth, CardHeight-55)];
     [self.contentLabel sizeToFit];
@@ -50,13 +50,14 @@ const float IntervalTitleWithImage = 5;
     if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
         rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
     }
+    rect.size.height += 2;
     self.bubbleContainerView.frame = rect;
     
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
     frame.size = titleSize;
-    frame.origin.y = 10;
+    frame.origin.y = Interval;
     
     self.titleLabel.frame = frame;
     
@@ -123,7 +124,7 @@ const float IntervalTitleWithImage = 5;
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJCardChatCell class])];
     if (self) {
         CGRect rect = self.bubbleContainerView.frame;
-        CGFloat width = [UIScreen mainScreen].bounds.size.width - (HEAD_PADDING*2+HEAD_SIZE*2+10);
+        CGFloat width = [UIScreen mainScreen].bounds.size.width - (HEAD_PADDING*2+HEAD_SIZE*2+35);
         rect.size.width = width;
         rect.size.height = CardHeight;
         self.bubbleContainerView.frame = rect;
@@ -137,7 +138,10 @@ const float IntervalTitleWithImage = 5;
 
     self.cardImageView.image = nil;
     self.titleLabel.text = self.message.cardTitle;
-    self.contentLabel.text = self.message.cardContent;
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+    paragraph.lineSpacing = 1;
+    NSMutableAttributedString *mutAtt = [[NSMutableAttributedString alloc] initWithString:self.message.cardContent attributes:@{NSFontAttributeName:self.contentLabel.font,NSParagraphStyleAttributeName:paragraph}];
+    self.contentLabel.attributedText = mutAtt;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
@@ -157,8 +161,8 @@ const float IntervalTitleWithImage = 5;
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, 100, 40)];
-        [_titleLabel setFont:[UIFont systemFontOfSize:16]];
-        _titleLabel.numberOfLines = 1;
+        [_titleLabel setFont:[UIFont systemFontOfSize:14]];
+        _titleLabel.numberOfLines = 2;
         _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
     }
@@ -170,7 +174,7 @@ const float IntervalTitleWithImage = 5;
     if (!_contentLabel) {
         _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, 100, CardHeight-55)];
         _contentLabel.backgroundColor = [UIColor clearColor];;
-        [_contentLabel setFont:[UIFont systemFontOfSize:14]];
+        [_contentLabel setFont:[UIFont systemFontOfSize:12]];
         _contentLabel.numberOfLines = 4;
         [_contentLabel setTextColor:[UIColor darkGrayColor]];
         [self.bubbleContainerView addSubview:_contentLabel];
