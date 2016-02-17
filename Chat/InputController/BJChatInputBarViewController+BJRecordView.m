@@ -72,9 +72,10 @@ static char BJRecordView_Recorder;
     else
     {
         [[JLMicrophonePermission sharedInstance] authorize:^(bool granted, NSError *error) {
-            
+            if (!granted) {
+                [[JLMicrophonePermission sharedInstance] displayReenableAlert];
+            }
         }];
-        
     }
 }
 

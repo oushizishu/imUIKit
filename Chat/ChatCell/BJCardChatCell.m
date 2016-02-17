@@ -140,7 +140,7 @@ const float IntervalTitleWithImage = 5;
     self.titleLabel.text = self.message.cardTitle;
     NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
     paragraph.lineSpacing = 1;
-    NSMutableAttributedString *mutAtt = [[NSMutableAttributedString alloc] initWithString:self.message.cardContent attributes:@{NSFontAttributeName:self.contentLabel.font,NSParagraphStyleAttributeName:paragraph}];
+    NSMutableAttributedString *mutAtt = [[NSMutableAttributedString alloc] initWithString:self.message.cardContent?:@"" attributes:@{NSFontAttributeName:self.contentLabel.font,NSParagraphStyleAttributeName:paragraph}];
     self.contentLabel.attributedText = mutAtt;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
