@@ -11,6 +11,9 @@
 #import "IMActionSheet.h"
 #import "BJChatFileCacheManager.h"
 #import "MBProgressHUD+IMKit.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GroupNameViewController()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 

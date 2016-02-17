@@ -7,7 +7,8 @@
 //
 
 #import "IMActionSheet.h"
-
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 @protocol IMActionSheetItemDelegate <NSObject>
 
 - (void)actionSheetHitItem:(IMActionSheetItem*)item;

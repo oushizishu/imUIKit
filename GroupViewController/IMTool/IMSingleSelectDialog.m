@@ -5,6 +5,7 @@
 //
 
 #import "IMSingleSelectDialog.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 @protocol IMSelectItemDelegate <NSObject>
 

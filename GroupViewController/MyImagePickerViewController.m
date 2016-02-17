@@ -5,6 +5,8 @@
 //
 
 #import "MyImagePickerViewController.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface CollectionItemCell()
 

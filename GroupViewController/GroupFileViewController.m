@@ -13,10 +13,14 @@
 #import "IMFilePreviewViewController.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import <BJHL-Common-iOS-SDK/NSDateFormatter+Category.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #import "MBProgressHUD+IMKit.h"
 #import "IMInputDialog.h"
 #import "IMActionSheet.h"
 #import "IMDialog.h"
+
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GroupFileViewController()<CustomTableViewControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MyImagePickerViewControllerDelegate,IMFileCellModeDelegate>
 

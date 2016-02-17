@@ -9,7 +9,8 @@
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "MBProgressHUD+IMKit.h"
 #import "IMLinshiTool.h"
-
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #define MAXCHARACTERCOUNT 250
 
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>

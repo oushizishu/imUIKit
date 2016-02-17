@@ -11,6 +11,8 @@
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
 

@@ -9,6 +9,8 @@
 #import "IMLinshiTool.h"
 #import "BJChatFileCacheManager.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @implementation IMUIView
 

@@ -8,6 +8,8 @@
 #import "IMGroupTeachersCellMode.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import "IMLinshiTool.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 #define IMGROUPTEACHERSCELLMODEHEIGHT 110.0f
 

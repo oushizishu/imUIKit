@@ -8,6 +8,8 @@
 #import "BJChatFileCacheManager.h"
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface IMFilePreviewViewController()<UIDocumentInteractionControllerDelegate>
 

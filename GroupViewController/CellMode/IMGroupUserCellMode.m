@@ -11,6 +11,9 @@
 #import <BJHL-IM-iOS-SDK/IMEnvironment.h>
 #import "IMLinshiTool.h"
 
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
 @interface IMGroupUserCell()
 
 @property (strong ,nonatomic) UIView *cellView;

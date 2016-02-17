@@ -789,11 +789,9 @@ IMNewGRoupNoticeDelegate>
         BJChatTimeCell *timeCell = (BJChatTimeCell *)[tableView dequeueReusableCellWithIdentifier:@"MessageCellTime"];
         if (timeCell == nil) {
             timeCell = [[BJChatTimeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MessageCellTime"];
-            timeCell.backgroundColor = [UIColor clearColor];
-            timeCell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        timeCell.textLabel.text = (NSString *)message;
+        [timeCell updateTime:(NSString *)message];
         
         return timeCell;
     }

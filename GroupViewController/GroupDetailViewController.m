@@ -22,6 +22,8 @@
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
 #import <TKAlertViewController.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 

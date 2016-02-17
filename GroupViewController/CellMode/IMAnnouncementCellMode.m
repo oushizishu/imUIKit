@@ -9,6 +9,8 @@
 #import "IMLinshiTool.h"
 #import "IMDialog.h"
 #import "MBProgressHUD+IMKit.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @implementation IMUILable
 

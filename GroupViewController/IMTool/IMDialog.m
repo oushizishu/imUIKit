@@ -8,7 +8,8 @@
 
 #import "IMDialog.h"
 #import "IMLinshiTool.h"
-
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #define IMDIALOGHEIGHT 150.0f
 
 @interface IMDialog()

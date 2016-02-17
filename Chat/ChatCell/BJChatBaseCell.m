@@ -10,8 +10,9 @@
 #import <UIImageView+Aliyun.h>
 #import "UIResponder+BJIMChatRouter.h"
 
-const float HEAD_SIZE = 37; // 头像大小
-const float HEAD_PADDING = 5; // 头像到cell的内间距和头像到bubble的间距
+const float HEAD_SIZE = 40; // 头像大小
+const float HEAD_PADDING = 10; // 头像到cell的内间距和头像到bubble的间距
+const float HEAD_BUBBLE_PADDING = 8; // 头像到bubble的间距
 
 
 const float NAME_LABEL_WIDTH = 180; // nameLabel宽度
@@ -28,9 +29,7 @@ const float BUBBLE_RIGHT_TOP_CAP_HEIGHT = 35; // 文字在右侧时,bubble用于
 const float BUBBLE_LEFT_LEFT_CAP_WIDTH = 15; // 文字在左侧时,bubble用于拉伸点的X坐标
 const float BUBBLE_LEFT_TOP_CAP_HEIGHT = 35; // 文字在左侧时,bubble用于拉伸点的Y坐标
 
-NSString *const BUBBLE_LEFT_IMAGE_NAME = @"bg_speech_nor"; // bubbleView 的背景图片
 NSString *const BUBBLE_LEFT_IMAGE_NAME_NEW = @"bg_messages_gray_n"; //
-NSString *const BUBBLE_RIGHT_IMAGE_NAME = @"bg_speech_gre_nor";
 NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
 
 
@@ -85,12 +84,17 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     // Configure the view for the selected state
 }
 
-- (BOOL)shouldShowName
++ (BOOL)shouldShowNameWithMessage:(IMMessage *)message
 {
-    if (self.message.chat_t == eChatType_GroupChat && !self.message.isMySend) {
+    if (message.chat_t == eChatType_GroupChat && !message.isMySend) {
         return YES;
     }
     return NO;
+}
+
+- (BOOL)shouldShowName
+{
+    return [BJChatBaseCell shouldShowNameWithMessage:self.message];
 }
 
 -(void)layoutSubviews
@@ -144,7 +148,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
                 break;
         }
         
-        bubbleFrame.origin.x = self.headImageView.frame.origin.x - bubbleFrame.size.width - HEAD_PADDING;
+        bubbleFrame.origin.x = self.headImageView.frame.origin.x - bubbleFrame.size.width - HEAD_BUBBLE_PADDING;
         self.bubbleContainerView.frame = bubbleFrame;
         
         CGRect frame = self.activityView.frame;
@@ -243,7 +247,11 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     if (height < cell.headImageView.frame.size.height) {
         height = cell.headImageView.frame.size.height;
     }
-    return height + BJ_CELLPADDING*2 + NAME_LABEL_PADDING;
+    CGFloat nameLabelPadding = 0;
+    if ([BJChatBaseCell shouldShowNameWithMessage:message]) {
+        nameLabelPadding = NAME_LABEL_PADDING;
+    }
+    return height + BJ_CELLPADDING*2 + nameLabelPadding;
 }
 
 #pragma mark - set get
@@ -264,8 +272,8 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
 {
     if (_headImageView == nil) {
         _headImageView = [[UIImageView alloc] initWithFrame:CGRectMake(HEAD_PADDING, BJ_CELLPADDING, HEAD_SIZE, HEAD_SIZE)];
-        [_headImageView.layer setCornerRadius:HEAD_SIZE/2];
-        _headImageView.clipsToBounds = YES;
+//        [_headImageView.layer setCornerRadius:HEAD_SIZE/2];
+//        _headImageView.clipsToBounds = YES;
         _headImageView.userInteractionEnabled = YES;
         _headImageView.multipleTouchEnabled = YES;
         _headImageView.backgroundColor = [UIColor grayColor];
