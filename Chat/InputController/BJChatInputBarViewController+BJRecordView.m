@@ -67,7 +67,6 @@ static char BJRecordView_Recorder;
                 [weakSelf recordButtonTouchUpInside];
             }];
         });
-        
     }
     else
     {

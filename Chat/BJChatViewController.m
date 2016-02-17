@@ -285,14 +285,30 @@ IMNewGRoupNoticeDelegate>
     for (IMMessage *oneMessage in messages) {
 //        [oneMessage markRead];
         if (lastMessage) {
-            long long minute = ([NSDate dateWithTimeIntervalSince1970:oneMessage.createAt].minute/BJ_Chat_Time_Interval - [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt].minute/BJ_Chat_Time_Interval);//两条消息的时间分单位间隔超过5，则加一个时间显示
-            if (minute > 0) {
+            BOOL shouldAdd = NO;
+            if (oneMessage.createAt - lastMessage.createAt > 60*5)//超过5分钟肯定不在一个时间间隔内
+            {
+                shouldAdd = YES;
+            }
+            else
+            {
+                NSDate *oneDate = [NSDate dateWithTimeIntervalSince1970:oneMessage.createAt];
+                NSDate *lastDate = [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt];
+                long long minute = (oneDate.minute/BJ_Chat_Time_Interval - lastDate.minute/BJ_Chat_Time_Interval);//以每个小时的5分钟为一间隔 比如 06:00~06:05之间的
+                if (minute > 0) {
+                    shouldAdd = YES;
+                }
+            }
+
+            if (shouldAdd) {
                 [mutMessages insertObject:[self customformattedTime:[NSDate dateWithTimeIntervalSince1970:oneMessage.createAt]] atIndex:[mutMessages indexOfObject:oneMessage]];
                 lastMessage = oneMessage;
             }
         }
         else
+        {
             lastMessage = oneMessage;
+        }
     }
     
     if (forward) {
