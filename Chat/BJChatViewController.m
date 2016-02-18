@@ -294,7 +294,7 @@ IMNewGRoupNoticeDelegate>
             {
                 NSDate *oneDate = [NSDate dateWithTimeIntervalSince1970:oneMessage.createAt];
                 NSDate *lastDate = [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt];
-                long long minute = (oneDate.minute/BJ_Chat_Time_Interval - lastDate.minute/BJ_Chat_Time_Interval);//以每个小时的5分钟为一间隔 比如 06:00~06:05之间的
+                long long minute = (oneDate.minute/BJ_Chat_Time_Interval - lastDate.minute/BJ_Chat_Time_Interval);//以每个小时的5分钟为一间隔 比如 06:00~06:05之间的 06:05~06:10之间的
                 if (minute > 0) {
                     shouldAdd = YES;
                 }
@@ -826,7 +826,7 @@ IMNewGRoupNoticeDelegate>
     IMMessage *message = [self.messageList objectAtIndex:indexPath.row];
     
     if ([message isKindOfClass:[NSString class]]) {
-        return 40;
+        return 46;
     }
     else
     {

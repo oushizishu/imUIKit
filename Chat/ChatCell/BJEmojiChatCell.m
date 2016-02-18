@@ -37,14 +37,18 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     CGSize size = [self calculateCellHeight];
     CGRect rect = self.emojiImageView.frame;
     rect.size = size;
+    if (self.message.isMySend) {
+        rect.origin.x = 0;
+    }
+    else
+        rect.origin.x = 5;
     self.emojiImageView.frame = rect;
     
     rect = self.bubbleContainerView.frame;
     rect.size = size;
+    rect.size.width = size.width + 5;
     self.bubbleContainerView.frame = rect;
     [super layoutSubviews];
-    CGRect frame = self.bubbleContainerView.bounds;
-    [self.emojiImageView setFrame:frame];
     [CATransaction commit];
 }
 
@@ -126,7 +130,6 @@ const float BJ_EMOJI_MAX_SIZE = 60;
     {
         [self.emojiImageView sd_setImageWithURL:[self.message emojiImageURL] placeholderImage:nil];
     }
-
     [self setNeedsLayout];
     [self layoutIfNeeded];
 }
@@ -135,7 +138,7 @@ const float BJ_EMOJI_MAX_SIZE = 60;
 - (YLImageView *)emojiImageView
 {
     if (_emojiImageView == nil) {
-        _emojiImageView = [[YLImageView alloc] initWithFrame:CGRectMake(0, 0, BJ_EMOJI_MAX_SIZE, BJ_EMOJI_MAX_SIZE)];
+        _emojiImageView = [[YLImageView alloc] initWithFrame:CGRectMake(5, 0, BJ_EMOJI_MAX_SIZE, BJ_EMOJI_MAX_SIZE)];
         _emojiImageView.runLoopMode = NSDefaultRunLoopMode;
         [self.bubbleContainerView addSubview:_emojiImageView];
 

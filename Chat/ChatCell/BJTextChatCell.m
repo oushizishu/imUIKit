@@ -119,7 +119,7 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
     
     NSString *message = self.message.msg_t==eMessageType_TXT?(self.message.content?:@""):@"当前版本暂不支持查看此消息,请升级新版本";
     
-    self.displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message];
+    self.displayTextView.attributedText = [[XHMessageBubbleHelper sharedMessageBubbleHelper] bubbleAttributtedStringWithText:message matchColor:[UIColor colorWithRed:0.185 green:0.383 blue:1.000 alpha:1.000] normalColor:self.message.isMySend?[UIColor whiteColor]:[UIColor colorWithHexString:BJ_TEXTCHATCELL_FONTCOLOR]];
 
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -162,9 +162,6 @@ const float TEXTLABEL_MAX_WIDTH = 200; // textLaebl 最大宽度
         displayTextView.editable = NO;
         _displayTextView = displayTextView;
         [self.bubbleContainerView addSubview:displayTextView];
-        
-        [XHMessageBubbleHelper sharedMessageBubbleHelper].matchColor = [UIColor colorWithRed:0.185 green:0.583 blue:1.000 alpha:1.000];
-        [XHMessageBubbleHelper sharedMessageBubbleHelper].normalColor = [UIColor colorWithHexString:BJ_TEXTCHATCELL_FONTCOLOR];
     }
     return _displayTextView;
 }

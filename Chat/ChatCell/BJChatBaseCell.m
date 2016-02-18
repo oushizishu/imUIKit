@@ -12,7 +12,7 @@
 
 const float HEAD_SIZE = 40; // 头像大小
 const float HEAD_PADDING = 10; // 头像到cell的内间距和头像到bubble的间距
-const float HEAD_BUBBLE_PADDING = 8; // 头像到bubble的间距
+const float HEAD_BUBBLE_PADDING = 6; // 头像到bubble的间距
 
 
 const float NAME_LABEL_WIDTH = 180; // nameLabel宽度
@@ -157,7 +157,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
         self.activityView.frame = frame;
     }
     else{
-        bubbleFrame.origin.x = HEAD_PADDING * 2 + HEAD_SIZE;
+        bubbleFrame.origin.x = HEAD_PADDING + HEAD_BUBBLE_PADDING + HEAD_SIZE;
         self.bubbleContainerView.frame = bubbleFrame;
         [self.activtiy stopAnimating];
         [self.activityView setHidden:YES];

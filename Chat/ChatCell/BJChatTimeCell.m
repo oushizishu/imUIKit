@@ -7,7 +7,7 @@
 //
 
 #define BJChatTime_TOP_PADDING 19.5
-#define BJChatTime_Bottom_PADDING 1.5
+#define BJChatTime_Bottom_PADDING 5.5
 
 #import "BJChatTimeCell.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
@@ -44,7 +44,7 @@
     self.timeLabel.frame = CGRectMake(10, BJChatTime_TOP_PADDING, self.frame.size.width - 20, self.frame.size.height - BJChatTime_Bottom_PADDING - BJChatTime_TOP_PADDING);
     [self.timeLabel sizeToFit];
     CGRect rect = self.timeLabel.frame;
-    rect.size.width = rect.size.width + 18 * 2;
+    rect.size.width = rect.size.width + 9 * 2;
     rect.size.height = rect.size.height + 5*2;
     rect.origin.x = (self.frame.size.width - rect.size.width) / 2.0f;
     self.timeLabel.frame = rect;
@@ -62,9 +62,9 @@
     if (_timeLabel == nil) {
         _timeLabel = ({
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, BJChatTime_TOP_PADDING, self.frame.size.width - 20, self.frame.size.height - BJChatTime_Bottom_PADDING - BJChatTime_TOP_PADDING)];
-            label.font = [UIFont systemFontOfSize:10];
+            label.font = [UIFont systemFontOfSize:12];
             label.textAlignment = NSTextAlignmentCenter;
-            label.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+            label.backgroundColor = [UIColor colorWithHexString:@"#C7C9CA"];
             label.textColor = [UIColor whiteColor];
             label;
         });

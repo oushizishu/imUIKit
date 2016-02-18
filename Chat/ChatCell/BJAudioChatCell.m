@@ -28,7 +28,7 @@
 #define BJ_ANIMATION_TIME_LABEL_FONT_SIZE 14 // 时间字体
 
 // 发送
-#define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT @"ic_volume_li_gary3" // 小喇叭默认图片
+#define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT @"ic_volume_li_gary4" // 小喇叭默认图片
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_01 @"ic_volume_li_gary1" // 小喇叭动画第一帧
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_02 @"ic_volume_li_gary2" // 小喇叭动画第二帧
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_03 @"ic_volume_li_gary3" // 小喇叭动画第三帧

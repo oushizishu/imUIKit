@@ -17,6 +17,8 @@
 #import <IMEnvironment.h>
 #import "BJFaceView.h"
 
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
 #define kHorizontalPadding 6
@@ -95,7 +97,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
     self.draft = [BJChatDraft conversationDraftForUserId:self.chatInfo.getToId andUserRole:self.chatInfo.getToRole];
     self.inputTextView.text = self.draft?self.draft.content:@"";
 }
@@ -675,12 +677,17 @@
 {
     if (_toolbarView == nil) {
         _toolbarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, [BJChatInputBarViewController defaultHeight])];
-        _toolbarView.backgroundColor = [UIColor whiteColor];
+        _toolbarView.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
         
         //增加线
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _toolbarView.frame.size.width, 0.5)];
         lineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
         [_toolbarView addSubview:lineView];
+        
+        //增加线
+        UIView *bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(0, _toolbarView.frame.size.height - 0.5, _toolbarView.frame.size.width, 0.5)];
+        bottomLineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        [_toolbarView addSubview:bottomLineView];
         
 //        //增加背景照片
 //        UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];

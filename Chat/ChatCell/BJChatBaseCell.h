@@ -11,7 +11,7 @@
 #import <IMMessage.h>
 #import "IMMessage+ViewModel.h"
 
-#define BJ_BUBBLE_ARROW_WIDTH 5 // bubbleView中，箭头的宽度
+#define BJ_BUBBLE_ARROW_WIDTH 7 // bubbleView中，箭头的宽度
 #define BJ_BUBBLE_VIEW_PADDING 12 // bubbleView 与 在其中的控件内边距
 #define BJ_CELLPADDING 10.5 // Cell之间间距
 #define BJ_NAME_LABEL_FONT_SIZE 14 // 字体
