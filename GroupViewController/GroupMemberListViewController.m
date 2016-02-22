@@ -13,6 +13,9 @@
 #import "IMDialog.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 #import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import "TeacherDetailsAViewController.h"
+#import "BaseWebViewController.h"
+#import "CustomTableView/CustomTableViewController.h"
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
 
@@ -49,7 +52,7 @@
         self.im_group_id = groudId;
         self.pageIndex = 1;
         self.offset = 0;
-        self.ifGroup = NO;
+        self.ifGroup = YES;
         self.hasMore = NO;
         self.isAdmin = NO;
         self.isMajor = NO;
@@ -88,6 +91,8 @@
     label.textColor = [UIColor blackColor];
     self.navigationItem.titleView = label;
     
+    self.customTableViewController.tableView.showsVerticalScrollIndicator = YES;
+    
     [self requestGroupMembers];
     
 }
@@ -109,9 +114,6 @@
             
             if (hasMore) {
                 weakself.ifGroup = NO;
-            }else
-            {
-                weakself.ifGroup = YES;
             }
             
             [weakself appendMoreMembers:members];
@@ -229,104 +231,113 @@
     });
     */
     
-    NSArray *tmpTeacherArray = self.groupUserArray;
-    
-    NSMutableArray *sectionTitles = [NSMutableArray array];
-    //建立索引的核心, 返回27，是a－z和＃
-    UILocalizedIndexedCollation *indexCollation = [UILocalizedIndexedCollation currentCollation];
-    [sectionTitles addObjectsFromArray:[indexCollation sectionTitles]];
-    
-    NSInteger highSection = [sectionTitles count];
-    NSMutableArray *sortedArray = [NSMutableArray arrayWithCapacity:highSection];
-    for (int i = 0; i < highSection; i++) {
-        NSMutableArray *sectionArray = [NSMutableArray arrayWithCapacity:1];
-        [sortedArray addObject:sectionArray];
-    }
-    
-    NSMutableArray *managerArray = [[NSMutableArray alloc] init];
-    //按首字母分组
-    for (IMGroupUserCellMode *model in tmpTeacherArray) {
-        if (model.GroupDetailMember.is_major == 1) {
-            [managerArray insertObject:model atIndex:0];
-            continue;
-        }else if(model.GroupDetailMember.is_admin == 1)
-        {
-            [managerArray addObject:model];
-            continue;
+    if (self.ifGroup) {
+        NSArray *tmpTeacherArray = self.groupUserArray;
+        
+        NSMutableArray *sectionTitles = [NSMutableArray array];
+        //建立索引的核心, 返回27，是a－z和＃
+        UILocalizedIndexedCollation *indexCollation = [UILocalizedIndexedCollation currentCollation];
+        [sectionTitles addObjectsFromArray:[indexCollation sectionTitles]];
+        
+        NSInteger highSection = [sectionTitles count];
+        NSMutableArray *sortedArray = [NSMutableArray arrayWithCapacity:highSection];
+        for (int i = 0; i < highSection; i++) {
+            NSMutableArray *sectionArray = [NSMutableArray arrayWithCapacity:1];
+            [sortedArray addObject:sectionArray];
         }
-        NSString *firstLetter = [IMLinshiTool pinyinFromChineseString:model.GroupDetailMember.user_name];
-        if (firstLetter && firstLetter.length > 1)
-        {
-            NSInteger section = [indexCollation sectionForObject:[firstLetter substringToIndex:1] collationStringSelector:@selector(uppercaseString)];
+        
+        NSMutableArray *managerArray = [[NSMutableArray alloc] init];
+        //按首字母分组
+        for (IMGroupUserCellMode *model in tmpTeacherArray) {
+            if (model.GroupDetailMember.is_major == 1) {
+                [managerArray insertObject:model atIndex:0];
+                continue;
+            }else if(model.GroupDetailMember.is_admin == 1)
+            {
+                [managerArray addObject:model];
+                continue;
+            }
+            NSString *firstLetter = [IMLinshiTool pinyinFromChineseString:model.GroupDetailMember.user_name];
+            if (firstLetter && firstLetter.length > 1)
+            {
+                NSInteger section = [indexCollation sectionForObject:[firstLetter substringToIndex:1] collationStringSelector:@selector(uppercaseString)];
+                
+                NSMutableArray *array = [sortedArray objectAtIndex:section];
+                [array addObject:model];
+            }
+        }
+        
+        //每个section内的数组排序
+        for (int i = 0; i < [sortedArray count]; i++) {
+            NSArray *array = [[sortedArray objectAtIndex:i] sortedArrayUsingComparator:^NSComparisonResult(IMGroupUserCellMode *obj1, IMGroupUserCellMode *obj2) {
+                NSString *firstLetter1 = [IMLinshiTool pinyinFromChineseString:obj1.GroupDetailMember.user_name];
+                firstLetter1 = [[firstLetter1 substringToIndex:1] uppercaseString];
+                
+                NSString *firstLetter2 = [IMLinshiTool pinyinFromChineseString:obj2.GroupDetailMember.user_name];
+                firstLetter2 = [[firstLetter2 substringToIndex:1] uppercaseString];
+                
+                return [firstLetter1 caseInsensitiveCompare:firstLetter2];
+            }];
             
-            NSMutableArray *array = [sortedArray objectAtIndex:section];
-            [array addObject:model];
-        }
-    }
-    
-    //每个section内的数组排序
-    for (int i = 0; i < [sortedArray count]; i++) {
-        NSArray *array = [[sortedArray objectAtIndex:i] sortedArrayUsingComparator:^NSComparisonResult(IMGroupUserCellMode *obj1, IMGroupUserCellMode *obj2) {
-            NSString *firstLetter1 = [IMLinshiTool pinyinFromChineseString:obj1.GroupDetailMember.user_name];
-            firstLetter1 = [[firstLetter1 substringToIndex:1] uppercaseString];
             
-            NSString *firstLetter2 = [IMLinshiTool pinyinFromChineseString:obj2.GroupDetailMember.user_name];
-            firstLetter2 = [[firstLetter2 substringToIndex:1] uppercaseString];
+            [sortedArray replaceObjectAtIndex:i withObject:[NSMutableArray arrayWithArray:array]];
+        }
+        
+        //去掉空的section
+        for (NSInteger i = [sortedArray count] - 1; i >= 0; i--) {
+            NSArray *array = [sortedArray objectAtIndex:i];
+            if ([array count] == 0) {
+                [sortedArray removeObjectAtIndex:i];
+                [sectionTitles removeObjectAtIndex:i];
+            }
+        }
+        
+        NSMutableArray *sectionTitleArray = [[NSMutableArray alloc] init];
+        NSMutableArray *sectionModeArray = [[NSMutableArray alloc] init];
+        if ([managerArray count] > 0) {
+            SectionMode *sMode = [[SectionMode alloc] init];
+            sMode.headerHeight = 0.0f;
+            [sMode setRows:managerArray];
+            [sectionModeArray addObject:sMode];
+            [sectionTitleArray addObject:@"☆"];
+        }
+        
+        for (int i = 0; i < [sortedArray count]; i++) {
+            NSArray *array = [sortedArray objectAtIndex:i];
+            NSString *title = [sectionTitles objectAtIndex:i];
+            SectionMode *sMode = [[SectionMode alloc] init];
             
-            return [firstLetter1 caseInsensitiveCompare:firstLetter2];
-        }];
-        
-        
-        [sortedArray replaceObjectAtIndex:i withObject:[NSMutableArray arrayWithArray:array]];
-    }
-    
-    //去掉空的section
-    for (NSInteger i = [sortedArray count] - 1; i >= 0; i--) {
-        NSArray *array = [sortedArray objectAtIndex:i];
-        if ([array count] == 0) {
-            [sortedArray removeObjectAtIndex:i];
-            [sectionTitles removeObjectAtIndex:i];
+            sMode.headerHeight = 33.0f;
+            sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
+            sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+            UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 9, 100, 15)];
+            showTitleL.backgroundColor = [UIColor clearColor];
+            showTitleL.textAlignment = NSTextAlignmentLeft;
+            showTitleL.font = [UIFont systemFontOfSize:12.0f];
+            CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+            if(version >= 7.0f)
+            {
+                showTitleL.tintColor = [UIColor grayColor];
+            }
+            showTitleL.text = title;
+            [sMode.headerView addSubview:showTitleL];
+            
+            [sMode setRows:array];
+            [sectionModeArray addObject:sMode];
         }
-    }
-    
-    NSMutableArray *sectionTitleArray = [[NSMutableArray alloc] init];
-    NSMutableArray *sectionModeArray = [[NSMutableArray alloc] init];
-    if ([managerArray count] > 0) {
-        SectionMode *sMode = [[SectionMode alloc] init];
-        sMode.headerHeight = 0.0f;
-        [sMode setRows:managerArray];
-        [sectionModeArray addObject:sMode];
-        [sectionTitleArray addObject:@"☆"];
-    }
-    
-    for (int i = 0; i < [sortedArray count]; i++) {
-        NSArray *array = [sortedArray objectAtIndex:i];
-        NSString *title = [sectionTitles objectAtIndex:i];
-        SectionMode *sMode = [[SectionMode alloc] init];
         
-        sMode.headerHeight = 33.0f;
-        sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
-        sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
-        UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 9, 100, 15)];
-        showTitleL.backgroundColor = [UIColor clearColor];
-        showTitleL.textAlignment = NSTextAlignmentLeft;
-        showTitleL.font = [UIFont systemFontOfSize:12.0f];
-        CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
-        if(version >= 7.0f)
-        {
-            showTitleL.tintColor = [UIColor grayColor];
-        }
-        showTitleL.text = title;
-        [sMode.headerView addSubview:showTitleL];
+        [sectionTitleArray addObjectsFromArray:sectionTitles];
         
-        [sMode setRows:array];
-        [sectionModeArray addObject:sMode];
+        self.sectionTitleArray = sectionTitleArray;
+        self.sectionModeArray = sectionModeArray;
     }
-    
-    [sectionTitleArray addObjectsFromArray:sectionTitles];
-    
-    self.sectionTitleArray = sectionTitleArray;
-    self.sectionModeArray = sectionModeArray;
+    else
+    {
+        self.sectionTitleArray = nil;
+        SectionMode *model = [[SectionMode alloc] init];
+        [model setRows:self.groupUserArray];
+        self.sectionModeArray = @[model];
+    }
     
     self.customTableViewController.sectionTitles = self.sectionTitleArray;
     [self.customTableViewController setSections:self.sectionModeArray];
@@ -345,18 +356,8 @@
         cellMode.operaterIsMajor = self.isMajor;
         [self.groupUserArray addObject:cellMode];
     }
-    if (self.hasMore) {
-        NSMutableArray<SectionMode *> *sectionModeArray = [[NSMutableArray alloc] init];
-        for (int i = 0; [self.groupUserArray count]; i++) {
-            SectionMode *sMode = [[SectionMode alloc] init];
-            sMode.headerHeight = 15.0f;
-            [sectionModeArray addObject:sMode];
-        }
-        [self.customTableViewController addSections:sectionModeArray];
-    }else
-    {
-        [self refreshGroupMembers];
-    }
+    [self refreshGroupMembers];
+
 }
 
 - (void)backAction:(id)aciton
