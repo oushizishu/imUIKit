@@ -13,8 +13,6 @@
 #import "IMDialog.h"
 #import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 #import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
-#import "TeacherDetailsAViewController.h"
-#import "BaseWebViewController.h"
 #import "CustomTableView/CustomTableViewController.h"
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
