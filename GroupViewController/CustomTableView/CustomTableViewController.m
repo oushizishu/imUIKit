@@ -42,7 +42,13 @@
     self.tableView.dataSource=self;
     self.tableView.tableHeaderView = self.tableHeaderView;
     self.tableView.tableFooterView = self.tableFooterView;
-    self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version >= 7.0f)
+    {
+        self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    }
+    
     self.tableView.sectionIndexColor = [UIColor grayColor];
     [self.view addSubview:self.tableView];
 }
@@ -92,7 +98,7 @@
         [sets addIndex:sectionIndex+i];
     }
     [self.sectionArray insertObjects:array atIndexes:sets];
-    [self.tableView insertSections:sets withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView insertSections:sets withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(void)removeSections:(NSArray<SectionMode *> *)array
@@ -107,7 +113,7 @@
         }
     }
     [self.sectionArray removeObjectsAtIndexes:sets];
-    [self.tableView deleteSections:sets withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView deleteSections:sets withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(CGPoint)getCurOffSetPoint

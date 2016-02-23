@@ -9,6 +9,8 @@
 #import "IMLinshiTool.h"
 #import "BJChatFileCacheManager.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @implementation IMUIView
 
@@ -127,6 +129,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         
         UISwipeGestureRecognizer *lSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
         [lSwipG setDirection:(UISwipeGestureRecognizerDirectionLeft)];

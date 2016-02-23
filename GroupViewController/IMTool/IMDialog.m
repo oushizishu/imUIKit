@@ -8,7 +8,8 @@
 
 #import "IMDialog.h"
 #import "IMLinshiTool.h"
-
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #define IMDIALOGHEIGHT 150.0f
 
 @interface IMDialog()
@@ -42,13 +43,7 @@
     self.comfire = comfire;
     self.cancel = cancel;
     
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width/8, (sRect.size.height-150)/2, sRect.size.width-sRect.size.width/4, 150)];
-    self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
-    self.contentView.layer.masksToBounds = YES;
-    [self.contentView.layer setCornerRadius:5.0f];
-    [self.view addSubview:self.contentView];
-    
-    CGFloat maxW = self.contentView.frame.size.width-30;
+    CGFloat maxW = sRect.size.width-sRect.size.width/4-30;
     
     UIFont *font = [UIFont systemFontOfSize:15.0f];
     NSArray *splA = [IMLinshiTool splitMsg:content withFont:font withMaxWid:maxW];
@@ -61,10 +56,16 @@
         [splMA addObjectsFromArray:splA];
     }
     
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width/8, (sRect.size.height-(64+[splA count]*40))/2, sRect.size.width-sRect.size.width/4, 64+[splA count]*40)];
+    self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
+    self.contentView.layer.masksToBounds = YES;
+    [self.contentView.layer setCornerRadius:5.0f];
+    [self.view addSubview:self.contentView];
+    
     for (int i = 0; i < [splMA count]; i++) {
-        UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(15, ((150-20*3)/4)*(i+1)+i*20, self.contentView.frame.size.width-30, 20)];
+        UILabel *lable = [[UILabel alloc] initWithFrame:CGRectMake(15, 20+i*40, self.contentView.frame.size.width-30, 20)];
         lable.font = font;
-        lable.textAlignment = NSTextAlignmentLeft;
+        lable.textAlignment = NSTextAlignmentCenter;
         lable.text = [splMA objectAtIndex:i];
         lable.textColor =[UIColor colorWithHexString:IMCOLOT_GREY600];
         [self.contentView addSubview:lable];
@@ -100,20 +101,34 @@
 
 - (void)cancelBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
+    
     if (self.cancel) {
         self.cancel();
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
 }
 
 - (void)comfireBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
+    
     if (self.comfire) {
         self.comfire();
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     
 }
 

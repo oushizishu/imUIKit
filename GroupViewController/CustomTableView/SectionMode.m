@@ -82,7 +82,7 @@
         [sets enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
             [indexPathsArray addObject:[NSIndexPath indexPathForRow:idx inSection:sectionIndex]];
         }];
-        [self.customTableViewController.tableView insertRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationNone];
+        [self.customTableViewController.tableView insertRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -104,7 +104,7 @@
         [sets enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
             [indexPathsArray addObject:[NSIndexPath indexPathForRow:idx inSection:sectionIndex]];
         }];
-        [self.customTableViewController.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationNone];
+        [self.customTableViewController.tableView deleteRowsAtIndexPaths:indexPathsArray withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 

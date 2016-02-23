@@ -8,8 +8,10 @@
 #import "BJChatFileCacheManager.h"
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
-@interface IMFilePreviewViewController()
+@interface IMFilePreviewViewController()<UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) NSString *im_group_id;
 @property (strong ,nonatomic)GroupFile *groupFile;
@@ -18,6 +20,7 @@
 @property (strong ,nonatomic)UIWebView *webView;
 @property (strong ,nonatomic)UIView *operationView;
 @property (strong ,nonatomic)UIButton *operationBtn;
+@property (strong ,nonatomic)UIDocumentInteractionController *docInteractionController;
 
 @end
 
@@ -60,21 +63,90 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    self.title = @"文件预览";
+    //self.title = @"文件预览";
     
     CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"文件预览";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
+    
     CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
     CGRect rectNav = self.navigationController.navigationBar.frame;
     
-    self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-(rectStatus.size.height+rectNav.size.height+50), sRect.size.width, 50)];
-    self.operationView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.operationView];
-    self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
-    [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.operationBtn setTitle:@"用其他应用打开" forState:UIControlStateNormal];
-    [self.operationView addSubview:self.operationBtn];
+    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if(version >= 7.0f)
+    {
+        self.operationView = [[UIView alloc] initWithFrame:CGRectMake(0, sRect.size.height-(rectStatus.size.height+rectNav.size.height+50), sRect.size.width, 50)];
+        self.operationView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:self.operationView];
+        self.operationBtn = [[UIButton alloc] initWithFrame:CGRectMake((sRect.size.width-200)/2, 10, 200, 25)];
+        [self.operationBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.operationBtn setTitle:@"用其他应用打开" forState:UIControlStateNormal];
+        [self.operationBtn addTarget:self action:@selector(openFile) forControlEvents:UIControlEventTouchUpInside];
+        [self.operationView addSubview:self.operationBtn];
+    }
     
     [self previewGroupFile];
+}
+
+
+- (void)openFile
+{
+    NSString *path = [BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]];
+    
+    NSURL *fileUrl = [NSURL fileURLWithPath:path];
+    
+    [ self setupDocumentControllerWithURL:fileUrl];
+    
+    CGRect rect = CGRectMake ( 0 , 0 , self.view.frame.size.width , self.view.frame.size.height );
+    
+    [self.docInteractionController presentOptionsMenuFromRect:rect inView:self.view  animated:YES];//包含快速预览菜单
+    
+    //[ self . docInteractionController presentOpenInMenuFromRect :rect inView : self . view animated : YES ];
+}
+
+- ( void )setupDocumentControllerWithURL:( NSURL *)url
+
+{
+    
+    if ( self.docInteractionController == nil ){
+        
+        self.docInteractionController = [ UIDocumentInteractionController interactionControllerWithURL :url];
+        
+        self.docInteractionController.delegate = self ;
+    }
+    
+    else {
+        
+        self.docInteractionController.URL = url;
+        
+    }
+    
+}
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- ( UIViewController *)documentInteractionControllerViewControllerForPreview:( UIDocumentInteractionController *)interactionController{
+    
+    return self ;
+    
+}
+
+// 不显示 copy print
+
+- ( BOOL )documentInteractionController:( UIDocumentInteractionController *)controller canPerformAction:( SEL )action{
+    
+    return NO ;
+    
+}
+
+- ( BOOL )documentInteractionController:( UIDocumentInteractionController *)controller performAction:( SEL )action{
+    
+    return NO ;
+    
 }
 
 - (void)previewGroupFile
@@ -83,7 +155,9 @@
         || [self.groupFile.file_type isEqualToString:@"jpeg"]
         || [self.groupFile.file_type isEqualToString:@"png"]) {
         
-        UIImage *preImage = [UIImage imageWithContentsOfFile:[BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]]];
+        NSString *path = [BJChatFileCacheManager groupFileCachePathWithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:self.groupFile.file_url],self.groupFile.file_type]];
+        
+        UIImage *preImage = [UIImage imageWithContentsOfFile:path];
         
         CGSize imageSize = preImage.size;
         

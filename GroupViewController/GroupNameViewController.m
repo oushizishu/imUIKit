@@ -11,6 +11,9 @@
 #import "IMActionSheet.h"
 #import "BJChatFileCacheManager.h"
 #import "MBProgressHUD+IMKit.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GroupNameViewController()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
@@ -22,6 +25,8 @@
 @property (strong, nonatomic) UIButton *saveBtn;
 
 @property (assign, nonatomic) int64_t storage_id;
+
+@property (strong ,nonatomic) IMActionSheet *actionSheet;
 
 @end
 
@@ -67,9 +72,15 @@
     UIBarButtonItem *itemBar = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = itemBar;
     
-    self.title = @"群名称";
+    //self.title = @"群名称";
     
     CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"群名称";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
     
     self.faceImageView = [[UIImageView alloc] initWithFrame:CGRectMake((sRect.size.width-70)/2, 40, 70, 70)];
     [self.faceImageView.layer setCornerRadius:3.0f];
@@ -147,9 +158,9 @@
 - (void)faceImagePressed:(id)sender
 {
     [self.view endEditing:YES];
-    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    self.actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
-    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+    [self.actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
             [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];

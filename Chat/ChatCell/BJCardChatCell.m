@@ -12,12 +12,16 @@
 #import <PureLayout/PureLayout.h>
 #import <UIImageView+Aliyun.h>
 #import "UIResponder+BJIMChatRouter.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 const float ImageWH = 60;
 const float Interval = 10;
-const float CardWidth = 217;
+//const float CardWidth = 217;
 const float CardHeight = 130;
-const float ContentWidth = 130;
-const float IntervalTitleWithImage = 5;
+const float IntervalTitleWithImage = 10;
+const float IntervalLeftAndRight = 10;
+const float IntervalTop = 15;
+const float IntervalBottom = 12;
+const float IntervalImageWithContent = 7;
 
 @interface BJCardChatCell ()
 @property (strong, nonatomic) UIImageView *cardImageView;
@@ -36,72 +40,70 @@ const float IntervalTitleWithImage = 5;
 {
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-   
-    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
-    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-55)];
-    [self.contentLabel sizeToFit];
-    CGRect rect = self.bubbleContainerView.frame;
-    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + Interval*2;
-    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2) {
-        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + Interval*2;
+    BOOL hasCardImage = NO;
+    if (self.message.cardThumb.length>0) {
+        hasCardImage = YES;
     }
+    
+    CGFloat CardWidth = self.bubbleContainerView.frame.size.width - IntervalLeftAndRight*2 - BJ_BUBBLE_ARROW_WIDTH;
+   
+    CGSize titleSize = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth, self.titleLabel.font.pointSize+1)];
+    
+    float contentMaxHeight = CardHeight- IntervalTop - IntervalBottom - (self.titleLabel.font.pointSize+1) - IntervalTitleWithImage;
+    float contentMaxWidth = CardWidth - IntervalImageWithContent - ImageWH;
+    if (hasCardImage) {
+        [self.cardImageView setHidden:NO];
+    }else
+    {
+        [self.cardImageView setHidden:YES];
+        contentMaxWidth = CardWidth;
+    }
+    CGSize contentSize = [self.contentLabel sizeThatFits:CGSizeMake(contentMaxWidth, contentMaxHeight)];
+    CGRect rect = self.bubbleContainerView.frame;
+    rect.size.height = titleSize.height + contentSize.height + IntervalTitleWithImage + IntervalBottom + IntervalTop;
+    if (rect.size.height<titleSize.height+ IntervalTitleWithImage + ImageWH + IntervalBottom + IntervalTop && hasCardImage) {
+        rect.size.height = titleSize.height+ IntervalTitleWithImage + ImageWH + IntervalBottom + IntervalTop;
+    }
+    rect.size.height += 2;
     self.bubbleContainerView.frame = rect;
     
     [super layoutSubviews];
     
     CGRect frame = self.titleLabel.frame;
-    frame.size = [self.titleLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, 40)];
-    frame.origin.y = 10;
+    frame.size = titleSize;
+    frame.origin.y = IntervalTop;
+    
     self.titleLabel.frame = frame;
     
-    if (self.message.cardThumb.length<=0) {
-        [self.cardImageView setHidden:YES];
-        frame = self.contentLabel.frame;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(CardWidth-Interval*2+5, CardHeight-35)];
-        frame.origin.x = Interval;
-        self.contentLabel.frame = frame;
-    }else
-    {
-        [self.cardImageView setHidden:NO];
-        frame = self.contentLabel.frame;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.size = [self.contentLabel sizeThatFits:CGSizeMake(ContentWidth, CardHeight-35)];
-        frame.origin.x = Interval+ImageWH+5;
-        self.contentLabel.frame = frame;
+    frame = self.contentLabel.frame;
+    frame.size = contentSize;
+    frame.origin.y = CGRectGetMaxY(self.titleLabel.frame) + IntervalTitleWithImage;
+    self.contentLabel.frame = frame;
+    
+    CGFloat arrowWidth = 0;
+    if (!self.message.isMySend) {
+        arrowWidth = BJ_BUBBLE_ARROW_WIDTH;
     }
     
-    if (!self.message.isMySend) {
-        CGRect frame = self.cardImageView.frame;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        frame.origin.x = Interval+5;
-        self.cardImageView.frame = frame;
-        
-        frame = self.titleLabel.frame;
-        frame.origin.x = Interval+5;
-        self.titleLabel.frame = frame;
-        self.titleLabel.textAlignment = NSTextAlignmentLeft;
-        
-        frame = self.contentLabel.frame;
-        frame.origin.x = Interval+10+ImageWH;
-        self.contentLabel.frame = frame;
+    frame = self.cardImageView.frame;
+    frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
+    frame.origin.x = IntervalLeftAndRight + arrowWidth;
+    self.cardImageView.frame = frame;
+    
+    frame = self.titleLabel.frame;
+    frame.origin.x = IntervalLeftAndRight + arrowWidth;
+    self.titleLabel.frame = frame;
+    self.titleLabel.textAlignment = NSTextAlignmentLeft;
+    
+    frame = self.contentLabel.frame;
+    if (self.cardImageView.hidden) {
+        frame.origin.x = arrowWidth + IntervalLeftAndRight;
     }
     else
     {
-        CGRect frame = self.cardImageView.frame;
-        frame.origin.x = Interval;
-        frame.origin.y = self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height+IntervalTitleWithImage;
-        self.cardImageView.frame = frame;
-        
-        frame = self.titleLabel.frame;
-        frame.origin.x = Interval;
-        self.titleLabel.frame = frame;
-        self.titleLabel.textAlignment = NSTextAlignmentLeft;
-        
-        frame = self.contentLabel.frame;
-        frame.origin.x = Interval+ImageWH+5;
-        self.contentLabel.frame = frame;
+        frame.origin.x = arrowWidth + IntervalLeftAndRight + ImageWH + IntervalImageWithContent;
     }
+    self.contentLabel.frame = frame;
 
     [CATransaction commit];
 }
@@ -117,19 +119,32 @@ const float IntervalTitleWithImage = 5;
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJCardChatCell class])];
     if (self) {
         CGRect rect = self.bubbleContainerView.frame;
-        rect.size.width = CardWidth;
+        CGFloat width = [UIScreen mainScreen].bounds.size.width - (HEAD_PADDING*2+HEAD_SIZE*2+35);
+        rect.size.width = width;
         rect.size.height = CardHeight;
         self.bubbleContainerView.frame = rect;
     }
     return self;
 }
 
+- (UIImage *)bubbleImage
+{
+    NSString *imageName = !self.message.isMySend ? @"bg_card_left_n" : @"bg_card_right_n";
+    NSInteger leftCapWidth = !self.message.isMySend?15:5;
+    NSInteger topCapHeight =  !self.message.isMySend?35:35;
+    return [[UIImage imageNamed:imageName] stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+}
+
 -(void)setCellInfo:(id)info indexPath:(NSIndexPath *)indexPath;
 {
     [super setCellInfo:info indexPath:indexPath];
+
     self.cardImageView.image = nil;
     self.titleLabel.text = self.message.cardTitle;
-    self.contentLabel.text = self.message.cardContent;
+    NSMutableParagraphStyle *paragraph = [[NSMutableParagraphStyle alloc] init];
+    paragraph.lineSpacing = 1;
+    NSMutableAttributedString *mutAtt = [[NSMutableAttributedString alloc] initWithString:self.message.cardContent?:@"" attributes:@{NSFontAttributeName:self.contentLabel.font,NSParagraphStyleAttributeName:paragraph}];
+    self.contentLabel.attributedText = mutAtt;
     [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
@@ -148,8 +163,9 @@ const float IntervalTitleWithImage = 5;
 - (UILabel *)titleLabel
 {
     if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, CardWidth-Interval*2, 40)];
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, 100, 40)];
         [_titleLabel setFont:[UIFont systemFontOfSize:16]];
+        _titleLabel.textColor = [UIColor colorWithHexString:@"#3C3D3D"];
         _titleLabel.numberOfLines = 2;
         _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
@@ -160,11 +176,11 @@ const float IntervalTitleWithImage = 5;
 - (UILabel *)contentLabel
 {
     if (!_contentLabel) {
-        _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, ContentWidth, CardHeight-55)];
+        _contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval+ImageWH+5, 55, 100, CardHeight-55)];
         _contentLabel.backgroundColor = [UIColor clearColor];;
-        [_contentLabel setFont:[UIFont systemFontOfSize:14]];
+        [_contentLabel setFont:[UIFont systemFontOfSize:12]];
         _contentLabel.numberOfLines = 4;
-        [_contentLabel setTextColor:[UIColor darkGrayColor]];
+        [_contentLabel setTextColor:[UIColor colorWithHexString:@"#9D9E9E"]];
         [self.bubbleContainerView addSubview:_contentLabel];
     }
     return _contentLabel;

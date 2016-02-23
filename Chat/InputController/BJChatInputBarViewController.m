@@ -17,10 +17,13 @@
 #import <IMEnvironment.h>
 #import "BJFaceView.h"
 
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
-#define kHorizontalPadding 4
-#define kVerticalPadding 5
+#define kHorizontalPadding 6
+#define kVerticalPadding 6
+#define kLeftRightPadding 10
 
 #define kTouchToRecord @"按住说话"
 #define kTouchToFinish @"松开发送"
@@ -94,7 +97,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
     self.draft = [BJChatDraft conversationDraftForUserId:self.chatInfo.getToId andUserRole:self.chatInfo.getToRole];
     self.inputTextView.text = self.draft?self.draft.content:@"";
 }
@@ -127,27 +130,27 @@
 - (void)setupSubviews
 {
     CGFloat allButtonWidth = 0.0;
-    CGFloat textViewLeftMargin = 6.0;
+    CGFloat textViewLeftMargin = kHorizontalPadding;
     
     //转变输入样式
-    self.styleChangeButton = [[UIButton alloc] initWithFrame:CGRectMake(kHorizontalPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
+    self.styleChangeButton = [[UIButton alloc] initWithFrame:CGRectMake(kLeftRightPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
     self.styleChangeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self.styleChangeButton setImage:[UIImage imageNamed:@"ic_microphone_nor_.png"] forState:UIControlStateNormal];
     [self.styleChangeButton setImage:[UIImage imageNamed:@"ic_keyboard_nor_.png"] forState:UIControlStateSelected];
     [self.styleChangeButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     self.styleChangeButton.tag = 0;
-    allButtonWidth += CGRectGetMaxX(self.styleChangeButton.frame);
+    allButtonWidth += CGRectGetMaxX(self.styleChangeButton.frame) + kHorizontalPadding;
     textViewLeftMargin += CGRectGetMaxX(self.styleChangeButton.frame);
     
     //更多
-    self.moreButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - kHorizontalPadding - kInputTextViewMinHeight, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
+    self.moreButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - kLeftRightPadding - kInputTextViewMinHeight, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
     self.moreButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     [self.moreButton setImage:[UIImage imageNamed:@"ic_add_normal"] forState:UIControlStateNormal];
     [self.moreButton setImage:[UIImage imageNamed:@"ic_add_press"] forState:UIControlStateHighlighted];
     [self.moreButton setImage:[UIImage imageNamed:@"ic_keyboard_nor_"] forState:UIControlStateSelected];
     [self.moreButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     self.moreButton.tag = 2;
-    allButtonWidth += CGRectGetWidth(self.moreButton.frame) + kHorizontalPadding * 2.5;
+    allButtonWidth += CGRectGetWidth(self.moreButton.frame) + kHorizontalPadding + kLeftRightPadding;
     
     //表情
     self.faceButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.moreButton.frame) - kInputTextViewMinHeight - kHorizontalPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
@@ -157,7 +160,7 @@
     [self.faceButton setImage:[UIImage imageNamed:@"ic_keyboard_nor_"] forState:UIControlStateSelected];
     [self.faceButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     self.faceButton.tag = 1;
-    allButtonWidth += CGRectGetWidth(self.faceButton.frame) + kHorizontalPadding * 1.5;
+    allButtonWidth += CGRectGetWidth(self.faceButton.frame) + kHorizontalPadding;
     
     // 输入框的高度和宽度
     CGFloat width = CGRectGetWidth(self.view.bounds) - (allButtonWidth ? allButtonWidth : (textViewLeftMargin * 2));
@@ -170,10 +173,10 @@
     self.inputTextView.enablesReturnKeyAutomatically = YES; // UITextView内部判断send按钮是否可以用
     self.inputTextView.placeHolder = @"说点什么吧...";
     self.inputTextView.delegate = self;
-    self.inputTextView.backgroundColor = [UIColor clearColor];
+    self.inputTextView.backgroundColor = [UIColor whiteColor];
     self.inputTextView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
     self.inputTextView.layer.borderWidth = 0.65f;
-    self.inputTextView.layer.cornerRadius = 6.0f;
+    self.inputTextView.layer.cornerRadius = 5.0f;
     self.previousTextViewContentHeight = [self getTextViewContentH:self.inputTextView];
     
     //录制
@@ -679,13 +682,23 @@
 {
     if (_toolbarView == nil) {
         _toolbarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, [BJChatInputBarViewController defaultHeight])];
-        _toolbarView.backgroundColor = [UIColor clearColor];
+        _toolbarView.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
         
-        //增加背景照片
-        UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];
-        backgroundImageView.image = [[UIImage imageNamed:@"messageToolbarBg"] stretchableImageWithLeftCapWidth:0.5 topCapHeight:10];
-        [backgroundImageView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
-        [_toolbarView addSubview:backgroundImageView];
+        //增加线
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _toolbarView.frame.size.width, 0.5)];
+        lineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        [_toolbarView addSubview:lineView];
+        
+        //增加线
+        UIView *bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(0, _toolbarView.frame.size.height - 0.5, _toolbarView.frame.size.width, 0.5)];
+        bottomLineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        [_toolbarView addSubview:bottomLineView];
+        
+//        //增加背景照片
+//        UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];
+//        backgroundImageView.image = [[UIImage imageNamed:@"messageToolbarBg"] stretchableImageWithLeftCapWidth:0.5 topCapHeight:10];
+//        [backgroundImageView setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
+//        [_toolbarView addSubview:backgroundImageView];
     }
     
     return _toolbarView;

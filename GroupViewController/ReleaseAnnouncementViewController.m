@@ -8,6 +8,10 @@
 #import "UIColor+Util.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "MBProgressHUD+IMKit.h"
+#import "IMLinshiTool.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#define MAXCHARACTERCOUNT 250
 
 @interface ReleaseAnnouncementViewController()<UITextViewDelegate>
 
@@ -62,15 +66,21 @@
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发布" style:UIBarButtonItemStylePlain target:self action:@selector(releaseAnnouncement)];
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
-    self.title = @"发布群公告";
+    //self.title = @"发布群公告";
     
-    CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
-    CGRect rectNav = self.navigationController.navigationBar.frame;
-    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"发布群公告";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
+    
+    self.editView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 160)];
     self.editView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.editView];
     
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 140)];
+    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 15, self.editView.frame.size.width-30, 100)];
     self.textView.font = [UIFont systemFontOfSize:16.0f];
     self.textView.delegate = self;
     [self.editView addSubview:self.textView];
@@ -78,7 +88,7 @@
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake(15, self.editView.frame.size.height-35, self.editView.frame.size.width-30, 20)];
     self.tipLable.textAlignment = NSTextAlignmentRight;
     self.tipLable.textColor = [UIColor grayColor];
-    self.tipLable.text = @"剩余250字";
+    self.tipLable.text = [NSString stringWithFormat:@"剩余%d字",MAXCHARACTERCOUNT];
     self.tipLable.font = [UIFont systemFontOfSize:16.0f];
     [self.editView addSubview:self.tipLable];
     
@@ -89,18 +99,36 @@
 - (void)releaseAnnouncement
 {
     if (self.ifCanRrelease) {
-        
         if (self.textView.text == nil || [self.textView.text length] == 0) {
-            [MBProgressHUD imShowError:@"请输入公告内容" toView:self.view];
+            [MBProgressHUD imShowError:@"请输入公告内容" toView:self.textView];
+            //[MBProgressHUD imShowError:@"请输入公告内容"];
             return;
         }
+        
+        /*
+        CGRect sRect = [UIScreen mainScreen].bounds;
+        NSArray *spA = [IMLinshiTool splitMsg:self.textView.text withFont:[UIFont systemFontOfSize:16.0f] withMaxWid:sRect.size.width-30];
+        if (spA == nil || [spA count] == 0) {
+            [MBProgressHUD imShowError:@"未输入有效内容" toView:self.textView];
+            //[MBProgressHUD imShowError:@"未输入有效内容"];
+            return;
+        }
+        
+        NSMutableString *content = [[NSMutableString alloc] init];
+        
+        
+        for (int i = 0; i < [spA count]; i++) {
+            [content appendString:[spA objectAtIndex:i]];
+        }
+        */
         
         WS(weakSelf);
         self.ifCanRrelease = NO;
         [[BJIMManager shareInstance] createGroupNotice:[self.im_group_Id longLongValue] content:self.textView.text callback:^(NSError *error) {
             if (error) {
                 weakSelf.ifCanRrelease = YES;
-                [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.view];
+                [MBProgressHUD imShowError:@"公告发布失败" toView:weakSelf.textView];
+                //[MBProgressHUD imShowError:@"公告发布失败"];
             }else
             {
                 [weakSelf backAction:nil];
@@ -114,12 +142,23 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if (textView.text.length >= MAXCHARACTERCOUNT && text.length > range.length) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (void)textViewDidChange:(UITextView *)textView
 {
-    if (textView.text.length>250) {
-        textView.text = [textView.text substringWithRange:NSMakeRange(0, 250)];
+    NSInteger surplusCount = 0;
+    if (MAXCHARACTERCOUNT>textView.text.length) {
+        surplusCount = MAXCHARACTERCOUNT-textView.text.length;
     }
-    self.tipLable.text = [NSString stringWithFormat:@"剩余%ld字",250-textView.text.length];
+    self.tipLable.text = [NSString stringWithFormat:@"剩余%d字",surplusCount];
+    
 }
 
 @end

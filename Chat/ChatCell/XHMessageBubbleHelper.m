@@ -60,7 +60,8 @@
                               }];
 }
 
-- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text {
+- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text matchColor:(UIColor *)matchColor normalColor:(UIColor *)normalColor;
+{
     if (!text) {
         return [[NSAttributedString alloc] init];
     }
@@ -68,10 +69,10 @@
         return [_attributedStringCache objectForKey:text];
     }
     
-    NSDictionary *textAttributes = @{NSForegroundColorAttributeName : self.matchColor};
+    NSDictionary *textAttributes = @{NSForegroundColorAttributeName : matchColor};
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:self.normalColor range:NSMakeRange(0,text.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:normalColor range:NSMakeRange(0,text.length)];
     NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber | NSTextCheckingTypeDate
                                                                error:nil];
     [self setDataDetectorsAttributedAttributedString:attributedString atText:text withRegularExpression:detector attributes:textAttributes];

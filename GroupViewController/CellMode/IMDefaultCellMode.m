@@ -7,6 +7,8 @@
 #import "IMDefaultCellMode.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import "IMLinshiTool.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 #define IMDEFAULTCELLMODEHEIGHT 44
 
@@ -29,6 +31,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         CGRect sRect = [UIScreen mainScreen].bounds;
         
         self.lineView = [[UIView alloc] initWithFrame:CGRectMake(15, IMDEFAULTCELLMODEHEIGHT, sRect.size.width-15, 0.5)];

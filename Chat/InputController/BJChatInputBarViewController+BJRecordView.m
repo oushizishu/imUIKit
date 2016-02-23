@@ -67,14 +67,14 @@ static char BJRecordView_Recorder;
                 [weakSelf recordButtonTouchUpInside];
             }];
         });
-        
     }
     else
     {
         [[JLMicrophonePermission sharedInstance] authorize:^(bool granted, NSError *error) {
-            
+            if (!granted) {
+                [[JLMicrophonePermission sharedInstance] displayReenableAlert];
+            }
         }];
-        
     }
 }
 

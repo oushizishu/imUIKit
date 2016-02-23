@@ -22,6 +22,7 @@
 #import "CardSimpleItem.h"
 #import <User.h>
 
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 @interface BJChatInputMoreViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -53,7 +54,7 @@
         }
     }
     self.view.autoresizingMask = UIViewAutoresizingNone;
-    self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 200);
+    self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 220);
     [self.view addSubview:self.collectionView];
     [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([BJActionCollectionViewCell class]) bundle:nil] forCellWithReuseIdentifier:NSStringFromClass([BJActionCollectionViewCell class])];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendCouponMessage:) name:@"sendCouponNotification" object:nil];
@@ -225,12 +226,16 @@
 {
     if (_collectionView == nil) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(60, 105);
+        CGSize itemSize = CGSizeMake(59, 80);
+        layout.itemSize = itemSize;
+        CGFloat lineSpace = ([UIScreen mainScreen].bounds.size.width - itemSize.width * 4) / 5.0f;
         layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        layout.minimumLineSpacing = 5;
-        layout.sectionInset = UIEdgeInsetsMake(5, 15, 5, 15);
+        layout.minimumInteritemSpacing = 13;
+        layout.minimumLineSpacing = lineSpace;
+        layout.sectionInset = UIEdgeInsetsMake(20, lineSpace, 27, lineSpace);
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-        _collectionView.backgroundColor = [UIColor whiteColor];
+        _collectionView.showsVerticalScrollIndicator = NO;
+        _collectionView.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
     }

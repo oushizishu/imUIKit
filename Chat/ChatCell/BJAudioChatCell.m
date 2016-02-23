@@ -13,7 +13,9 @@
 #import <BJAudioPlayer.h>
 #import "UIResponder+BJIMChatRouter.h"
 
-#define BJ_ANIMATION_IMAGEVIEW_HEIGHT 14 // 小喇叭图片尺寸
+#define BJ_CHAT_AUDIO_BUBBLE_CONTENT_PADDING 10//bubble和内部控件的间距
+
+#define BJ_ANIMATION_IMAGEVIEW_HEIGHT 18 // 小喇叭图片尺寸
 #define BJ_ANIMATION_IMAGEVIEW_WIDTH 13
 #define BJ_ANIMATION_IMAGEVIEW_SPEED 1 // 小喇叭动画播放速度
 
@@ -26,7 +28,7 @@
 #define BJ_ANIMATION_TIME_LABEL_FONT_SIZE 14 // 时间字体
 
 // 发送
-#define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT @"ic_volume_li_gary3" // 小喇叭默认图片
+#define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT @"ic_volume_li_gary4" // 小喇叭默认图片
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_01 @"ic_volume_li_gary1" // 小喇叭动画第一帧
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_02 @"ic_volume_li_gary2" // 小喇叭动画第二帧
 #define BJ_SENDER_ANIMATION_IMAGEVIEW_IMAGE_03 @"ic_volume_li_gary3" // 小喇叭动画第三帧
@@ -63,21 +65,29 @@
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     CGRect rect = self.bubbleContainerView.frame;
-    rect.size.width  = BJ_ANIMATION_IMAGEVIEW_WIDTH*3+((AUDIOSHOW_MAX_WIDTH-BJ_ANIMATION_IMAGEVIEW_WIDTH*3)/AUDIOLENGTH_MAX_WIDTH)*self.message.time;
+    CGFloat maxWidth = AUDIOSHOW_MAX_WIDTH;
+    
+    rect.size.width  = BJ_ANIMATION_IMAGEVIEW_WIDTH*3+((maxWidth-BJ_ANIMATION_IMAGEVIEW_WIDTH*3)/AUDIOLENGTH_MAX_WIDTH)*30;
+    
+    if (rect.size.width > maxWidth) {
+        rect.size.width = maxWidth;
+    }
+
     self.bubbleContainerView.frame = rect;
     
     [super layoutSubviews];
     
     CGRect frame = self.animationImageView.frame;
     if (self.message.isMySend) {
-        frame.origin.x = self.bubbleContainerView.frame.size.width - BJ_BUBBLE_ARROW_WIDTH - frame.size.width - BJ_BUBBLE_VIEW_PADDING;
+        frame.origin.x = self.bubbleContainerView.frame.size.width - BJ_BUBBLE_ARROW_WIDTH - frame.size.width - BJ_CHAT_AUDIO_BUBBLE_CONTENT_PADDING;
         frame.origin.y = self.bubbleContainerView.frame.size.height / 2 - frame.size.height / 2;
         self.animationImageView.frame = frame;
         
         frame = self.timeLabel.frame;
-        frame.origin.x = self.bubbleContainerView.frame.origin.x - BJ_ANIMATION_TIME_LABEL_WIDHT;
+        frame.origin.x = self.bubbleContainerView.frame.origin.x - BJ_ANIMATION_TIME_LABEL_WIDHT - BJ_BJ_ANIMATION_TIME_LABEL_WIDHT;
         frame.origin.y = self.bubbleContainerView.frame.origin.y + (self.bubbleContainerView.frame.size.height-BJ_ANIMATION_TIME_LABEL_HEIGHT)/2;
         self.timeLabel.frame = frame;
+        self.timeLabel.textAlignment = NSTextAlignmentRight;
         
         frame = self.activityView.frame;
         frame.origin.x = self.timeLabel.frame.origin.x - frame.size.width;
@@ -86,14 +96,15 @@
     else {
         self.animationImageView.image = [UIImage imageNamed:BJ_RECEIVER_ANIMATION_IMAGEVIEW_IMAGE_DEFAULT];
         
-        frame.origin.x = BJ_BUBBLE_ARROW_WIDTH + BJ_BUBBLE_VIEW_PADDING;
+        frame.origin.x = BJ_BUBBLE_ARROW_WIDTH + BJ_CHAT_AUDIO_BUBBLE_CONTENT_PADDING;
         frame.origin.y = self.bubbleContainerView.frame.size.height / 2 - frame.size.height / 2;
         self.animationImageView.frame = frame;
         
         frame = self.timeLabel.frame;
-        frame.origin.x = self.bubbleContainerView.frame.size.width + self.bubbleContainerView.frame.origin.x;
+        frame.origin.x = self.bubbleContainerView.frame.size.width + self.bubbleContainerView.frame.origin.x + BJ_BJ_ANIMATION_TIME_LABEL_WIDHT;
         frame.origin.y = self.bubbleContainerView.frame.origin.y + (self.bubbleContainerView.frame.size.height-BJ_ANIMATION_TIME_LABEL_HEIGHT)/2;
         self.timeLabel.frame = frame;
+        self.timeLabel.textAlignment = NSTextAlignmentLeft;
         
         frame.origin.x = self.bubbleContainerView.frame.origin.x+ self.bubbleContainerView.frame.size.width + self.timeLabel.frame.size.width/2-self.isReadView.frame.size.width/2;
         frame.origin.y = self.bubbleContainerView.frame.origin.y;
@@ -131,10 +142,10 @@
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSStringFromClass([BJAudioChatCell class])];
     if (self) {
-        CGFloat width = BJ_BUBBLE_VIEW_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH + BJ_ANIMATION_TIME_LABEL_WIDHT +BJ_BJ_ANIMATION_TIME_LABEL_WIDHT + BJ_ANIMATION_IMAGEVIEW_WIDTH;
+        CGFloat width = BJ_CHAT_AUDIO_BUBBLE_CONTENT_PADDING*2 + BJ_BUBBLE_ARROW_WIDTH + BJ_ANIMATION_TIME_LABEL_WIDHT +BJ_BJ_ANIMATION_TIME_LABEL_WIDHT + BJ_ANIMATION_IMAGEVIEW_WIDTH;
         
         CGFloat maxHeight = MAX(BJ_ANIMATION_IMAGEVIEW_HEIGHT, BJ_ANIMATION_TIME_LABEL_HEIGHT);
-        CGFloat height = BJ_BUBBLE_VIEW_PADDING*2 + maxHeight;
+        CGFloat height = BJ_CHAT_AUDIO_BUBBLE_CONTENT_PADDING*2 + maxHeight;
         CGRect rect = self.bubbleContainerView.frame;
         rect.size.width = width;
         rect.size.height = height;

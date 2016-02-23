@@ -8,6 +8,8 @@
 #import "IMGroupTeachersCellMode.h"
 #import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 #import "IMLinshiTool.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 #define IMGROUPTEACHERSCELLMODEHEIGHT 110.0f
 
@@ -86,6 +88,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }

@@ -11,6 +11,9 @@
 #import <BJHL-IM-iOS-SDK/IMEnvironment.h>
 #import "IMLinshiTool.h"
 
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
 @interface IMGroupUserCell()
 
 @property (strong ,nonatomic) UIView *cellView;
@@ -33,6 +36,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
         
         UISwipeGestureRecognizer *lSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
         [lSwipG setDirection:(UISwipeGestureRecognizerDirectionLeft)];
@@ -199,6 +203,12 @@
 
 @end
 
+@interface IMGroupUserCellMode()
+
+@property (strong ,nonatomic) IMSingleSelectDialog *dialog;
+
+@end
+
 @implementation IMGroupUserCellMode
 
 -(instancetype)initWithGroupDetailMember:(GroupDetailMember*)member
@@ -274,7 +284,7 @@
 -(void)moreAction
 {
     WS(weakSelf);
-    IMSingleSelectDialog *dialog = [[IMSingleSelectDialog alloc] init];
+    self.dialog = [[IMSingleSelectDialog alloc] init];
     NSArray *array = nil;
     if (self.GroupDetailMember.is_admin) {
         array = [NSArray arrayWithObjects:@"取消该成员为管理员",@"移交群给该成员", nil];
@@ -282,7 +292,7 @@
     {
         array = [NSArray arrayWithObjects:@"设置该成员为管理员",@"移交群给该成员", nil];
     }
-    [dialog showWithTitle:@"请选择将要进行的操作" withArray:array withSelectBlock:^(NSInteger index) {
+    [self.dialog showWithTitle:@"请选择将要进行的操作" withArray:array withSelectBlock:^(NSInteger index) {
         if (index == 0) {
             if (weakSelf.GroupDetailMember.is_admin) {
                 [self.groupUserDelegate cancelGroupUserAmin:weakSelf];

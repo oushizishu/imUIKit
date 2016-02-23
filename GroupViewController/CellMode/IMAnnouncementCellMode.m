@@ -9,6 +9,8 @@
 #import "IMLinshiTool.h"
 #import "IMDialog.h"
 #import "MBProgressHUD+IMKit.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @implementation IMUILable
 
@@ -69,6 +71,7 @@
         // Initialization code
         //设置cell没有选中效果
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        self.contentView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -102,7 +105,7 @@
     for (int i = 0; i < [mode.contentArray count]; i++) {
         UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+20*i, sRect.size.width-30, 15)];
         itemL.font = font;
-        itemL.tintColor = fontColor;
+        itemL.textColor = fontColor;
         itemL.text = [mode.contentArray objectAtIndex:i];
         [self addSubview:itemL];
         [self.contentArray addObject:itemL];
@@ -223,6 +226,8 @@
 
 @interface IMAnnouncementCellMode()
 
+@property (strong, nonatomic) IMDialog *dialog;
+
 @end
 
 @implementation IMAnnouncementCellMode
@@ -260,7 +265,7 @@
     if (_contentArray == nil) {
         if (self.groupNotice != nil && self.groupNotice.content != nil&& self.groupNotice.content.length > 0) {
             CGRect sRect = [UIScreen mainScreen].bounds;
-            _contentArray = [self splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:14.0f] withMaxWid:sRect.size.width-30];
+            _contentArray = [IMLinshiTool splitMsg:self.groupNotice.content withFont:[UIFont systemFontOfSize:14.0f] withMaxWid:sRect.size.width-30];
         }
     }
     return _contentArray;
@@ -298,8 +303,8 @@
 
 -(void)deleteAnnouncement
 {
-    IMDialog *dialog = [[IMDialog alloc] init];
-    [dialog showWithContent:@"是否删除公告" withSelectBlock:^{
+    self.dialog = [[IMDialog alloc] init];
+    [self.dialog showWithContent:@"是否删除公告" withSelectBlock:^{
         WS(weakSelf);
         [[BJIMManager shareInstance] removeGroupNotice:self.groupNotice.noticeId group_id:self.groupId callback:^(NSError *error) {
             if (error) {

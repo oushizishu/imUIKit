@@ -13,10 +13,14 @@
 #import "IMFilePreviewViewController.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import <BJHL-Common-iOS-SDK/NSDateFormatter+Category.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 #import "MBProgressHUD+IMKit.h"
 #import "IMInputDialog.h"
 #import "IMActionSheet.h"
 #import "IMDialog.h"
+
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GroupFileViewController()<CustomTableViewControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MyImagePickerViewControllerDelegate,IMFileCellModeDelegate>
 
@@ -34,10 +38,18 @@
 
 @property (weak ,nonatomic)UIView *curView;
 
+@property (strong, nonatomic) IMActionSheet *actionSheet;
+@property (strong, nonatomic) IMDialog *dialog;
+@property (strong, nonatomic) IMInputDialog *inputD;
 
 @end
 
 @implementation GroupFileViewController
+
+- (void)dealloc
+{
+    NSLog(@"dealloc");
+}
 
 -(instancetype)initWithGroudId:(NSString*)groudId
 {
@@ -84,7 +96,14 @@
     
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     
-    self.title = @"群文件";
+    //self.title = @"群文件";
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = @"群文件";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
     
     [self requestGroupFiles];
     
@@ -102,9 +121,10 @@
     //UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:imagePicker];
     //[self presentViewController:nav animated:YES completion:nil];
     
-    IMActionSheet *actionSheet = [[IMActionSheet alloc] init];
+    self.actionSheet = [[IMActionSheet alloc] init];
     NSArray *array = [NSArray arrayWithObjects:@"从相册选择",@"打开相机拍照", nil];
-    [actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
+    WS(weakSelf);
+    [self.actionSheet showWithTitle:@"请选择上传方式" withArray:array withCurIndex:-1 withSelectBlock:^(NSInteger index) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         if (index == 0) {
             [imagePicker setSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
@@ -116,8 +136,8 @@
             NSArray *mediaArray = [NSArray arrayWithObjects:(NSString*)kUTTypeImage, nil];
             [imagePicker setMediaTypes:mediaArray];
         }
-        imagePicker.delegate = self;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        imagePicker.delegate = weakSelf;
+        [weakSelf presentViewController:imagePicker animated:YES completion:nil];
     } withCancelBlock:^{
         
     }];
@@ -240,9 +260,9 @@
     }else
     {
         WS(weakSelf);
-        IMInputDialog *inputD = [[IMInputDialog alloc] init];
+        self.inputD = [[IMInputDialog alloc] init];
         NSString *defaultContent = [NSString stringWithFormat:@"gsx_%.0f",[[NSDate date] timeIntervalSince1970]*100];
-        [inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
+        [self.inputD showWithDefaultContent:defaultContent withInputComplete:^(NSString *content) {
             NSString *filePath = defaultContent;
             
             if (![IMLinshiTool ifExistDircory:[BJChatFileCacheManager chatUploadFilePath]]) {
@@ -252,7 +272,7 @@
             [data writeToFile:[BJChatFileCacheManager uploadFileCachePathwithName:[NSString stringWithFormat:@"%@.%@",[IMLinshiTool getStringWithStringByMD5:filePath],attachment]] atomically:YES];
             
             IMFileUploadInfo *info = [[IMFileUploadInfo alloc] init];
-            info.group_id = [self.im_group_id longLongValue];
+            info.group_id = [weakSelf.im_group_id longLongValue];
             info.attachment = attachment;
             info.filePath = filePath;
             info.fileName = content;
@@ -266,7 +286,7 @@
             IMFileCellMode *mode = [[IMFileCellMode alloc] initWithFileUploadInfo:info];
             mode.fileDelegate = weakSelf;
             
-            [self switchCurView:self.customTableViewController.view];
+            [weakSelf switchCurView:weakSelf.customTableViewController.view];
             
             IMFileCellMode *firstFileMode = [weakSelf.fileModeArray firstObject];
             if (firstFileMode != nil) {
@@ -280,7 +300,6 @@
             
             [weakSelf.fileModeArray insertObject:mode atIndex:0];
         } withInputCancel:^{
-            
         }];
     }
 }
@@ -428,9 +447,9 @@
 
 - (void)userDeleteGroupFile:(IMFileCellMode *)cellMode
 {
-    IMDialog *dialog = [[IMDialog alloc] init];
+    self.dialog = [[IMDialog alloc] init];
      WS(weakSelf);
-    [dialog showWithContent:@"是否删除该文件" withSelectBlock:^{
+    [self.dialog showWithContent:@"是否删除该文件" withSelectBlock:^{
         if ([self.fileModeArray containsObject:cellMode] && cellMode.sectionMode != nil) {
             if (cellMode.groupFile != nil) {
                 [[BJIMManager shareInstance] deleteGroupFile:[self.im_group_id longLongValue] file_id:cellMode.groupFile.fileId callback:^(NSError *error) {

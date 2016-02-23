@@ -21,6 +21,9 @@
 #import "MBProgressHUD+IMKit.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
+#import <TKAlertViewController.h>
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 
@@ -43,6 +46,9 @@
 @property (strong, nonatomic) IMDefaultCellMode *groupSettingMode;
 
 @property (strong, nonatomic) UIButton *exitBtn;
+
+@property (strong, nonatomic) IMActionSheet  *actionSheet;
+@property (strong, nonatomic) IMDialog *dialog;
 
 @end
 
@@ -68,6 +74,10 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self requestGroupDetails];
 }
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
 
 - (void)viewDidLoad
 {
@@ -89,7 +99,14 @@
     [[BJIMManager shareInstance] getGroupProfile:[_im_group_id longLongValue]];
     self.group = [[BJIMManager shareInstance] getGroup:[_im_group_id longLongValue]];
     if (self.group) {
-        self.title = self.group.getContactName;
+        //self.title = self.group.getContactName;
+        CGRect sRect = [UIScreen mainScreen].bounds;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+        label.font = [UIFont systemFontOfSize:18.0f];
+        label.text = self.group.getContactName;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        self.navigationItem.titleView = label;
     }
 }
 
@@ -107,7 +124,7 @@
             [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:self.view];
         }else
         {
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD hideHUDForView:weakself.view animated:YES];
             weakself.groupDetail = groupDetail;
             [weakself refreshGroupDetails];
         }
@@ -269,6 +286,17 @@
 
 - (void)hitExitBtn
 {
+//    TKAlertViewController *alertv = [[TKAlertViewController alloc] initWithTitle:@"是否删除该文件" message:nil];
+//    [alertv addCancelButtonWithTitle:@"取消" handler:^{
+//        
+//    }];
+//    [alertv addButtonWithTitle:@"确认" handler:^{
+//        
+//    }];
+//    
+//    [alertv show];
+//    return;
+    
     User *owner = [IMEnvironment shareInstance].owner;
     NSString *content = nil;
     if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
@@ -279,8 +307,8 @@
     }
     
     WS(weakSelf);
-    IMDialog *dialog = [[IMDialog alloc] init];
-    [dialog showWithContent:content withSelectBlock:^{
+    self.dialog = [[IMDialog alloc] init];
+    [self.dialog showWithContent:content withSelectBlock:^{
         if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
             [weakSelf userDisbandGroup];
         }else
@@ -386,7 +414,7 @@
     }else if (cellMode == self.groupSettingMode)
     {
         WS(weakSelf);
-        IMActionSheet  *actionSheet = [[IMActionSheet alloc] init];
+        self.actionSheet = [[IMActionSheet alloc] init];
         NSArray *array = nil;
         User *owner = [IMEnvironment shareInstance].owner;
         NSInteger curIndex = (int)self.groupDetail.msg_status;
@@ -400,7 +428,7 @@
             }
         }
         
-        [actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
+        [self.actionSheet showWithTitle:@"请选择消息接收方式" withArray:array withCurIndex:curIndex withSelectBlock:^(NSInteger index){
             if (index >= 0 && index <= 3 && curIndex != index) {
                 if (owner.userRole == eUserRole_Student) {
                     [weakSelf setGroupMsgStatus:index];

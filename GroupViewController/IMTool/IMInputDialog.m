@@ -7,6 +7,8 @@
 //
 
 #import "IMInputDialog.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
 
 @interface IMInputDialog()
 
@@ -22,6 +24,10 @@
 
 @implementation IMInputDialog
 
+- (void)dealloc
+{
+    
+}
 - (BOOL)shouldAutorotate
 {
     return NO;
@@ -31,6 +37,10 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
 }
 
 -(void)showWithDefaultContent:(NSString*)content withInputComplete:(IMUserInputComplete)complete withInputCancel:(IMUserInputCancel)cancel;
@@ -86,20 +96,34 @@
 
 - (void)cancelBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     if (self.userCancel) {
         self.userCancel();
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
 }
 
 - (void)comfireBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     if (self.userComplete) {
         self.userComplete(self.textField.text);
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
 }
 
 @end

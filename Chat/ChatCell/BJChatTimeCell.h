@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface BJChatTimeCell : UITableViewCell
+- (void)updateTime:(NSString *)time;
 
 @end

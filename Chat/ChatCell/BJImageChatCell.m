@@ -30,6 +30,22 @@ const CGFloat BJ_MIN_SIZE = 37; //　图片最大显示大小
     [ChatCellFactoryInstance registerClass:[self class] forMessageType:eMessageType_IMG];
 }
 
+- (UIImage *)bubbleBorderImage
+{
+    NSString *imageName = !self.message.isMySend ? @"bg_pic_left_n" : @"bg_pic_right_n";
+    NSInteger leftCapWidth = !self.message.isMySend?15:5;
+    NSInteger topCapHeight =  !self.message.isMySend?35:35;
+    return [[UIImage imageNamed:imageName] stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+}
+
+- (UIImage *)bubbleImage
+{
+    NSString *imageName = !self.message.isMySend ? @"bg_card_left_n" : @"bg_card_right_n";
+    NSInteger leftCapWidth = !self.message.isMySend?15:5;
+    NSInteger topCapHeight =  !self.message.isMySend?35:35;
+    return [[UIImage imageNamed:imageName] stretchableImageWithLeftCapWidth:leftCapWidth topCapHeight:topCapHeight];
+}
+
 -(void)layoutSubviews
 {
     [CATransaction begin];
@@ -43,7 +59,7 @@ const CGFloat BJ_MIN_SIZE = 37; //　图片最大显示大小
     UIImageView *imageViewMask = [[UIImageView alloc] initWithImage:image];
     imageViewMask.frame = CGRectInset(self.chatImageView.frame, 2.0f, 2.0f);
     self.chatImageView.layer.mask = imageViewMask.layer;
-    
+        
     rect = self.bubbleContainerView.frame;
     rect.size = size;
     self.bubbleContainerView.frame = rect;
@@ -145,6 +161,7 @@ const CGFloat BJ_MIN_SIZE = 37; //　图片最大显示大小
         _chatImageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _chatImageView.userInteractionEnabled = YES;
         _chatImageView.multipleTouchEnabled = YES;
+        
         [_chatImageView setContentMode:UIViewContentModeScaleAspectFill];
         [self.bubbleContainerView addSubview:_chatImageView];
     }

@@ -5,6 +5,7 @@
 //
 
 #import "IMSingleSelectDialog.h"
+#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
 
 @protocol IMSelectItemDelegate <NSObject>
 
@@ -199,15 +200,25 @@
 
 - (void)cancelBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     if (self.userCancelBlock) {
         self.userCancelBlock();
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
 }
 
 - (void)comfireBtnAction
 {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
     NSInteger index = 0;
     if (self.selectItemArray != nil && [self.selectItemArray containsObject:self.curSelectItem]) {
         index = [self.selectItemArray indexOfObject:self.curSelectItem];
@@ -216,8 +227,11 @@
         self.userSelectBlock(index);
     }
     
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+//    CGFloat version = [[[UIDevice currentDevice] systemVersion] floatValue];
+//    if(version < 7.0f || version >= 8.0f)
+//    {
+//        [self removeFromParentViewController];
+//    }
     
 }
 
