@@ -7,8 +7,10 @@
 //
 
 #import "IMActionSheet.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+
 @protocol IMActionSheetItemDelegate <NSObject>
 
 - (void)actionSheetHitItem:(IMActionSheetItem*)item;
@@ -175,7 +177,7 @@
     }
     
     UIView *spView = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-60, self.contentView.frame.size.width, 10)];
-    spView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    spView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     [self.contentView addSubview:spView];
     
     self.cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-50, self.contentView.frame.size.width, 50)];

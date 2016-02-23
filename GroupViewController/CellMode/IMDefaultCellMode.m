@@ -5,10 +5,11 @@
 //
 
 #import "IMDefaultCellMode.h"
-#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+
 #import "IMLinshiTool.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 #define IMDEFAULTCELLMODEHEIGHT 44
 
@@ -35,7 +36,7 @@
         CGRect sRect = [UIScreen mainScreen].bounds;
         
         self.lineView = [[UIView alloc] initWithFrame:CGRectMake(15, IMDEFAULTCELLMODEHEIGHT, sRect.size.width-15, 0.5)];
-        self.lineView.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+        self.lineView.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];
         [self addSubview:self.lineView];
     }
     return self;
@@ -72,7 +73,7 @@
     {
         self.flagImageView.hidden = NO;
         self.flagImageView.frame = CGRectMake(startPoint.x, (IMDEFAULTCELLMODEHEIGHT-36)/2, 36, 36);
-        [self.flagImageView setAliyunImageWithURL:mode.imageUrl placeholderImage:nil size:CGSizeMake(36, 36)];
+        [self.flagImageView bjck_setAliyunImageWithURL:mode.imageUrl placeholderImage:nil size:CGSizeMake(36, 36)];
         startPoint.x += 36+10;
         maxW = maxW - (36+10);
     }else

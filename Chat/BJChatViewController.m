@@ -10,8 +10,10 @@
 #import <IMMessage.h>
 #import "BJChatCellFactory.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+
 #import <Conversation+DB.h>
 
 #import "BJChatInputBarViewController.h"
@@ -23,13 +25,11 @@
 
 #import "BJChatTimeCell.h"
 
-#import <NSDate+Category.h>
 #import "BJChatUtilsMacro.h"
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatViewController+BrowserHelper.h"
-#import <NSDateFormatter+Category.h>
-#import <UIView+Basic.h>
-#import <UIColor+Util.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 #import "BJChatLoadMoreHeadView.h"
 
@@ -149,7 +149,7 @@ IMNewGRoupNoticeDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#f2f4f5"];
     [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackgroud) name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
@@ -294,7 +294,7 @@ IMNewGRoupNoticeDelegate>
             {
                 NSDate *oneDate = [NSDate dateWithTimeIntervalSince1970:oneMessage.createAt];
                 NSDate *lastDate = [NSDate dateWithTimeIntervalSince1970:lastMessage.createAt];
-                long long minute = (oneDate.minute/BJ_Chat_Time_Interval - lastDate.minute/BJ_Chat_Time_Interval);//以每个小时的5分钟为一间隔 比如 06:00~06:05之间的 06:05~06:10之间的
+                long long minute = (oneDate.bjcf_minute/BJ_Chat_Time_Interval - lastDate.bjcf_minute/BJ_Chat_Time_Interval);//以每个小时的5分钟为一间隔 比如 06:00~06:05之间的 06:05~06:10之间的
                 if (minute > 0) {
                     shouldAdd = YES;
                 }
@@ -342,7 +342,7 @@ IMNewGRoupNoticeDelegate>
 //时间处理函数,统一使用UTC时间，计算出来的时间也是UTC时间。
 -(NSString*)customformattedTime:(NSDate*)time
 {
-    NSDateFormatter* formatter = [NSDateFormatter dateFormatter];
+    NSDateFormatter* formatter = [NSDateFormatter bjcf_dateFormatter];
     [formatter setDateFormat:@"yyyyMMdd"];
     NSString * dateNow = [formatter stringFromDate:[NSDate date]];
     NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -359,13 +359,13 @@ IMNewGRoupNoticeDelegate>
     if(interval >= 0)
     {
         if (interval < 6*60*60) {
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"凌晨HH:mm"];
+            dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"凌晨HH:mm"];
         }else if(interval < 12*60*60){
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"上午HH:mm"];
+            dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"上午HH:mm"];
         }else if(interval < 18*60*60){
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"下午HH:mm"];
+            dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"下午HH:mm"];
         }else{
-            dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"晚上HH:mm"];
+            dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"晚上HH:mm"];
         }
     }else
     {
@@ -378,13 +378,13 @@ IMNewGRoupNoticeDelegate>
         interval = [time timeIntervalSinceDate:yDate];
         if (interval >= 0) {
             if (interval < 6*60*60) {
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"昨天 凌晨HH:mm"];
             }else if(interval < 12*60*60){
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 上午HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"昨天 上午HH:mm"];
             }else if(interval < 18*60*60){
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 下午HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"昨天 下午HH:mm"];
             }else{
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"昨天 晚上HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"昨天 晚上HH:mm"];
             }
         }else
         {
@@ -397,13 +397,13 @@ IMNewGRoupNoticeDelegate>
             
             interval = [time timeIntervalSinceDate:cDate];
             if (interval < 6*60*60) {
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"MM月dd日 凌晨HH:mm"];
             }else if(interval < 12*60*60){
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"MM月dd日 上午HH:mm"];
             }else if(interval < 18*60*60){
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"MM月dd日 下午HH:mm"];
             }else{
-                dateFormatter = [NSDateFormatter dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
+                dateFormatter = [NSDateFormatter bjcf_dateFormatterWithFormat:@"MM月dd日 晚上HH:mm"];
             }
         }
     }
@@ -916,10 +916,10 @@ IMNewGRoupNoticeDelegate>
 - (UILabel *)nonRecordLable
 {
     if (!_nonRecordLable) {
-        _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.current_w, 30)];
+        _nonRecordLable = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, self.view.bjck_current_w, 30)];
         [_nonRecordLable setBackgroundColor:[UIColor clearColor]];
         [_nonRecordLable setTextAlignment:NSTextAlignmentCenter];
-        [_nonRecordLable setTextColor:[UIColor colorWithHexString:@"#6d6d6e"]];
+        [_nonRecordLable setTextColor:[UIColor bjck_colorWithHexString:@"#6d6d6e"]];
         [_nonRecordLable setText:@"暂无聊天消息"];
         [_nonRecordLable setFont:[UIFont systemFontOfSize:16]];
     }
@@ -929,7 +929,7 @@ IMNewGRoupNoticeDelegate>
 -(BJChatLoadMoreHeadView *)chatHeadView
 {
     if (!_chatHeadView) {
-        _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.size.width, 40)];
+        _chatHeadView = [[BJChatLoadMoreHeadView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.bjck_size.width, 40)];
         [_chatHeadView setDelegate:self];
     }
     return _chatHeadView;

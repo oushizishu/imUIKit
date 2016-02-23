@@ -8,12 +8,12 @@
 #import "CustomTableView.h"
 #import "IMAnnouncementCellMode.h"
 #import "ReleaseAnnouncementViewController.h"
-#import "UIColor+Util.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "MBProgressHUD+IMKit.h"
 #import "IMLinshiTool.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 
 @interface GroupAnnouncementViewController()<CustomTableViewControllerDelegate>
 
@@ -65,7 +65,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
     [backBtn setImage:[UIImage imageNamed:@"im_black_leftarrow"] forState:UIControlStateNormal];
@@ -206,12 +206,12 @@
         _noNoticeTip.backgroundColor= [UIColor clearColor];
         _noNoticeTip.font = [UIFont systemFontOfSize:13.0f];
         _noNoticeTip.text = @"还没发布任何群公告";
-        _noNoticeTip.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        _noNoticeTip.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         _noNoticeTip.textAlignment = NSTextAlignmentCenter;
         [_noHaveNoticeView addSubview:_noNoticeTip];
         
         _releaseBtn = [[UIButton alloc] initWithFrame:CGRectMake((_noHaveNoticeView.frame.size.width-120)/2, (_noHaveNoticeView.frame.size.height-175)/2+90+15+30, 120, 40)];
-        _releaseBtn.backgroundColor = [UIColor colorWithHexString:@"#ff9100"];
+        _releaseBtn.backgroundColor = [UIColor bjck_colorWithHexString:@"#ff9100"];
         [_releaseBtn.layer setCornerRadius:2.0f];
         [_releaseBtn setTitle:@"发布公告" forState:UIControlStateNormal];
         [_releaseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

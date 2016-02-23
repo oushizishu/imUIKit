@@ -11,7 +11,9 @@
   */
 
 #import "BJRecordView.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+
 @interface BJRecordView ()
 {
     NSTimer *_timer;
@@ -49,7 +51,7 @@
         
         _roundView = [[UIView alloc] initWithFrame:CGRectMake(0,0, _recordView.frame.size.width, _recordView.frame.size.height)];
         _roundView.layer.cornerRadius = _roundView.frame.size.height/2;
-        _roundView.backgroundColor = [UIColor colorWithHexString:@"#ffcc80"];
+        _roundView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ffcc80"];
         [_recordView addSubview:_roundView];
         
         _showView = [[UIView alloc] initWithFrame:CGRectMake(30, 30, _recordView.frame.size.width-60, _recordView.frame.size.height-60)];
@@ -69,7 +71,7 @@
         NSInteger timel = _timelength;
         _tLable.text = [NSString stringWithFormat:@"%lu\"",timel];
         _tLable.font = [UIFont systemFontOfSize:12];
-        _tLable.textColor = [UIColor colorWithHexString:@"#6d6e6e"];
+        _tLable.textColor = [UIColor bjck_colorWithHexString:@"#6d6e6e"];
         [_recordAnimationView addSubview:_tLable];
         
         _countdownLable = [[UILabel alloc] initWithFrame:CGRectMake(0, (_showView.frame.size.height-50)/2,_showView.frame.size.width , 50)];
@@ -90,7 +92,7 @@
         _textLabel.text = @" 手指上滑，取消发送 ";
         [self addSubview:_textLabel];
         _textLabel.font = [UIFont systemFontOfSize:12];
-        _textLabel.textColor = [UIColor colorWithHexString:@"#9d9e9e"];
+        _textLabel.textColor = [UIColor bjck_colorWithHexString:@"#9d9e9e"];
         _textLabel.layer.cornerRadius = 5;
         _textLabel.layer.borderColor = [[UIColor redColor] colorWithAlphaComponent:0.5].CGColor;
         _textLabel.layer.masksToBounds = YES;

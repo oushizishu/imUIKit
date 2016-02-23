@@ -11,7 +11,7 @@
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
 #import <SDWebImage/UIImageView+WebCache.h>
-#import <UIImageView+Aliyun.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 #import "UIResponder+BJIMChatRouter.h"
 #import "BJChatUtilsMacro.h"
 #import "LocalImageCache.h"
@@ -147,7 +147,7 @@ const CGFloat BJ_MIN_SIZE = 37; //　图片最大显示大小
         [[LocalImageCache sharedInstance] setLocalImage:self.message.imageURL withSize:size withImageView:self.chatImageView];
     }else
     {
-        [self.chatImageView setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
+        [self.chatImageView bjck_setAliyunImageWithURL:self.message.imageURL placeholderImage:nil size:size];
     }
     
     [self setNeedsLayout];

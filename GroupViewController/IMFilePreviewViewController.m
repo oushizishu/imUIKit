@@ -8,8 +8,9 @@
 #import "BJChatFileCacheManager.h"
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface IMFilePreviewViewController()<UIDocumentInteractionControllerDelegate>
 
@@ -55,7 +56,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
     [backBtn setImage:[UIImage imageNamed:@"im_black_leftarrow"] forState:UIControlStateNormal];

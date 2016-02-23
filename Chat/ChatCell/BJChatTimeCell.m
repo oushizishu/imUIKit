@@ -10,7 +10,7 @@
 #define BJChatTime_Bottom_PADDING 5.5
 
 #import "BJChatTimeCell.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface BJChatTimeCell ()
 @property (strong, nonatomic) UILabel *timeLabel;
@@ -64,7 +64,7 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, BJChatTime_TOP_PADDING, self.frame.size.width - 20, self.frame.size.height - BJChatTime_Bottom_PADDING - BJChatTime_TOP_PADDING)];
             label.font = [UIFont systemFontOfSize:12];
             label.textAlignment = NSTextAlignmentCenter;
-            label.backgroundColor = [UIColor colorWithHexString:@"#C7C9CA"];
+            label.backgroundColor = [UIColor bjck_colorWithHexString:@"#C7C9CA"];
             label.textColor = [UIColor whiteColor];
             label;
         });

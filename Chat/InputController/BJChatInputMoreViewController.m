@@ -16,7 +16,9 @@
 #import "BJChatUtilsMacro.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface BJChatInputMoreViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -148,7 +150,7 @@
         layout.sectionInset = UIEdgeInsetsMake(20, lineSpace, 27, lineSpace);
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         _collectionView.showsVerticalScrollIndicator = NO;
-        _collectionView.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
+        _collectionView.backgroundColor = [UIColor bjck_colorWithHexString:@"#F4F4F6"];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
     }
