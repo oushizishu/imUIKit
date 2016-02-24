@@ -9,7 +9,9 @@
 #import "BJGossipTableViewCell.h"
 #import "BJChatCellFactory.h"
 #import "BJChatBaseCell.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+
 #import "MyXmlDomParser.h"
 
 const float Gossip_Content_Label_Max_Width = 200;
@@ -29,7 +31,7 @@ const float Gossip_Content_Label_Height = 18;
         self.font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
         self.textAlignment = NSTextAlignmentCenter;
         self.backgroundColor = [UIColor clearColor];
-        self.textColor = [UIColor colorWithHexString:BJ_GOSSIP_FONTCOLOR];
+        self.textColor = [UIColor bjck_colorWithHexString:BJ_GOSSIP_FONTCOLOR];
         self.numberOfLines = 1;
         self.clipsToBounds = YES;
         self.href = nil;
@@ -41,7 +43,7 @@ const float Gossip_Content_Label_Height = 18;
 -(void)addHrefLink:(NSString*)href
 {
     self.href = href;
-    self.textColor = [UIColor colorWithHexString:@"#3fa5f2"];;
+    self.textColor = [UIColor bjck_colorWithHexString:@"#3fa5f2"];;
     self.userInteractionEnabled = YES;
 }
 
@@ -396,13 +398,13 @@ const float Gossip_Content_Label_Height = 18;
             label.font = [UIFont systemFontOfSize:BJ_GOSSIP_FONTSIZE];
             label.textAlignment = NSTextAlignmentCenter;
             label.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor colorWithHexString:BJ_GOSSIP_FONTCOLOR];
+            label.textColor = [UIColor bjck_colorWithHexString:BJ_GOSSIP_FONTCOLOR];
             label.clipsToBounds = YES;
             label;
         });
         if (_gossipView == nil) {
             _gossipView = [[UIView alloc] initWithFrame:CGRectZero];
-            _gossipView.backgroundColor = [UIColor colorWithHexString:BJ_GOOSIP_BACKCOLOR];
+            _gossipView.backgroundColor = [UIColor bjck_colorWithHexString:BJ_GOOSIP_BACKCOLOR];
             _gossipView.layer.cornerRadius = 2;
         }
         [self.gossipView addSubview:self.contentLabel];

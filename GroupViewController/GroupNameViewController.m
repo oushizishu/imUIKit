@@ -5,14 +5,16 @@
 //
 
 #import "GroupNameViewController.h"
-#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMLinshiTool.h"
 #import "IMActionSheet.h"
 #import "BJChatFileCacheManager.h"
 #import "MBProgressHUD+IMKit.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GroupNameViewController()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
@@ -64,7 +66,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
     [backBtn setImage:[UIImage imageNamed:@"im_black_leftarrow"] forState:UIControlStateNormal];
@@ -86,14 +88,14 @@
     [self.faceImageView.layer setCornerRadius:3.0f];
     self.faceImageView.layer.masksToBounds = YES;
     self.faceImageView.backgroundColor = [UIColor grayColor];
-    [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
+    [self.faceImageView bjck_setAliyunImageWithURL:[NSURL URLWithString:self.groupDetail.avatar] placeholderImage:nil];
     [self.view addSubview:self.faceImageView];
     
     self.tipLable = [[UILabel alloc] initWithFrame:CGRectMake((sRect.size.width-100)/2, 120, 100, 20)];
     self.tipLable.backgroundColor = [UIColor clearColor];
     self.tipLable.font = [UIFont systemFontOfSize:13.0f];
     self.tipLable.text = @"点击换头像";
-    self.tipLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+    self.tipLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
     self.tipLable.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.tipLable];
     
@@ -120,7 +122,7 @@
         [self.faceImageView addGestureRecognizer:tapG];
         
         self.saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
-        [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+        [self.saveBtn setTitleColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
         [self.saveBtn setTitle:@"保存" forState:UIControlStateNormal];
         [self.saveBtn addTarget:self action:@selector(saveAction) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.saveBtn];
@@ -139,7 +141,7 @@
     if (self.storage_id == 0) {
         if ([self.nameTextField.text isEqualToString:self.groupDetail.group_name]) {
             self.saveBtn.userInteractionEnabled = NO;
-            [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+            [self.saveBtn setTitleColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
         }else
         {
             if (self.nameTextField.text.length > 0) {
@@ -148,7 +150,7 @@
             }else
             {
                 self.saveBtn.userInteractionEnabled = NO;
-                [self.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+                [self.saveBtn setTitleColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
             }
         }
     }
@@ -240,7 +242,7 @@
                                                    weakSelf.storage_id = 0;
                                                    weakSelf.groupDetail.group_name = weakSelf.nameTextField.text;
                                                    weakSelf.saveBtn.userInteractionEnabled = NO;
-                                                   [weakSelf.saveBtn setTitleColor:[UIColor colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
+                                                   [weakSelf.saveBtn setTitleColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY400] forState:UIControlStateNormal];
                                                     */
                                                }
                                            }];

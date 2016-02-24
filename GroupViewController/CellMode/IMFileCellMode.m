@@ -9,8 +9,9 @@
 #import "IMLinshiTool.h"
 #import "BJChatFileCacheManager.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 
 @implementation IMUIView
 
@@ -156,32 +157,32 @@
         self.fileNameLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 15, sRect.size.width-160, 20)];
         self.fileNameLable.font = [UIFont systemFontOfSize:14.0f];
         self.fileNameLable.textAlignment = NSTextAlignmentLeft;
-        self.fileNameLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+        self.fileNameLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
         [self.fileContentView addSubview:self.fileNameLable];
         
         self.descriptionLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 35, sRect.size.width-160, 20)];
         self.descriptionLable.font = [UIFont systemFontOfSize:12.0f];
         self.descriptionLable.textAlignment = NSTextAlignmentLeft;
-        self.descriptionLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        self.descriptionLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         [self.fileContentView addSubview:self.descriptionLable];
         
         self.creatDateLable = [[UILabel alloc] initWithFrame:CGRectMake(80, 55, sRect.size.width-160, 20)];
         self.creatDateLable.font = [UIFont systemFontOfSize:12.0f];
         self.creatDateLable.textAlignment = NSTextAlignmentLeft;
-        self.creatDateLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY400];
+        self.creatDateLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY400];
         [self.fileContentView addSubview:self.creatDateLable];
         
         self.operationView = [[IMUIView alloc] initWithFrame:CGRectMake(sRect.size.width-70, 30, 60, 30)];
         self.operationView.delegate = self;
         self.operationView.backgroundColor = [UIColor clearColor];
         [self.operationView.layer setCornerRadius:2.0f];
-        [self.operationView.layer setBorderColor:[UIColor colorWithHexString:IMCOLOT_GREY400].CGColor];
+        [self.operationView.layer setBorderColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY400].CGColor];
         [self.operationView.layer setBorderWidth:0.5f];
         [self.fileContentView addSubview:self.operationView];
         
         self.operationL = [[UILabel alloc] initWithFrame:CGRectMake(0, 7, self.operationView.frame.size.width, 15)];
         self.operationL.backgroundColor = [UIColor clearColor];
-        self.operationL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+        self.operationL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
         self.operationL.font = [UIFont systemFontOfSize:14.0f];
         self.operationL.textAlignment = NSTextAlignmentCenter;
         [self.operationView addSubview:self.operationL];
@@ -189,7 +190,7 @@
         self.operationTip = [[UILabel alloc] initWithFrame:CGRectMake(sRect.size.width-70, 35, 60, 15)];
         self.operationTip.backgroundColor = [UIColor clearColor];
         self.operationTip.font = [UIFont systemFontOfSize:14.0f];
-        self.operationTip.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        self.operationTip.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         self.operationTip.textAlignment = NSTextAlignmentCenter;
         [self.fileContentView addSubview:self.operationTip];
         
@@ -197,11 +198,11 @@
         [self.fileContentView addSubview:self.progressView];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15, 89, sRect.size.width-15, 0.5)];
-        lineView.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+        lineView.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];
         [self.fileContentView addSubview:lineView];
         
         self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 90, 90)];
-        self.deleteView.backgroundColor = [UIColor colorWithHexString:@"#f95e5e"];
+        self.deleteView.backgroundColor = [UIColor bjck_colorWithHexString:@"#f95e5e"];
         [self.fileCellView addSubview:self.deleteView];
         
         self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(5, (90-30)/2, 80, 30)];
@@ -507,8 +508,8 @@
 
 @interface IMFileCellMode()
 
-@property(strong ,nonatomic)BJNetRequestOperation *uploadOperation;
-@property(strong ,nonatomic)BJNetRequestOperation *downloadOperation;
+@property(strong ,nonatomic)BJCNNetRequestOperation *uploadOperation;
+@property(strong ,nonatomic)BJCNNetRequestOperation *downloadOperation;
 
 @end
 

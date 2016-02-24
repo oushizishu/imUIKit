@@ -10,9 +10,10 @@
 #import "BJChatCellFactory.h"
 #import <BJIMConstants.h>
 #import <PureLayout/PureLayout.h>
-#import <UIImageView+Aliyun.h>
+#import <BJHL-Kit-iOS.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 #import "UIResponder+BJIMChatRouter.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+
 const float ImageWH = 60;
 const float Interval = 10;
 //const float CardWidth = 217;
@@ -145,7 +146,7 @@ const float IntervalImageWithContent = 7;
     paragraph.lineSpacing = 1;
     NSMutableAttributedString *mutAtt = [[NSMutableAttributedString alloc] initWithString:self.message.cardContent?:@"" attributes:@{NSFontAttributeName:self.contentLabel.font,NSParagraphStyleAttributeName:paragraph}];
     self.contentLabel.attributedText = mutAtt;
-    [self.cardImageView setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
+    [self.cardImageView bjck_setAliyunImageWithURL:[NSURL URLWithString:self.message.cardThumb] placeholderImage:nil size:self.cardImageView.frame.size];
     
     self.backImageView.image = [self bubbleImage];
 
@@ -165,7 +166,7 @@ const float IntervalImageWithContent = 7;
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(Interval, Interval, 100, 40)];
         [_titleLabel setFont:[UIFont systemFontOfSize:16]];
-        _titleLabel.textColor = [UIColor colorWithHexString:@"#3C3D3D"];
+        _titleLabel.textColor = [UIColor bjck_colorWithHexString:@"#3C3D3D"];
         _titleLabel.numberOfLines = 2;
         _titleLabel.backgroundColor = [UIColor clearColor];
         [self.bubbleContainerView addSubview:_titleLabel];
@@ -180,7 +181,7 @@ const float IntervalImageWithContent = 7;
         _contentLabel.backgroundColor = [UIColor clearColor];;
         [_contentLabel setFont:[UIFont systemFontOfSize:12]];
         _contentLabel.numberOfLines = 4;
-        [_contentLabel setTextColor:[UIColor colorWithHexString:@"#9D9E9E"]];
+        [_contentLabel setTextColor:[UIColor bjck_colorWithHexString:@"#9D9E9E"]];
         [self.bubbleContainerView addSubview:_contentLabel];
     }
     return _contentLabel;

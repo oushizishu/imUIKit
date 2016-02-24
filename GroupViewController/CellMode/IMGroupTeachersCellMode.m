@@ -6,10 +6,11 @@
 //
 
 #import "IMGroupTeachersCellMode.h"
-#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+
 #import "IMLinshiTool.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 #define IMGROUPTEACHERSCELLMODEHEIGHT 110.0f
 
@@ -42,20 +43,20 @@
         [self.faceImageView setClipsToBounds:YES];
         [self.faceImageView.layer setCornerRadius:2.0f];
         [self.faceImageView.layer setBorderWidth:0.5f];
-        [self.faceImageView.layer setBorderColor:[UIColor colorWithHexString:IMCOLOT_GREY100].CGColor];
+        [self.faceImageView.layer setBorderColor:[UIColor bjck_colorWithHexString:IMCOLOT_GREY100].CGColor];
         self.faceImageView.backgroundColor = [UIColor grayColor];
         [self addSubview:self.faceImageView];
         
         self.teacherNameL = [[UILabel alloc] initWithFrame:CGRectMake(0, 42, frame.size.width, 16)];
         self.teacherNameL.font = [UIFont systemFontOfSize:15.0f];
-        self.teacherNameL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+        self.teacherNameL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
         self.teacherNameL.textAlignment = NSTextAlignmentCenter;
         self.teacherNameL.backgroundColor = [UIColor clearColor];
         [self addSubview:self.teacherNameL];
         
         self.teacherPositionL = [[UILabel alloc] initWithFrame:CGRectMake(0, 65, frame.size.width, 15)];
         self.teacherPositionL.font = [UIFont systemFontOfSize:14.0f];
-        self.teacherPositionL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        self.teacherPositionL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         self.teacherPositionL.textAlignment = NSTextAlignmentCenter;
         self.teacherPositionL.backgroundColor = [UIColor clearColor];
         self.teacherPositionL.text = @"主讲老师";
@@ -66,7 +67,7 @@
 
 -(void)setGroupTeacher:(GroupTeacher*)teacher
 {
-    [self.faceImageView setAliyunImageWithURL:[NSURL URLWithString:teacher.avatar] placeholderImage:nil];
+    [self.faceImageView bjck_setAliyunImageWithURL:[NSURL URLWithString:teacher.avatar] placeholderImage:nil];
     self.teacherNameL.text = teacher.user_name;
 }
 

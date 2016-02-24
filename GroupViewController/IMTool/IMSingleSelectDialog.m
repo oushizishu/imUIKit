@@ -5,7 +5,7 @@
 //
 
 #import "IMSingleSelectDialog.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @protocol IMSelectItemDelegate <NSObject>
 
@@ -136,7 +136,7 @@
     }
     
     self.contentView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width/8, (sRect.size.height-(scrollH+88))/2, sRect.size.width-sRect.size.width/4, scrollH+88)];
-    self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f7f9fa"];
+    self.contentView.backgroundColor = [UIColor bjck_colorWithHexString:@"#f7f9fa"];
     self.contentView.layer.masksToBounds = YES;
     [self.contentView.layer setCornerRadius:5.0f];
     [self.view addSubview:self.contentView];
@@ -171,11 +171,11 @@
     }
     
     UIView *lineW = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-44, self.contentView.frame.size.width, 0.5)];
-    lineW.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+    lineW.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];
     [self.contentView addSubview:lineW];
     
     UIView *lineH = [[UIView alloc] initWithFrame:CGRectMake(self.contentView.frame.size.width/2, self.contentView.frame.size.height-44, 0.5, 50)];
-    lineH.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+    lineH.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];
     [self.contentView addSubview:lineH];
     
     self.cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height-44, self.contentView.frame.size.width/2, 44)];

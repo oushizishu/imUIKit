@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <BJFileManagerTool.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 @interface BJChatFileCacheManager : NSObject
 + (NSString *)chatRootPath;
 + (NSString *)chatAudiosPath;

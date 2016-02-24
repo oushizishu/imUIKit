@@ -10,7 +10,7 @@
 #import "MBProgressHUD+IMKit.h"
 #import "IMDefaultCellMode.h"
 #import "GroupAnnouncementViewController.h"
-#import "UIColor+Util.h"
+
 #import "GroupFileViewController.h"
 #import "IMAnnouncementCellMode.h"
 #import "IMGroupMembersCellMode.h"
@@ -21,9 +21,9 @@
 #import "MBProgressHUD+IMKit.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
-#import <TKAlertViewController.h>
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface GroupDetailViewController()<IMGroupManagerResultDelegate,IMGroupProfileChangedDelegate,CustomTableViewControllerDelegate>
 
@@ -87,7 +87,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
     [backBtn setImage:[UIImage imageNamed:@"im_black_leftarrow"] forState:UIControlStateNormal];
@@ -167,7 +167,7 @@
     sMode = [[SectionMode alloc] init];
     sMode.headerHeight = 45;
     sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
-    sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    sMode.headerView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     UIView *hView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, sMode.headerView.frame.size.width, 30)];
     hView.backgroundColor = [UIColor whiteColor];
     [sMode.headerView addSubview:hView];
@@ -186,7 +186,7 @@
     sMode = [[SectionMode alloc] init];
     sMode.headerHeight = 45;
     sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
-    sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    sMode.headerView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     hView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, sMode.headerView.frame.size.width, 30)];
     hView.backgroundColor = [UIColor whiteColor];
     [sMode.headerView addSubview:hView];
@@ -208,7 +208,7 @@
         sMode = [[SectionMode alloc] init];
         sMode.headerHeight = 45;
         sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
-        sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+        sMode.headerView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
         hView = [[UIView alloc] initWithFrame:CGRectMake(0, 15, sMode.headerView.frame.size.width, 30)];
         hView.backgroundColor = [UIColor whiteColor];
         [sMode.headerView addSubview:hView];
@@ -275,7 +275,7 @@
         [self.exitBtn setTitle:@"退出群组" forState:UIControlStateNormal];
     }
     [self.exitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.exitBtn setBackgroundColor:[UIColor colorWithHexString:@"#f95e5e"]];
+    [self.exitBtn setBackgroundColor:[UIColor bjck_colorWithHexString:@"#f95e5e"]];
     [self.exitBtn addTarget:self action:@selector(hitExitBtn) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:self.exitBtn];
     
@@ -286,17 +286,6 @@
 
 - (void)hitExitBtn
 {
-//    TKAlertViewController *alertv = [[TKAlertViewController alloc] initWithTitle:@"是否删除该文件" message:nil];
-//    [alertv addCancelButtonWithTitle:@"取消" handler:^{
-//        
-//    }];
-//    [alertv addButtonWithTitle:@"确认" handler:^{
-//        
-//    }];
-//    
-//    [alertv show];
-//    return;
-    
     User *owner = [IMEnvironment shareInstance].owner;
     NSString *content = nil;
     if (owner.userId == self.groupDetail.user_number && owner.userRole == self.groupDetail.user_role) {
