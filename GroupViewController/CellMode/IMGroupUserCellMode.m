@@ -7,12 +7,12 @@
 
 #import "IMGroupUserCellMode.h"
 #import "IMSingleSelectDialog.h"
-#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
+
 #import <BJHL-IM-iOS-SDK/IMEnvironment.h>
 #import "IMLinshiTool.h"
 
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface IMGroupUserCell()
 
@@ -59,18 +59,18 @@
         
         self.userNameL = [[UILabel alloc] initWithFrame:CGRectZero];
         self.userNameL.font = [UIFont systemFontOfSize:14.0f];
-        self.userNameL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+        self.userNameL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
         self.userNameL.textAlignment = NSTextAlignmentLeft;
         [self.cellView addSubview:self.userNameL];
         
         self.userRoleL = [[UILabel alloc] initWithFrame:CGRectZero];
         self.userRoleL.font = [UIFont systemFontOfSize:14.0f];
-        self.userRoleL.textColor = [UIColor colorWithHexString:IMCOLOT_GREY400];
+        self.userRoleL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY400];
         self.userRoleL.textAlignment = NSTextAlignmentLeft;
         [self.cellView addSubview:self.userRoleL];
         
         self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 75, 55)];
-        self.deleteView.backgroundColor = [UIColor colorWithHexString:@"#f95e5e"];
+        self.deleteView.backgroundColor = [UIColor bjck_colorWithHexString:@"#f95e5e"];
         [self.cellView addSubview:self.deleteView];
         self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
         [self.deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
@@ -80,7 +80,7 @@
         [self.deleteView addSubview:self.deleteBtn];
         
         self.moreView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width+75, 0, 75, 55)];
-        self.moreView.backgroundColor = [UIColor colorWithHexString:@"#6d6d6e"];
+        self.moreView.backgroundColor = [UIColor bjck_colorWithHexString:@"#6d6d6e"];
         [self.cellView addSubview:self.moreView];
         self.moreBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
         [self.moreBtn setTitle:@"更多" forState:UIControlStateNormal];
@@ -90,7 +90,7 @@
         [self.moreView addSubview:self.moreBtn];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 54.5, sRect.size.width, 0.5)];
-        lineView.backgroundColor = [UIColor colorWithHexString:@"#dcddde"];
+        lineView.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];
         [self.cellView addSubview:lineView];
         
     }
@@ -174,7 +174,7 @@
         self.cellView.frame=CGRectMake(0,frame.origin.y, frame.size.width,frame.size.height);
     }
     
-    [self.faceViewImage setAliyunImageWithURL:[NSURL URLWithString:mode.GroupDetailMember.avatar] placeholderImage:nil];
+    [self.faceViewImage bjck_setAliyunImageWithURL:[NSURL URLWithString:mode.GroupDetailMember.avatar] placeholderImage:nil];
     
     CGRect sRect = [UIScreen mainScreen].bounds;
     CGFloat nameLw = sRect.size.width-(30+40+10+10+60);

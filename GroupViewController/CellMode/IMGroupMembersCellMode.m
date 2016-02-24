@@ -8,8 +8,9 @@
 #import "IMGroupMembersCellMode.h"
 #import <BJHL-IM-iOS-SDK/GroupDetail.h>
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
-#import <BJHL-Common-iOS-SDK/UIImageView+Aliyun.h>
 
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 @interface IMGroupMembersCell()
 
 @property(strong ,nonatomic)NSMutableArray *imageViewArray;
@@ -72,7 +73,7 @@
             itemView.clipsToBounds = YES;
             itemView.backgroundColor = [UIColor grayColor];
             GroupDetailMember *itemMode = [mode.memberArray objectAtIndex:i];
-            [itemView setAliyunImageWithURL:[NSURL URLWithString:itemMode.avatar] placeholderImage:nil];
+            [itemView bjck_setAliyunImageWithURL:[NSURL URLWithString:itemMode.avatar] placeholderImage:nil];
             [self addSubview:itemView];
             [self.imageViewArray addObject:itemView];
         }

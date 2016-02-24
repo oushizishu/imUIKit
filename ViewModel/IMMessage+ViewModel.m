@@ -13,7 +13,7 @@
 #import <IMAudioMessageBody.h>
 #import <IMEmojiMessageBody.h>
 #import <IMCardMessageBody.h>
-#import <BJFileManagerTool.h>
+
 #import <IMMessage+DB.h>
 
 #import "BJChatAudioPlayerHelper.h"
@@ -22,6 +22,8 @@
 
 #import "BJChatFileCacheManager.h"
 #import "MyXmlDomParser.h"
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 
 @implementation IMMessage (ViewModel)
 
@@ -139,7 +141,7 @@
     IMImgMessageBody *imgMessage = [self imgMessageBody];
     if (imgMessage.file.length>0) {
         NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[imgMessage.file lastPathComponent]];
-        if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
+        if ([BJCFFileManagerTool isFileExisted:nil path:fileStr]) {
             return [NSURL fileURLWithPath:fileStr];
         }
     }
@@ -188,7 +190,7 @@
     IMAudioMessageBody *audioMessage = [self audioMessageBody];
     if (audioMessage.file.length>0) {
         NSString *fileStr = [BJChatFileCacheManager imageCachePathWithName:[audioMessage.file lastPathComponent]];
-        if ([BJFileManagerTool isFileExisted:nil path:fileStr]) {
+        if ([BJCFFileManagerTool isFileExisted:nil path:fileStr]) {
             return [NSURL fileURLWithPath:fileStr];
         }
     }

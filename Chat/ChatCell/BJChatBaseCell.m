@@ -7,7 +7,7 @@
 //
 
 #import "BJChatBaseCell.h"
-#import <UIImageView+Aliyun.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 #import "UIResponder+BJIMChatRouter.h"
 
 const float HEAD_SIZE = 40; // 头像大小
@@ -214,7 +214,7 @@ NSString *const BUBBLE_RIGHT_IMAGE_NAME_NEW = @"bg_messages_blue_n";
     self.message = info;
     self.indexPath = indexPath;
     UIImage *placeholderImage = [UIImage imageNamed:@"img_head_default"];
-    [self.headImageView setAliyunImageWithURL:self.message.headImageURL placeholderImage:placeholderImage size:CGSizeMake(HEAD_SIZE, HEAD_SIZE)];
+    [self.headImageView bjck_setAliyunImageWithURL:self.message.headImageURL placeholderImage:placeholderImage size:CGSizeMake(HEAD_SIZE, HEAD_SIZE)];
     if ([self shouldShowName]) {
         self.nameLabel.attributedText = self.message.nickNameAttri;
         self.nameLabel.hidden = NO;

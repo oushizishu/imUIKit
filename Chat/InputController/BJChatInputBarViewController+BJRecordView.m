@@ -12,8 +12,10 @@
 #import <JLMicrophonePermission.h>
 #import "BJChatLimitMacro.h"
 #import "BJChatUtilsMacro.h"
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
 #import "BJChatAudioPlayerHelper.h"
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 
 static char BJRecordView_View;
 static char BJRecordView_Recorder;

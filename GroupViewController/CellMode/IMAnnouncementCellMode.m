@@ -9,8 +9,9 @@
 #import "IMLinshiTool.h"
 #import "IMDialog.h"
 #import "MBProgressHUD+IMKit.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @implementation IMUILable
 
@@ -101,7 +102,7 @@
     [self.contentArray removeAllObjects];
     
     UIFont *font = [UIFont systemFontOfSize:14.0f];
-    UIColor *fontColor = [UIColor colorWithHexString:IMCOLOT_GREY600];
+    UIColor *fontColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
     for (int i = 0; i < [mode.contentArray count]; i++) {
         UILabel *itemL = [[UILabel alloc] initWithFrame:CGRectMake(15, 15+20*i, sRect.size.width-30, 15)];
         itemL.font = font;
@@ -169,7 +170,7 @@
 {
     if (_authorNameLable == nil) {
         _authorNameLable = [[UILabel alloc] initWithFrame:CGRectZero];
-        _authorNameLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        _authorNameLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         _authorNameLable.font = [UIFont systemFontOfSize:13.0f];
         _authorNameLable.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_authorNameLable];
@@ -181,7 +182,7 @@
 {
     if (_releaseTimeLable == nil) {
         _releaseTimeLable = [[UILabel alloc] initWithFrame:CGRectZero];
-        _releaseTimeLable.textColor = [UIColor colorWithHexString:IMCOLOT_GREY500];
+        _releaseTimeLable.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY500];
         _releaseTimeLable.font = [UIFont systemFontOfSize:13.0f];
         _releaseTimeLable.textAlignment = NSTextAlignmentLeft;
         [self addSubview:_releaseTimeLable];
@@ -194,7 +195,7 @@
     if (_deleteL == nil) {
         CGSize deleteSize = [@"删除" sizeWithFont:[UIFont systemFontOfSize:13.0f]];
         _deleteL = [[IMUILable alloc] initWithFrame:CGRectMake(0, 0, deleteSize.width+30, 15)];
-        _deleteL.textColor = [UIColor colorWithHexString:@"8cc8fd"];
+        _deleteL.textColor = [UIColor bjck_colorWithHexString:@"8cc8fd"];
         _deleteL.font = [UIFont systemFontOfSize:13.0f];
         _deleteL.textAlignment = NSTextAlignmentCenter;
         _deleteL.text = @"删除";

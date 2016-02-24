@@ -39,7 +39,7 @@
 
 + (NSString *)chatRootPath;
 {
-    return [BJCachesDir stringByAppendingPathComponent:BJChatFile_RootPath];
+    return [BJCFCachesDir stringByAppendingPathComponent:BJChatFile_RootPath];
 }
 
 + (NSString *)chatImagesPath;
@@ -121,13 +121,13 @@
  */
 + (NSString *)imageCacheRelativePathWithName:(NSString *)imagName;
 {
-    NSString *cacheDir = [BJCachesDir lastPathComponent];
+    NSString *cacheDir = [BJCFCachesDir lastPathComponent];
     return [NSString stringWithFormat:@"/%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Images,imagName];
 }
 
 + (NSString *)audioCacheRelativePathWithName:(NSString *)audioName;
 {
-    NSString *cacheDir = [BJCachesDir lastPathComponent];
+    NSString *cacheDir = [BJCFCachesDir lastPathComponent];
     return [NSString stringWithFormat:@"/%@/%@/%@/%@",cacheDir,BJChatFile_RootPath,BJChatFile_Audio,audioName];
 }
 

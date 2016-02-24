@@ -17,7 +17,7 @@
 #import <IMEnvironment.h>
 #import "BJFaceView.h"
 
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 #define kInputTextViewMinHeight 36
 #define kInputTextViewMaxHeight 84
@@ -97,7 +97,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#F4F4F6"];
     self.draft = [BJChatDraft conversationDraftForUserId:self.chatInfo.getToId andUserRole:self.chatInfo.getToRole];
     self.inputTextView.text = self.draft?self.draft.content:@"";
 }
@@ -682,7 +682,7 @@
 {
     if (_toolbarView == nil) {
         _toolbarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, [BJChatInputBarViewController defaultHeight])];
-        _toolbarView.backgroundColor = [UIColor colorWithHexString:@"#F4F4F6"];
+        _toolbarView.backgroundColor = [UIColor bjck_colorWithHexString:@"#F4F4F6"];
         
         //增加线
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _toolbarView.frame.size.width, 0.5)];

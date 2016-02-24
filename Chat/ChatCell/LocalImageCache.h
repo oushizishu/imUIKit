@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UIKitDefines.h>
-#import <UIImageView+Aliyun.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 #define LocalImageCacheFloder @"Localimagecachefloder"
 

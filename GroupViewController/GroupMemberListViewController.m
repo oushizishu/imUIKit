@@ -11,8 +11,10 @@
 #import "IMLinshiTool.h"
 #import <BJHL-IM-iOS-SDK/BJIMManager.h>
 #import "IMDialog.h"
-#import <BJHL-Common-iOS-SDK/UIColor+Util.h>
-#import <BJHL-Common-iOS-SDK/BJCommonDefines.h>
+
+#import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
+#import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
+
 #import "CustomTableView/CustomTableViewController.h"
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
@@ -72,7 +74,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+    self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
     [backBtn setImage:[UIImage imageNamed:@"im_black_leftarrow"] forState:UIControlStateNormal];
@@ -202,7 +204,7 @@
             
             sMode.headerHeight = 33.0f;
             sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
-            sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+            sMode.headerView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
             UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 9, 100, 15)];
             showTitleL.backgroundColor = [UIColor clearColor];
             showTitleL.textAlignment = NSTextAlignmentLeft;
@@ -307,7 +309,7 @@
             
             sMode.headerHeight = 33.0f;
             sMode.headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
-            sMode.headerView.backgroundColor = [UIColor colorWithHexString:@"#ebeced"];
+            sMode.headerView.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
             UILabel *showTitleL = [[UILabel alloc] initWithFrame:CGRectMake(15, 9, 100, 15)];
             showTitleL.backgroundColor = [UIColor clearColor];
             showTitleL.textAlignment = NSTextAlignmentLeft;

@@ -11,8 +11,9 @@
 #import "IMMessage+ViewModel.h"
 #import "BJChatUtilsMacro.h"
 #import "BJChatFileCacheManager.h"
-#import <BJNetworkUtil.h>
-#import <BJCommonProxy.h>
+
+#import <BJHL-Network-iOS/BJHL-Network-iOS.h>
+
 #import <NSError+BJIM.h>
 
 @interface BJChatAudioPlayerHelper ()
@@ -63,7 +64,7 @@
     else if(message.audioURL)
     {
         NSString *localPath = [self localFilePathWithMessage:message];
-        if ([BJFileManagerTool isFileExisted:nil path:localPath]) {
+        if ([BJCFFileManagerTool isFileExisted:nil path:localPath]) {
             [self.player startPlayWithUrl:[NSURL fileURLWithPath:localPath]];
         }
         else
@@ -122,12 +123,12 @@
     }
     WS(weakSelf);
     [self.downloadAudioDic setObject:message forKey:[self downKeyStrWithMessage:message]];
-    RequestParams *params = [[RequestParams alloc] initWithUrl:[message.audioURL absoluteString]];
-    [BJCommonProxyInstance.networkUtil doDownloadResource:params fileDownPath:[self localFilePathWithMessage:message] success:^(id response, NSDictionary *responseHeaders, RequestParams *params) {
+    BJCNRequestParams *params = [[BJCNRequestParams alloc] initWithUrl:[message.audioURL absoluteString]];
+    [BJCNNetworkUtilInstance doDownloadResource:params fileDownPath:[self localFilePathWithMessage:message] success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
         if ([weakSelf.message isEqual:message]) {
             [weakSelf startPlayerWithMessage:message callback:weakSelf.callback];
         }
-    } failure:^(NSError *error, RequestParams *params) {
+    } failure:^(NSError *error, BJCNRequestParams *params) {
         if ([weakSelf.message isEqual:message]) {
             [weakSelf.downloadAudioDic removeObjectForKey:[self downKeyStrWithMessage:message]];
             if (weakSelf.callback) {

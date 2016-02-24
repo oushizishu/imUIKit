@@ -7,7 +7,7 @@
 //
 
 #import "BJChatViewController.h"
-#import <BJHL-Common-iOS-SDK/BJPictueBrowser.h>
+#import <BJHL-PictureBrowser-iOS/BJPictueBrowser.h>
 
 @interface BJChatViewController (BrowserHelper)<BJPictureBrowserDelegate>
 
