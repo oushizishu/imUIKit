@@ -812,26 +812,29 @@ IMNewGRoupNoticeDelegate>
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    IMMessage *message = [self.messageList objectAtIndex:indexPath.row];
-    
-    if ([message isKindOfClass:[NSString class]]) {
-        BJChatTimeCell *timeCell = (BJChatTimeCell *)[tableView dequeueReusableCellWithIdentifier:@"MessageCellTime"];
-        if (timeCell == nil) {
-            timeCell = [[BJChatTimeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MessageCellTime"];
+    if (self.messageList.count > indexPath.row) {
+        IMMessage *message = [self.messageList objectAtIndex:indexPath.row];
+        
+        if ([message isKindOfClass:[NSString class]]) {
+            BJChatTimeCell *timeCell = (BJChatTimeCell *)[tableView dequeueReusableCellWithIdentifier:@"MessageCellTime"];
+            if (timeCell == nil) {
+                timeCell = [[BJChatTimeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MessageCellTime"];
+            }
+            
+            [timeCell updateTime:(NSString *)message];
+            
+            return timeCell;
         }
         
-        [timeCell updateTime:(NSString *)message];
-        
-        return timeCell;
+        UITableViewCell<BJChatViewCellProtocol> *cell = [tableView dequeueReusableCellWithIdentifier:[[BJChatCellFactory sharedInstance] cellIdentifierWithMessageType:message.msg_t]];
+        if (cell == nil) {
+            cell = [[BJChatCellFactory sharedInstance] cellWithMessageType:message.msg_t];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        [cell setCellInfo:message indexPath:indexPath];
+        return cell;
     }
-    
-    UITableViewCell<BJChatViewCellProtocol> *cell = [tableView dequeueReusableCellWithIdentifier:[[BJChatCellFactory sharedInstance] cellIdentifierWithMessageType:message.msg_t]];
-    if (cell == nil) {
-        cell = [[BJChatCellFactory sharedInstance] cellWithMessageType:message.msg_t];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    [cell setCellInfo:message indexPath:indexPath];
-    return cell;
+    return [UITableViewCell new];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
