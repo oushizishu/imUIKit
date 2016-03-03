@@ -684,10 +684,6 @@
         lineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
         [_toolbarView addSubview:lineView];
         
-        //增加线
-        UIView *bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(0, _toolbarView.frame.size.height - 0.5, _toolbarView.frame.size.width, 0.5)];
-        bottomLineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
-        [_toolbarView addSubview:bottomLineView];
         
 //        //增加背景照片
 //        UIImageView *backgroundImageView = [[UIImageView alloc]initWithFrame:_toolbarView.bounds];
