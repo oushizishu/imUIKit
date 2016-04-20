@@ -22,6 +22,8 @@
 #import "CardSimpleItem.h"
 #import <User.h>
 
+#import "NBAppConfiguration.h"
+#import "WebPageViewController.h"
 #import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
 @interface BJChatInputMoreViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
@@ -140,12 +142,16 @@
 }
 
 - (void)showCouponView{
-    IMChatType type = self.chatInfo.chat_t;
-    WS(weakSelf);
-    BJCouponManagerViewController *controller = [[BJCouponManagerViewController alloc]initWithState:BJCouponManagerControllerState_sendCoupon withSendCouponClick:^(NSString *searialNumber,NSString *url) {
-        [weakSelf sendCouponViewWithURL:url money:0];
-    } chatType:type?BJChatFromType_group:BJChatFromType_sigle];
-    [self.navigationController pushViewController:controller animated:YES];
+//    IMChatType type = self.chatInfo.chat_t;
+//    WS(weakSelf);
+//    BJCouponManagerViewController *controller = [[BJCouponManagerViewController alloc]initWithState:BJCouponManagerControllerState_sendCoupon withSendCouponClick:^(NSString *searialNumber,NSString *url) {
+//        [weakSelf sendCouponViewWithURL:url money:0];
+//    } chatType:type?BJChatFromType_group:BJChatFromType_sigle];
+//    [self.navigationController pushViewController:controller animated:YES];
+    NBAppConfiguration *configuration = [NBAppConfiguration sharedInstance];
+    NSURL *url = [NSURL URLWithString:[configuration.serverConfig.couponUrl valueForKey:@"from_im"]];
+    WebPageViewController *webVC = [[WebPageViewController alloc]initWithURL:url];
+    [self.navigationController pushViewController:webVC animated:YES];
 }
 
 - (void)didSelectWithKey:(NSString *)key;
