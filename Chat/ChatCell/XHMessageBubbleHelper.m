@@ -9,7 +9,8 @@
 #import "XHMessageBubbleHelper.h"
 
 @interface XHMessageBubbleHelper () {
-    NSCache *_attributedStringCache;
+    NSCache *_recvAttributedStringCache;
+    NSCache *_sendAttributedStringCache;
 }
 
 @end
@@ -30,7 +31,8 @@
 - (id)init {
     self = [super init];
     if (self) {
-        _attributedStringCache = [[NSCache alloc] init];
+        _recvAttributedStringCache = [[NSCache alloc] init];
+        _sendAttributedStringCache = [[NSCache alloc] init];
     }
     return self;
 }
@@ -60,13 +62,20 @@
                               }];
 }
 
-- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text matchColor:(UIColor *)matchColor normalColor:(UIColor *)normalColor;
+- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text matchColor:(UIColor *)matchColor normalColor:(UIColor *)normalColor isSend:(BOOL)isSend
 {
     if (!text) {
         return [[NSAttributedString alloc] init];
     }
-    if ([_attributedStringCache objectForKey:text]) {
-        return [_attributedStringCache objectForKey:text];
+    
+    if (isSend) {
+        if ([_sendAttributedStringCache objectForKey:text]) {
+            return [_sendAttributedStringCache objectForKey:text];
+        } else {
+            if ([_recvAttributedStringCache objectForKey:text]) {
+                return [_recvAttributedStringCache objectForKey:text];
+            }
+        }
     }
     
     NSDictionary *textAttributes = @{NSForegroundColorAttributeName : matchColor};
@@ -77,7 +86,11 @@
                                                                error:nil];
     [self setDataDetectorsAttributedAttributedString:attributedString atText:text withRegularExpression:detector attributes:textAttributes];
     
-    [_attributedStringCache setObject:attributedString forKey:text];
+    if (isSend) {
+        [_sendAttributedStringCache setObject:attributedString forKey:text];
+    } else {
+        [_recvAttributedStringCache setObject:attributedString forKey:text];
+    }
     
     return attributedString;
 }

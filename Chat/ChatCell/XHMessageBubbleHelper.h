@@ -13,6 +13,6 @@
 @property (strong, nonatomic) UIColor *normalColor;
 + (instancetype)sharedMessageBubbleHelper;
 
-- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text matchColor:(UIColor *)matchColor normalColor:(UIColor *)normalColor;
+- (NSAttributedString *)bubbleAttributtedStringWithText:(NSString *)text matchColor:(UIColor *)matchColor normalColor:(UIColor *)normalColor isSend:(BOOL)isSend;
 
 @end
