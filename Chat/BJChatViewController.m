@@ -641,8 +641,6 @@ IMNewGRoupNoticeDelegate>
         [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
         //检测是否有记录
         [self checkOutRecords:YES];
-        //自动发送文本消息
-        [self autoSendTextMessage];
     } else {
         if ([messages count] == 0) {
             [self.chatHeadView setCanLoadMore:hasMore];
