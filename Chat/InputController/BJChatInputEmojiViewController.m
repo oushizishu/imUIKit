@@ -26,6 +26,11 @@
     self.view.autoresizingMask = UIViewAutoresizingNone;
 
     [self.view addSubview:self.faceView];
+    
+    //增加线
+    UIView *topLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.5)];
+    topLineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+    [self.view addSubview:topLineView];
 }
 
 #pragma mark - action

@@ -59,7 +59,12 @@
     self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 220);
     [self.view addSubview:self.collectionView];
     [self.collectionView registerNib:[UINib nibWithNibName:NSStringFromClass([BJActionCollectionViewCell class]) bundle:nil] forCellWithReuseIdentifier:NSStringFromClass([BJActionCollectionViewCell class])];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendCouponMessage:) name:@"sendCouponNotification" object:nil];
+    //增加线
+    UIView *topLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0.5)];
+    topLineView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+    [self.view addSubview:topLineView];
 }
 
 
