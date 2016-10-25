@@ -207,5 +207,15 @@
         return @"";
     }
 }
-
+- (IMUserOnlineStatus)getContactOnlineStatus
+{
+    if (self.chat_t == eChatType_Chat)
+    {
+        return self.chatToUser.onlineStatus;
+    }
+    else
+    {
+        return eUserOnlieStatus_online;
+    }
+}
 @end
