@@ -23,7 +23,6 @@
 @optional
 - (NSString *)getContactNickName;
 - (NSString *)getContactRemarkName;
-- (NSString *)getContactRemarkName;
 - (IMUserOnlineStatus )getContactOnlineStatus;
 
 @end
