@@ -71,5 +71,8 @@
     }
     return self.nameHeader;
 }
-
+- (IMUserOnlineStatus )getContactOnlineStatus
+{
+    return self.onlineStatus;
+}
 @end

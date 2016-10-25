@@ -651,7 +651,13 @@ IMNewGRoupNoticeDelegate>
         [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
         //检测是否有记录
         [self checkOutRecords:YES];
+    } else {
+        if ([messages count] == 0) {
+            [self.chatHeadView setCanLoadMore:hasMore];
+            [self.chatHeadView bjChatLoadMoreHeadViewScrollViewDataSourceDidFinishedLoading:self.tableView];
+        }
     }
+    self.isLoadMore = NO;
 }
 
 - (void)willDeliveryMessage:(IMMessage *)message;
@@ -831,6 +837,7 @@ IMNewGRoupNoticeDelegate>
             cell = [[BJChatCellFactory sharedInstance] cellWithMessageType:message.msg_t];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
+        
         [cell setCellInfo:message indexPath:indexPath];
         return cell;
     }
