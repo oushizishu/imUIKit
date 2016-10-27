@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, IMGroupUserCellModeMenuType)
 @property (nonatomic) BOOL operaterIsMajor;
 @property (nonatomic) BOOL ifShowMenu;
 
+
 -(instancetype)initWithGroupDetailMember:(GroupDetailMember*)member;
 
 -(IMGroupUserCellModeMenuType)getMenuType;
