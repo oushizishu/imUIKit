@@ -14,10 +14,6 @@
 #import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 #import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 
-//等比例裁剪
-#define RetinaSize(size) (int)([UIScreen mainScreen].scale*size)
-
-#define CuteImageUrl(oriUrl,w,h) (oriUrl?[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",oriUrl,(int)RetinaSize(w),(int)RetinaSize(h)]:oriUrl)
 
 @interface IMGroupUserCell()
 
@@ -178,19 +174,9 @@
     {
         self.cellView.frame=CGRectMake(0,frame.origin.y, frame.size.width,frame.size.height);
     }
-    if (mode.GroupDetailMember.onlineStatus == eUserOnlineStatus_offline)
-    {
-        //离线状态头像置灰
-        [self.faceViewImage bjck_setImageWithURL:[NSURL URLWithString:CuteImageUrl(mode.GroupDetailMember.avatar, self.faceViewImage.current_w, self.faceViewImage.current_h)] placeholderImage:nil completed:^(UIImage *image, NSError *error, NSURL *imageURL) {
-            
-            [self.faceViewImage setImage:[self grayImage:image]];
-         }];
-    }
-    else
-    {
-        [self.faceViewImage bjck_setAliyunImageWithURL:[NSURL URLWithString:mode.GroupDetailMember.avatar] placeholderImage:nil];
+    
+    [self.faceViewImage bjck_setAliyunImageWithURL:[NSURL URLWithString:mode.GroupDetailMember.avatar] placeholderImage:nil];
 
-    }
     
     CGRect sRect = [UIScreen mainScreen].bounds;
     CGFloat nameLw = sRect.size.width-(30+40+10+10+60);
@@ -200,15 +186,6 @@
     }
     self.userNameL.frame = CGRectMake(15+40+10, 20, nameLw, 20);
     self.userNameL.text = mode.GroupDetailMember.user_name;
-    
-    if (mode.GroupDetailMember.onlineStatus == eUserOnlineStatus_offline) {
-        //离线状态名称置灰
-        self.userNameL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY400];
-    }
-    else
-    {
-        self.userNameL.textColor = [UIColor bjck_colorWithHexString:IMCOLOT_GREY600];
-    }
     
     if (mode.GroupDetailMember.is_major == 1) {
         self.userRoleL.hidden = NO;
