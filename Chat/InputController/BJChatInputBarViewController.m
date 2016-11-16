@@ -10,6 +10,8 @@
 #import "BJChatInputBarViewController+BJRecordView.h"
 #import "BJChatInputMoreViewController.h"
 #import "BJChatInputEmojiViewController.h"
+#import "BJChatInputFastReplyViewController.h"
+
 #import "MBProgressHUD+Simple.h"
 #import "BJChatUtilsMacro.h"
 #import "BJChatLimitMacro.h"
@@ -45,6 +47,7 @@
  */
 @property (strong, nonatomic) UIView *toolbarView;
 @property (strong, nonatomic) UIButton *styleChangeButton;
+@property (strong, nonatomic) UIButton *autoReplyButton;
 @property (strong, nonatomic) UIButton *moreButton;
 @property (strong, nonatomic) UIButton *faceButton;
 @property (strong, nonatomic) UIButton *recordButton;
@@ -61,7 +64,7 @@
  */
 @property (strong, nonatomic) BJChatInputEmojiViewController *emojiViewController;
 @property (strong, nonatomic) BJChatInputMoreViewController *moreViewController;
-
+@property (strong, nonatomic) BJChatInputFastReplyViewController *fastReplyViewController;
 /**
  *草稿
  */
@@ -101,7 +104,12 @@
     self.draft = [BJChatDraft conversationDraftForUserId:self.chatInfo.getToId andUserRole:self.chatInfo.getToRole];
     self.inputTextView.text = self.draft?self.draft.content:@"";
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (_fastReplyViewController) {
+        [_fastReplyViewController requstServer];
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -131,9 +139,15 @@
 {
     CGFloat allButtonWidth = 0.0;
     CGFloat textViewLeftMargin = kHorizontalPadding;
-    
+    //快捷回复样式
+    self.autoReplyButton = [[UIButton alloc] initWithFrame:CGRectMake(kLeftRightPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
+    self.autoReplyButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    [self.autoReplyButton setImage:[UIImage imageNamed:@"ic_information.png"] forState:UIControlStateNormal];
+    [self.autoReplyButton setImage:[UIImage imageNamed:@"ic_keyboard_nor_.png"] forState:UIControlStateSelected];
+    [self.autoReplyButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.autoReplyButton.tag = 3;
     //转变输入样式
-    self.styleChangeButton = [[UIButton alloc] initWithFrame:CGRectMake(kLeftRightPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
+    self.styleChangeButton = [[UIButton alloc] initWithFrame:CGRectMake(kLeftRightPadding + kInputTextViewMinHeight +kHorizontalPadding, kVerticalPadding, kInputTextViewMinHeight, kInputTextViewMinHeight)];
     self.styleChangeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self.styleChangeButton setImage:[UIImage imageNamed:@"ic_microphone_nor_.png"] forState:UIControlStateNormal];
     [self.styleChangeButton setImage:[UIImage imageNamed:@"ic_keyboard_nor_.png"] forState:UIControlStateSelected];
@@ -195,6 +209,7 @@
     self.recordButton.hidden = YES;
     [self bjrv_setupRecordView:self.recordButton];
     
+    [self.toolbarView addSubview:self.autoReplyButton];
     [self.toolbarView addSubview:self.styleChangeButton];
     [self.toolbarView addSubview:self.moreButton];
     [self.toolbarView addSubview:self.faceButton];
@@ -212,6 +227,7 @@
     
     self.faceButton.selected = NO;
     self.moreButton.selected = NO;
+    self.autoReplyButton.selected = NO;
     [self willShowBottomView:nil];
     
     return result;
@@ -246,6 +262,7 @@
             if (button.selected) {
                 self.faceButton.selected = NO;
                 self.moreButton.selected = NO;
+                self.autoReplyButton.selected = NO;
                 //录音状态下，不显示底部扩展页面
                 [self willShowBottomView:nil];
                 
@@ -274,6 +291,8 @@
         {
             if (button.selected) {
                 self.moreButton.selected = NO;
+                self.autoReplyButton.selected = NO;
+
                 //如果选择表情并且处于录音状态，切换成文字输入状态，但是不显示键盘
                 if (self.styleChangeButton.selected) {
                     self.styleChangeButton.selected = NO;
@@ -307,6 +326,8 @@
         {
             if (button.selected) {
                 self.faceButton.selected = NO;
+                self.autoReplyButton.selected = NO;
+
                 //如果选择表情并且处于录音状态，切换成文字输入状态，但是不显示键盘
                 if (self.styleChangeButton.selected) {
                     self.styleChangeButton.selected = NO;
@@ -331,6 +352,40 @@
             }
             break;
         }
+        case 3://快捷回复
+        {
+            if (button.selected) {
+                self.faceButton.selected = NO;
+                self.moreButton.selected = NO;
+                //如果选择表情并且处于录音状态，切换成文字输入状态，但是不显示键盘
+                if (self.styleChangeButton.selected) {
+                    self.styleChangeButton.selected = NO;
+                }
+                else{//如果处于文字输入状态，使文字输入框失去焦点
+                    [self.inputTextView resignFirstResponder];
+                }
+                
+                [self willShowBottomView:self.fastReplyViewController.view];
+                [self.fastReplyViewController didMoveToParentViewController:self];
+                [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.recordButton.hidden = button.selected;
+                    self.inputTextView.hidden = !button.selected;
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
+            else
+            {
+                if (!self.styleChangeButton.selected) {
+                    [self.inputTextView becomeFirstResponder];
+                }
+                else{
+                    [self willShowBottomView:nil];
+                }
+            }
+        }
+            break;
+
         case 4:
         {
 //            [_delegate toolBarPhotoAction];
@@ -353,7 +408,7 @@
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
-    if (self.faceButton.selected || self.moreButton.selected || self.recordButton.selected) {
+    if (self.faceButton.selected || self.moreButton.selected || self.recordButton.selected || self.autoReplyButton.selected) {
         return;
     }
     NSDictionary *userInfo = notification.userInfo;
@@ -384,6 +439,11 @@
         {
             [self.emojiViewController willMoveToParentViewController:nil];
         }
+        else if (self.fastReplyViewController.view == self.activityButtomView)
+        {
+            [self.fastReplyViewController willMoveToParentViewController:nil];
+        }
+
         [self.activityButtomView removeFromSuperview];
     }
 }
@@ -721,5 +781,22 @@
     }
     return _emojiViewController;
 }
-
+- (BJChatInputFastReplyViewController *)fastReplyViewController
+{
+    if (_fastReplyViewController == nil) {
+        _fastReplyViewController = [[BJChatInputFastReplyViewController alloc] initWithChatInfo:self.chatInfo];
+        _fastReplyViewController.view.frame = CGRectMake(0, (kVerticalPadding * 2 + kInputTextViewMinHeight), _fastReplyViewController.view.frame.size.width, _fastReplyViewController.view.frame.size.height);
+        [self addChildViewController:_fastReplyViewController];
+        weakifyself
+        _fastReplyViewController.actionBlock = ^(NSString *content){
+            strongifyself
+            
+            NSMutableString *str = [NSMutableString stringWithString:self.inputTextView.text];
+            [str appendString:content];
+            self.inputTextView.text = str;
+        };
+        _fastReplyViewController.delegate = self;
+    }
+    return _fastReplyViewController;
+}
 @end
