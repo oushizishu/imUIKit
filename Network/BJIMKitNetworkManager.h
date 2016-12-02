@@ -1,15 +1,16 @@
 //
-//  BJIMQuickResponseManager.h
-//  BJEducation_Institution
+//  BJIMKitNetworkManager.h
+//  BJEducation
 //
-//  Created by Mac_ZL on 16/11/4.
+//  Created by Mac_ZL on 16/12/2.
 //  Copyright © 2016年 com.bjhl. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface BJIMQuickResponseManager : NSObject
+@interface BJIMKitNetworkManager : NSObject
 
+#pragma mark - 快捷回复
 /**
  *  @author LiangZhao, 16-11-04 16:11:47
  *
@@ -61,5 +62,35 @@
  */
 + (void)getQuickResponseList:(BJCNOnSuccess)succ
                      failure:(BJCNOnFailure)failure;
+
+#pragma mark - 备注详情
+
+/**
+ *  @author LiangZhao, 16-12-02 16:11:40
+ *
+ *  设置备注详情
+ *  @param userNumber IM用户ID
+ *  @param userRole   用户角色
+ *  @param succ    成功回调
+ *  @param failure 失败回调
+ */
++ (void)setRemarkDescWithUserNumber:(NSString *)userNumber
+                           userRole:(IMUserRole)userRole
+                      success:(BJCNOnSuccess)succ
+                      failure:(BJCNOnFailure)failure;
+
+/**
+ *  @author LiangZhao, 16-12-02 16:11:40
+ *
+ *  获取备注详情
+ *  @param userNumber IM用户ID
+ *  @param userRole   用户角色
+ *  @param succ    成功回调
+ *  @param failure 失败回调
+ */
++ (void)getRemarkDescWithUserNumber:(NSString *)userNumber
+                           userRole:(IMUserRole)userRole
+                            success:(BJCNOnSuccess)succ
+                            failure:(BJCNOnFailure)failure;
 
 @end

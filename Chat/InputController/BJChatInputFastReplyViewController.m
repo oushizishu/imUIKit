@@ -10,7 +10,7 @@
 #import "BJFastReplyView.h"
 #import "BJFastReplyTableViewCell.h"
 #import "BJFastReplyViewController.h"
-#import "BJIMQuickResponseManager.h"
+#import "BJIMKitNetworkManager.h"
 
 @interface BJChatInputFastReplyViewController ()<BJFastReplyViewDelegate>
 @property (nonatomic, strong) BJFastReplyView *replayView;
@@ -82,7 +82,7 @@
 
 - (void)requstServer{
     weakifyself
-    [BJIMQuickResponseManager  getQuickResponseList:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
+    [BJIMKitNetworkManager  getQuickResponseList:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
         strongifyself
         
         NSDictionary *dic = [(NSDictionary *)response   valueForKey:@"data"];
