@@ -76,8 +76,9 @@
  */
 + (void)setRemarkDescWithUserNumber:(NSString *)userNumber
                            userRole:(IMUserRole)userRole
-                      success:(BJCNOnSuccess)succ
-                      failure:(BJCNOnFailure)failure;
+                         remarkDesc:(NSString *)remarkDesc
+                            success:(BJCNOnSuccess)succ
+                            failure:(BJCNOnFailure)failure;
 
 /**
  *  @author LiangZhao, 16-12-02 16:11:40

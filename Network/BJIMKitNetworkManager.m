@@ -82,12 +82,14 @@
 //设置备注详情
 + (void)setRemarkDescWithUserNumber:(NSString *)userNumber
                            userRole:(IMUserRole)userRole
+                        remarkDesc:(NSString *)remarkDesc
                             success:(BJCNOnSuccess)succ
                             failure:(BJCNOnFailure)failure
 {
     BJCNRequestParams *requestParams = [[BJCNRequestParams alloc] initWithUrl:HERMES_API_RemarkDesc_ADD method:kBJCNHttpMethod_POST];
     [requestParams appendPostParamValue:userNumber forKey:@"user_number"];
     [requestParams appendPostParamValue:@(userRole).description forKey:@"user_role"];
+    [requestParams appendPostParamValue:remarkDesc forKey:@"remark_desc"];
     [requestParams appendPostParamValue:[IMEnvironment shareInstance].oAuthToken forKey:@"auth_token"];
     [requestParams appendPostParamValue:@"im_version" forKey:[[IMEnvironment shareInstance] getCurrentVersion]];
     [BJCNNetworkUtilInstance doNetworkRequest:requestParams success:succ failure:failure];
