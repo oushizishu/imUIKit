@@ -27,6 +27,7 @@ typedef NS_ENUM (NSInteger, BJContactType)
     BJContact_Group = 1001,
     BJContact_Unkonwn = 1002,
     BJContact_Anonymous = -1,
+    BJContact_StudentResource = 20
 };
 
 
