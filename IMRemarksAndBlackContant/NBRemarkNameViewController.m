@@ -9,6 +9,7 @@
 #import "NBRemarkNameViewController.h"
 #import "NSString+NBByteLength.h"
 #import "NSString+utils.h"
+#import "BJIMKitNetworkManager.h"
 
 @interface NBRemarkDetailTextView : UITextView
 
@@ -34,6 +35,16 @@
         self.font = [UIFont systemFontOfSize:15];
     }
     return self;
+}
+
+- (void)setText:(NSString *)text
+{
+    [super setText:text];
+    if (text.length>0) {
+        _placeholder.hidden = YES;
+    }else{
+        _placeholder.hidden = NO;
+    }
 }
 
 - (void)changeEdit
@@ -74,6 +85,11 @@
 {
     [super viewWillAppear:animated];
     [self updateRightBtnColor];
+    [BJIMKitNetworkManager getRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",[self.bjChatInfo getToId]] userRole:[self.bjChatInfo getToRole] success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
+        self.detailText.text = [[response valueForKey:@"data"] valueForKey:@"remark_desc"];
+    } failure:^(NSError *error, BJCNRequestParams *params) {
+        [self showHUDWithText:@"获取备注详情失败" animated:YES];
+    }];
 }
 
 #pragma mark - private
@@ -95,6 +111,13 @@
             [self showHUDWithText:errMsg animated:YES];
         }
     }];
+    [BJIMKitNetworkManager setRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",[self.bjChatInfo getToId]] userRole:[self.bjChatInfo getToRole] remarkDesc:self.detailText.text success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
+        
+    } failure:^(NSError *error, BJCNRequestParams *params) {
+        
+        [self showHUDWithText:@"备注详情失败" animated:YES];
+    }];
+    
 }
 - (NSString *)getRemarkNameFromChatInfo
 {
