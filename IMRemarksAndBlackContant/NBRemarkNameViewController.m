@@ -227,6 +227,14 @@
 - (void)textFieldDidChange:(UITextField *)textField
 {
     if (textField == self.remarkName) {
+        // 选中范围的标记
+        UITextRange *textSelectedRange = [textField markedTextRange];
+        // 获取高亮部分
+        UITextPosition *textPosition = [textField positionFromPosition:textSelectedRange.start offset:0];
+        // 如果在变化中是高亮部分在变, 就不要计算字符了
+        if (textSelectedRange && textPosition) {
+            return;
+        }
         if (textField.text.length > 10) {
             textField.text = [textField.text substringToIndex:10];
         }
