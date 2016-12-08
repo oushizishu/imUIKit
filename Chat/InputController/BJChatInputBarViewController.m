@@ -85,7 +85,8 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
-    
+    [_inputTextView removeObserver:self forKeyPath:@"text"];
+
     _inputTextView.delegate = nil;
     _inputTextView = nil;
 }
@@ -192,7 +193,8 @@
     self.inputTextView.layer.borderWidth = 0.65f;
     self.inputTextView.layer.cornerRadius = 5.0f;
     self.previousTextViewContentHeight = [self getTextViewContentH:self.inputTextView];
-    
+    [self.inputTextView addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
+
     //录制
     self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake(textViewLeftMargin, kVerticalPadding, width, kInputTextViewMinHeight)];
     self.recordButton.clipsToBounds = YES;
@@ -612,6 +614,14 @@
         } completion:^(BOOL finished) {
 
         }];
+    }
+}
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (object == self.inputTextView)
+    {
+        CGFloat height = [self getTextViewContentH:self.inputTextView];
+        [self willShowInputTextViewToHeight:height];
     }
 }
 
