@@ -214,7 +214,8 @@
     UILabel * lable = (UILabel *)[cell.contentView viewWithTag:1000];
     CGSize size = [self.title stringSizeWithFont:[UIFont systemFontOfSize:14] size:CGSizeMake(200, 44)];
     [lable setFrame:CGRectMake(ScreenWidth-30-size.width, (44-size.height)/2, size.width, size.height)];
-    lable.text = self.title;
+    NSString *remarkName = [NSString defaultString:[self.bjChatInfo getContactRemarkName] defaultValue:@""];
+    lable.text = remarkName.length>0?remarkName:@"";
     if (indexPath.section==0&&indexPath.row==1) {
         lable.hidden = NO;
     }else{
