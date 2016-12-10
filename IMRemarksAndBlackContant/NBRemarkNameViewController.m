@@ -118,6 +118,7 @@
         [self showHUDWithText:@"备注详情失败" animated:YES];
     }];
     
+    [MobClick event:@"20123"];
 }
 - (NSString *)getRemarkNameFromChatInfo
 {
