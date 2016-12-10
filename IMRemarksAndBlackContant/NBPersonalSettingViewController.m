@@ -90,7 +90,7 @@
 - (void)switchBtnChange:(UISwitch *)sender
 {
     if (sender.on == YES) {
-        [self showAlertViewMessage:@"加入黑名单后，该学生无法再向您发送消息，也不能在您的群组中发言。\n今后学生将无法购买您的课程。已经购买课程可在“订单管理”中退款后取消" CallBack:^(BOOL sure) {
+        [self showAlertViewMessage:@"加入黑名单后，该学生无法再向您发送消息，今后将不能购买您的课程。\n在 消息页面－右上角设置按钮－我的黑名单，可以找到被拉黑学生并解除拉黑状态。" CallBack:^(BOOL sure) {
             if (sure) {
                 [self addBlackContant];
             }else{
