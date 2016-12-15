@@ -11,6 +11,7 @@
 #import "ContanctorBlackListTableViewCell.h"
 #import "MyChatViewController.h"
 #import "SWTableViewCell.h"
+#import "NoRecordView.h"
 
 @interface NBBlackContactListViewController ()<UITableViewDataSource,UITableViewDelegate,SWTableViewCellDelegate>
 
@@ -58,9 +59,12 @@
         [self.tableView headerEndRefreshing];
         if (self.listArray.count == 0)
         {
-            [self showErrorViewWithType:NBErrorViewTypeNoData callback:^(NBErrorView *errorView) {
-                [self requestServer];
-            }];
+            [NBErrorView showErrorViewInView:self.view inset:UIEdgeInsetsMake(64, 0, 0, 0)
+                                       image:[UIImage imageNamed:@"ic_blankpage_wodeshengyuan"]
+                                     message:@"暂无拉黑记录"
+                                    callback:^(NBErrorView *errorView) {
+                                        [self requestServer];
+                                    }];
         }
         else
         {
