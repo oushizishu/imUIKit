@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "BJChatInfo.h"
 
+//加入黑名单操作
+extern NSString *const NBContactBlacklistNotification;
+
 @interface NBPersonalSettingViewController : UIViewController
 
 @property (nonatomic,strong)BJChatInfo *bjChatInfo;

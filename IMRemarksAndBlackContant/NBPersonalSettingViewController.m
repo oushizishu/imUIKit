@@ -5,6 +5,7 @@
 //  Created by liujiaming on 16/11/22.
 //  Copyright © 2016年 com.bjhl. All rights reserved.
 //
+NSString *const NBContactBlacklistNotification = @"NBContactBlacklistNotification";
 
 #import "NBPersonalSettingViewController.h"
 #import "NSString+utils.h"
@@ -129,6 +130,7 @@
                                              strongdef(self)
                                              if (response.code==0) {
                                                  [self showHUDWithText:@"加入黑名单成功" animated:YES];
+                                                 [[NSNotificationCenter defaultCenter] postNotificationName:NBContactBlacklistNotification object:@(YES)];
                                              }else{
                                                  self.switchBtn.on=NO;
                                                  [self showHUDWithText:response.msg animated:YES];
@@ -142,6 +144,7 @@
                                              callback:^(BaseResponse *reponse) {
                                                  if (reponse.code==0) {
                                                      [self showHUDWithText:@"移除黑名单成功" animated:YES];
+                                                     [[NSNotificationCenter defaultCenter] postNotificationName:NBContactBlacklistNotification object:@(NO)];
                                                  }else{
                                                      self.switchBtn.on=YES;
                                                      [self showHUDWithText:reponse.msg animated:YES];
