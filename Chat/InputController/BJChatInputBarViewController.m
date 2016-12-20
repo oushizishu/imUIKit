@@ -655,6 +655,7 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     self.faceButton.selected = NO;
+    self.autoReplyButton.selected = NO;
     self.styleChangeButton.selected = NO;
     self.moreButton.selected = NO;
     return YES;
@@ -804,6 +805,7 @@
             NSMutableString *str = [NSMutableString stringWithString:self.inputTextView.text];
             [str appendString:content];
             self.inputTextView.text = str;
+            [self.inputTextView becomeFirstResponder];
         };
         _fastReplyViewController.delegate = self;
     }
