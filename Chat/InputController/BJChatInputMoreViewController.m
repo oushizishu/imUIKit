@@ -17,8 +17,9 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "MBProgressHUD+Simple.h"
-#import "SendCourseListViewController.h"
+#import "NBIMSendCourseCardViewController.h"
 #import "BJCouponManagerViewController.h"
+#import "BJTPersonalCardViewController.h"
 #import "CardSimpleItem.h"
 #import <User.h>
 
@@ -125,19 +126,27 @@
 //        [MBProgressHUD showWindowMessageThenHide:@"审核上线后才能拥有名片哦"];
 //        return;
 //    }
-    CardSimpleItem * item = [[CardSimpleItem alloc] init];
-    item.url = [NSString stringWithFormat:@"%@/%lld", [BJDeployEnv sharedInstance].baseMAPIURLStr, CommonInstance.mainAccount.personId];
-    [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+//    CardSimpleItem * item = [[CardSimpleItem alloc] init];
+//    item.url = [NSString stringWithFormat:@"%@/%lld", [BJDeployEnv sharedInstance].baseMAPIURLStr, CommonInstance.mainAccount.personId];
+//    [BJSendMessageHelper sendCardMessage:item chatInfo:self.chatInfo];
+    weakifyself;
+    BJTPersonalCardViewController *vc = [[BJTPersonalCardViewController alloc] init];
+    [vc setSendCallback:^(UIImage *image) {
+        strongifyself;
+        [self sendImageMessage:image];
+    }];
+    [vc setNotShare:YES];
+    [self.navigationController pushViewController:vc animated:YES];
+    
     
     // 友盟统计：消息-联系人聊天界面-我的名片
     [MobClick event:@"20115"];
 }
 
 - (void)showCourseView{
-    SendCourseListViewController *send = [[SendCourseListViewController alloc] init];
+    NBIMSendCourseCardViewController *send = [[NBIMSendCourseCardViewController alloc] init];
     WS(weakSelf)
-    send.selectCallback = ^(NSDictionary *dic){
-        NSString *url = dic[@"detail_url"];
+    send.selectCallback = ^(NSString *url){
         [weakSelf sendCourseViewWithURL:url];
     };
     [self.navigationController pushViewController:send animated:YES];

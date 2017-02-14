@@ -41,6 +41,7 @@
 #import <BJHL-IM-iOS-SDK/NSDictionary+Json.h>
 #import <BJHL-IM-iOS-SDK/NSString+Json.h>
 #import "MBProgressHUD+IMKit.h"
+#import "NBPersonalSettingViewController.h"
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -588,7 +589,24 @@ IMNewGRoupNoticeDelegate>
     }
     [self.tableView reloadData];
 }
-
+- (void)avatarHandle
+{
+    //单聊
+    if (self.chatInfo.chat_t == eChatType_Chat)
+    {
+        //联系人详情页
+        NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
+        vc.bjChatInfo = self.chatInfo;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else
+    {
+        //群主/管理员点击
+        
+        //普通群成员点击
+        
+    }
+}
 #pragma mark - 键盘相关
 
 // 点击背景隐藏
@@ -745,6 +763,8 @@ IMNewGRoupNoticeDelegate>
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
     if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
         //点击头像，添加响应操作
+        [self avatarHandle];
+        
     }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];
     }
