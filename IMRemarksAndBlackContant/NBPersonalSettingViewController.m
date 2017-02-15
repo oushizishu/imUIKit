@@ -403,6 +403,11 @@ typedef enum : NSUInteger {
                     {
                         [cell.detailTextLabel setText:[self.user getContactName]];
                     }
+                    else
+                    {
+                        [cell.detailTextLabel setText:self.detailString];
+
+                    }
                 }
                     break;
                     case TagCell:
