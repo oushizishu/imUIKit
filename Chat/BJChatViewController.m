@@ -42,6 +42,7 @@
 #import <BJHL-IM-iOS-SDK/NSString+Json.h>
 #import "MBProgressHUD+IMKit.h"
 #import "NBPersonalSettingViewController.h"
+#import "GroupMemberSettingViewController.h"
 
 const int BJ_Chat_Time_Interval = 5;
 
@@ -589,22 +590,43 @@ IMNewGRoupNoticeDelegate>
     }
     [self.tableView reloadData];
 }
-- (void)avatarHandle
+- (void)avatarHandle:(NSDictionary *)userInfo
 {
+
+    IMMessage *message = [userInfo valueForKey:@"kBJRouterEventUserInfoObject"];
+    User *user = [[BJIMManager shareInstance] getUser:message.sender role:message.senderRole];
+
+    //用户角色为学生、老师、机构可以点击
+    if (user.userRole == eUserRole_System ||
+        user.userRole == eUserRole_Kefu ||
+        user.userRole == eUserRole_Anonymous)
+    {
+        return;
+    }
     //单聊
     if (self.chatInfo.chat_t == eChatType_Chat)
     {
         //联系人详情页
         NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
-        vc.bjChatInfo = self.chatInfo;
+        vc.user = user;
         [self.navigationController pushViewController:vc animated:YES];
     }
     else
     {
-        //群主/管理员点击
-        
-        //普通群成员点击
-        
+        if (1)
+        {
+            //群主/管理员点击
+            GroupMemberSettingViewController *settingVC = [[GroupMemberSettingViewController alloc] init];
+            settingVC.user = user;
+            [self.navigationController pushViewController:settingVC animated:YES];
+        }
+        else
+        {
+            //普通群成员点击
+            NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
+            vc.user = user;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 #pragma mark - 键盘相关
@@ -763,7 +785,7 @@ IMNewGRoupNoticeDelegate>
     IMMessage *message = [userInfo objectForKey:kBJRouterEventUserInfoObject];
     if ([eventName isEqualToString:kBJRouterEventChatCellHeadTapEventName]){
         //点击头像，添加响应操作
-        [self avatarHandle];
+        [self avatarHandle:userInfo];
         
     }else if ([eventName isEqualToString:kBJRouterEventImageBubbleTapEventName]){
         [self showBigImageWithMessage:message];

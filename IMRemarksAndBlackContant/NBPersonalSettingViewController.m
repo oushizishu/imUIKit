@@ -9,6 +9,7 @@ NSString *const NBContactBlacklistNotification = @"NBContactBlacklistNotificatio
 
 #import "NBPersonalSettingViewController.h"
 #import "NSString+utils.h"
+#import "User+ViewModel.h"
 #import "NBRemarkNameViewController.h"
 
 typedef enum : NSUInteger {
@@ -37,6 +38,8 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong)UILabel * idLabel;
 @property (nonatomic,strong)UILabel * nickNameLabel;
 @property (nonatomic,strong)NSString *tagString;
+@property (nonatomic,strong)NSString *detailString;
+
 
 @end
 
@@ -66,10 +69,9 @@ typedef enum : NSUInteger {
 
 #pragma  mark --- setup
 
-- (void)updateTitle{
-    NSString *remarkName = [NSString defaultString:[self.bjChatInfo getContactRemarkName] defaultValue:@""];
-    NSString *name = [NSString defaultString:[self.bjChatInfo getToName] defaultValue:@""];
-    self.title = (remarkName.length>0)?remarkName:name;
+- (void)updateTitle
+{
+    self.title = [self.user getContactName];
 }
 
 - (void)setUpData
@@ -117,12 +119,12 @@ typedef enum : NSUInteger {
         _avtarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_avtarBtn.layer setCornerRadius:2];
         [_avtarBtn setClipsToBounds:YES];
-        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:self.bjChatInfo.chatToUser.avatar] forState:UIControlStateNormal placeholderImage:placeholderImage];
+        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:self.user.avatar] forState:UIControlStateNormal placeholderImage:placeholderImage];
         [_headerView addSubview:_avtarBtn];
         weakifyself;
         [_avtarBtn handleControlEvent:UIControlEventTouchUpInside withBlock:^{
             strongifyself;
-            NSString *string = [NSString stringWithFormat:@"%@/x/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,[self.bjChatInfo getToId]];
+            NSString *string = [NSString stringWithFormat:@"%@/x/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
             [[BJActionManager sharedManager] sendTotarget:self handleWithUrl:string];
         }];
         [_avtarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -141,8 +143,7 @@ typedef enum : NSUInteger {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
             
         }];
-        NSString *remarkName = [NSString defaultString:[self.bjChatInfo getContactRemarkName] defaultValue:@""];
-        [_nameLabel setText:remarkName.length>0?remarkName:[self.bjChatInfo getContactNickName]];
+        [_nameLabel setText:[self.user getContactName]];
         
         _idLabel = [[UILabel alloc] init];
         [_idLabel setFont:[UIFont systemFontOfSize:13]];
@@ -151,7 +152,7 @@ typedef enum : NSUInteger {
         [_idLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
         }];
-        [_idLabel setText:[NSString stringWithFormat:@"ID:%lld",[self.bjChatInfo getToId]]];
+        [_idLabel setText:[NSString stringWithFormat:@"ID:%lld",self.user.userId]];
         
         _nickNameLabel = [[UILabel alloc] init];
         [_nickNameLabel setFont:[UIFont systemFontOfSize:13]];
@@ -160,10 +161,9 @@ typedef enum : NSUInteger {
         [_nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
         }];
-        [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",[self.bjChatInfo getContactNickName]]];
+        [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",[self.user getContactNickName]]];
         
         NSArray *array = @[_nameLabel,_idLabel,_nickNameLabel];
-//        [array mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedItemLength:1 leadSpacing:20 tailSpacing:9];
         [array mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:5 leadSpacing:20 tailSpacing:9];
     }
     return _headerView;
@@ -245,8 +245,8 @@ typedef enum : NSUInteger {
 - (void)addBlackContant
 {
     weakdef(self)
-    [[BJIMManager shareInstance]addBlackContactId:[self.bjChatInfo getToId]
-                                      contactRole:[self.bjChatInfo getToRole]
+    [[BJIMManager shareInstance]addBlackContactId:self.user.userId
+                                      contactRole:self.user.userRole
                                          callback:^(BaseResponse *response) {
                                              strongdef(self)
                                              if (response.code==0) {
@@ -260,8 +260,8 @@ typedef enum : NSUInteger {
 }
 - (void)removeBlackContant
 {
-    [[BJIMManager shareInstance] removeBlackContactId:[self.bjChatInfo getToId]
-                                          contactRole:[self.bjChatInfo getToRole]
+    [[BJIMManager shareInstance] removeBlackContactId:self.user.userId
+                                          contactRole:self.user.userRole
                                              callback:^(BaseResponse *reponse) {
                                                  if (reponse.code==0) {
                                                      [self showHUDWithText:@"移除黑名单成功" animated:YES];
@@ -275,21 +275,31 @@ typedef enum : NSUInteger {
 - (void)requesetServer
 {
     weakifyself;
-    NSDictionary *dic = @{@"student_user_number":[NSNumber numberWithLongLong:[self.bjChatInfo getToId]]};
-    NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/student_contact_detail" parameters:dic];
-    request.requestType = QFNetworkRequestTypeGet;
-    [request nb_startWithSuccessCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response, NBNetworkCallback  _Nullable failure) {
-        strongifyself
-        [self hideLoading];
-        if (request.response.responseCode == NBRequestSucceeded)
-        {
-            self.tagString = [[request.response.responseData valueForKey:@"student"] valueForKey:@"prefer_string"];
-            [self.tableView reloadData];
-        }
-    } failureCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response) {
-        strongifyself
-        [self hideLoading];
-    }];
+    
+    if ([self isTeacher])
+    {
+        
+    }
+    else
+    {
+        NSDictionary *dic = @{@"student_user_number":[NSNumber numberWithLongLong:self.user.userId]};
+        NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/student_contact_detail" parameters:dic];
+        request.requestType = QFNetworkRequestTypeGet;
+        [request nb_startWithSuccessCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response, NBNetworkCallback  _Nullable failure) {
+            strongifyself
+            [self hideLoading];
+            if (request.response.responseCode == NBRequestSucceeded)
+            {
+                self.detailString = [[request.response.responseData valueForKey:@"im"] valueForKey:@"remark_desc"];
+                
+                self.tagString = [[request.response.responseData valueForKey:@"student"] valueForKey:@"prefer_string"];
+                [self.tableView reloadData];
+            }
+        } failureCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response) {
+            strongifyself
+            [self hideLoading];
+        }];
+    }
 }
 #pragma mark  tableview delegate /datasource
 
@@ -383,9 +393,16 @@ typedef enum : NSUInteger {
                 case RemarkCell:
                 {
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    
-                    NSString *remarkName = [NSString defaultString:[self.bjChatInfo getContactRemarkName] defaultValue:@""];
-                    [cell.detailTextLabel setText:remarkName.length>0?remarkName:@""];
+                    if (self.detailString.length > 12)
+                    {
+                        self.detailString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:11]];
+                        
+                        [cell.detailTextLabel setText:self.detailString];
+                    }
+                    else if(self.detailString.length == 0)
+                    {
+                        [cell.detailTextLabel setText:[self.user getContactName]];
+                    }
                 }
                     break;
                     case TagCell:
@@ -414,7 +431,7 @@ typedef enum : NSUInteger {
             case BlackSection:
         {
             cell.accessoryView = _switchBtn;
-            IMUserRelation relation = self.bjChatInfo.chatToUser.relation;
+            IMUserRelation relation = self.user.relation;
             if (relation==eUserRelation_normal) {
                 _switchBtn.on=NO;
             }else{
@@ -436,7 +453,7 @@ typedef enum : NSUInteger {
             case RemarkCell:
             {
                 NBRemarkNameViewController *vc = [NBRemarkNameViewController new];
-                vc.bjChatInfo = self.bjChatInfo;
+                vc.user = self.user;
                 [self.navigationController pushViewController:vc animated:YES];
             }
                 break;
@@ -449,7 +466,7 @@ typedef enum : NSUInteger {
 #pragma mark - Inter 
 - (BOOL)isTeacher
 {
-    if ([self.bjChatInfo getToRole] == eUserRole_Teacher)
+    if (self.user.userRole == eUserRole_Teacher)
     {
         return YES;
     }

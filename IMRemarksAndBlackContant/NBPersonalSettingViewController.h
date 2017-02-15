@@ -14,6 +14,6 @@ extern NSString *const NBContactBlacklistNotification;
 
 @interface NBPersonalSettingViewController : UIViewController
 
-@property (nonatomic,strong)BJChatInfo *bjChatInfo;
+@property (nonatomic,strong)User *user;
 
 @end

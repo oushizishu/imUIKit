@@ -11,6 +11,6 @@
 
 @interface NBRemarkNameViewController : UIViewController
 
-@property (nonatomic,strong)BJChatInfo *bjChatInfo;
+@property (nonatomic,strong)User *user;
 
 @end

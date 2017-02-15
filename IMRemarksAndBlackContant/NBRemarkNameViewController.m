@@ -10,6 +10,7 @@
 #import "NSString+NBByteLength.h"
 #import "NSString+utils.h"
 #import "BJIMKitNetworkManager.h"
+#import "User+ViewModel.h"
 
 @interface NBRemarkDetailTextView : UITextView
 
@@ -85,7 +86,7 @@
 {
     [super viewWillAppear:animated];
     [self updateRightBtnColor];
-    [BJIMKitNetworkManager getRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",[self.bjChatInfo getToId]] userRole:[self.bjChatInfo getToRole] success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
+    [BJIMKitNetworkManager getRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",self.user.userId] userRole:self.user.userRole success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
         self.detailText.text = [[response valueForKey:@"data"] valueForKey:@"remark_desc"];
     } failure:^(NSError *error, BJCNRequestParams *params) {
         [self showHUDWithText:@"获取备注详情失败" animated:YES];
@@ -103,7 +104,7 @@
 }
 - (void)sureClick:(UIButton *)button
 {
-    [[BJIMManager shareInstance]setRemarkName:self.remarkName.text.length>0?self.remarkName.text:@"" user:self.bjChatInfo.chatToUser callback:^(NSString *remarkName, NSInteger errCode, NSString *errMsg) {
+    [[BJIMManager shareInstance]setRemarkName:self.remarkName.text.length>0?self.remarkName.text:@"" user:self.user callback:^(NSString *remarkName, NSInteger errCode, NSString *errMsg) {
         if (errCode==0) {
             [self showHUDWithText:@"修改成功" animated:YES];
             [self.navigationController popViewControllerAnimated:YES];
@@ -111,7 +112,7 @@
             [self showHUDWithText:errMsg animated:YES];
         }
     }];
-    [BJIMKitNetworkManager setRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",[self.bjChatInfo getToId]] userRole:[self.bjChatInfo getToRole] remarkDesc:self.detailText.text success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
+    [BJIMKitNetworkManager setRemarkDescWithUserNumber:[NSString stringWithFormat:@"%lld",self.user.userId] userRole:self.user.userRole remarkDesc:self.detailText.text success:^(id response, NSDictionary *responseHeaders, BJCNRequestParams *params) {
         
     } failure:^(NSError *error, BJCNRequestParams *params) {
         
@@ -122,12 +123,12 @@
 }
 - (NSString *)getRemarkNameFromChatInfo
 {
-    NSString *remarkName = [NSString defaultString:[self.bjChatInfo getContactRemarkName] defaultValue:@""];
+    NSString *remarkName = [NSString defaultString:[self.user getContactRemarkName] defaultValue:@""];
     return remarkName;
 }
 - (NSString *)getRealNameFromChatInfo
 {
-    NSString *name = [NSString defaultString:[self.bjChatInfo getToName] defaultValue:@""];
+    NSString *name = [NSString defaultString:[self.user getContactNickName] defaultValue:@""];
     return name;
 }
 #pragma setupview
