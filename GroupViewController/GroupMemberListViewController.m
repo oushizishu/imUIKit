@@ -17,10 +17,11 @@
 
 #import "CustomTableView/CustomTableViewController.h"
 
-@interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate>
+@interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate,UISearchBarDelegate>
 
 @property (strong, nonatomic) NSString *im_group_id;
 @property (strong ,nonatomic) CustomTableViewController *customTableViewController;
+@property (strong ,nonatomic) CustomTableViewController *searchTableViewController;
 
 @property (strong ,nonatomic) NSMutableArray<IMGroupUserCellMode *> *groupUserArray;
 
@@ -93,10 +94,25 @@
     
     self.customTableViewController.tableView.showsVerticalScrollIndicator = YES;
     
+    UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    [bar setPlaceholder:@"搜索"];
+    [bar setBackgroundImage:[UIImage imageWithColor:[UIColor bj_gray_100]]];
+    [bar setDelegate:self];
+    [bar setTintColor:[UIColor bj_blue]];
+    [self.customTableViewController setTableHeaderView:bar];
+    
     [self requestGroupMembers];
     
 }
-
+//- (void)viewWillAppear:(BOOL)animated
+//{
+////    UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+////    [bar setPlaceholder:@"搜索"];
+////    [bar setBackgroundImage:[UIImage imageWithColor:[UIColor bj_gray_100]]];
+////    [bar setTintColor:[UIColor bj_blue]];
+////    [bar setShowsCancelButton:YES animated:YES];
+////    [self.customTableViewController setTableHeaderView:bar];
+//}
 - (void)requestGroupMembers
 {
     WS(weakself);
@@ -106,6 +122,7 @@
             [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:weakself.view];
         }else
         {
+            
             [MBProgressHUD hideHUDForView:weakself.view animated:YES];
             weakself.pageIndex++;
             weakself.isAdmin = is_admin;
@@ -115,6 +132,7 @@
             if (hasMore) {
                 weakself.ifGroup = NO;
             }
+
             
             [weakself appendMoreMembers:members];
         }
@@ -453,10 +471,30 @@
         CGRect rectNav = self.navigationController.navigationBar.frame;
         _customTableViewController = [[CustomTableViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
         _customTableViewController.delegate = self;
+    
         
         [self.view addSubview:self.customTableViewController.view];
+        
+     
     }
     return _customTableViewController;
 }
 
+#pragma mark - SearchBar Delegate
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [searchBar setShowsCancelButton:YES animated:YES];
+    
+    return YES;
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+
+}
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    
+}
 @end

@@ -395,7 +395,7 @@ typedef enum : NSUInteger {
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                     if (self.detailString.length > 12)
                     {
-                        self.detailString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:11]];
+                        self.detailString = [NSString stringWithFormat:@"%@...",[self.detailString substringToIndex:11]];
                         
                         [cell.detailTextLabel setText:self.detailString];
                     }

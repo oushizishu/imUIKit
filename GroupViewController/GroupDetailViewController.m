@@ -463,7 +463,6 @@
         CGRect rectNav = self.navigationController.navigationBar.frame;
         _customTableViewController = [[CustomTableViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, rectScreen.size.height-rectStatus.size.height-rectNav.size.height)];
         _customTableViewController.delegate = self;
-        
         [self.view addSubview:self.customTableViewController.view];
     }
     return _customTableViewController;
