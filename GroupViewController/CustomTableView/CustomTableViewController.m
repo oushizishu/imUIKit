@@ -236,7 +236,13 @@
         [self.delegate userHitCellMode:itemCellMode];
     }
 }
-
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(tableViewDidScroll:)])
+    {
+        [self.delegate tableViewDidScroll:scrollView];
+    }
+}
 -(NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
     return self.sectionTitles;

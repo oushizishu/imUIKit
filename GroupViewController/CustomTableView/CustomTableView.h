@@ -56,6 +56,8 @@ typedef NS_ENUM(NSInteger, ArrayInsertPosition)
 //用户滚动到底部
 -(void)userScrollBottom;
 
+-(void)tableViewDidScroll:(UIScrollView *)scrollView;
+
 @end
 
 @interface CustomTableViewController : UIViewController

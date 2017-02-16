@@ -16,12 +16,13 @@
 #import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 
 #import "CustomTableView/CustomTableViewController.h"
+#import "GroupMemberSearchResultViewController.h"
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate,UISearchBarDelegate>
 
 @property (strong, nonatomic) NSString *im_group_id;
 @property (strong ,nonatomic) CustomTableViewController *customTableViewController;
-@property (strong ,nonatomic) CustomTableViewController *searchTableViewController;
+@property (strong ,nonatomic) GroupMemberSearchResultViewController *searchResultViewController;
 
 @property (strong ,nonatomic) NSMutableArray<IMGroupUserCellMode *> *groupUserArray;
 
@@ -479,22 +480,27 @@
     }
     return _customTableViewController;
 }
+- (GroupMemberSearchResultViewController *)searchResultViewController
+{
+    if (!_searchResultViewController)
+    {
+        _searchResultViewController = [[GroupMemberSearchResultViewController alloc] init];
+        [self addChildViewController:_searchResultViewController];
+        [self didMoveToParentViewController:_searchResultViewController];
+        
+    }
+    return _searchResultViewController;
+}
 
 #pragma mark - SearchBar Delegate
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    [searchBar setShowsCancelButton:YES animated:YES];
+    [self.view addSubview:self.searchResultViewController.view];
     
-    return YES;
-}
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    return NO;
 
 }
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
-{
-    
-}
+
+
 @end
