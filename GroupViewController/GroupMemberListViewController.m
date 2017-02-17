@@ -17,6 +17,8 @@
 
 #import "CustomTableView/CustomTableViewController.h"
 #import "GroupMemberSearchResultViewController.h"
+#import "GroupMemberSettingViewController.h"
+#import "NBPersonalSettingViewController.h"
 
 @interface GroupMemberListViewController()<CustomTableViewControllerDelegate,IMGroupUserCellModeDelegate,UISearchBarDelegate>
 
@@ -386,7 +388,34 @@
 
 - (void)userHitCellMode:(BaseCellMode *)cellMode
 {
+    IMGroupUserCellMode *mode = (IMGroupUserCellMode *)cellMode;
+    GroupDetailMember *member = mode.GroupDetailMember;
     
+    User *user = [[User alloc] init];
+    user.userId = member.user_id;
+    user.avatar = member.avatar;
+    user.name = member.user_name;
+    
+//    User *user = [[BJIMManager shareInstance] getUser:member.user_number role:member.user_role];
+    
+    [[BJIMManager shareInstance] isAdmin:[self.im_group_id longLongValue] callback:^(NSError *error, IMGroupMemberRole groupMemberRole) {
+        
+        if (groupMemberRole == eIMGroupMemberRole_Normal) {
+            //普通群成员点击
+            NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
+            vc.user = user;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else
+        {
+            //群主/管理员点击
+            GroupMemberSettingViewController *settingVC = [[GroupMemberSettingViewController alloc] init];
+            settingVC.groupId = [self.im_group_id longLongValue];
+            settingVC.user = user;
+            settingVC.isOwner = (groupMemberRole == eIMGroupMemberRole_Owner);
+            [self.navigationController pushViewController:settingVC animated:YES];
+        }
+    }];
 }
 
 - (void)userScrollBottom
@@ -484,7 +513,15 @@
 {
     if (!_searchResultViewController)
     {
+        weakifyself;
         _searchResultViewController = [[GroupMemberSearchResultViewController alloc] init];
+        [_searchResultViewController setSearchBarCancelBlock:^{
+            strongifyself;
+            
+            [UIView animateWithDuration:.2 animations:^{
+                [self.customTableViewController.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64)];
+            }];
+        }];
         [self addChildViewController:_searchResultViewController];
         [self didMoveToParentViewController:_searchResultViewController];
         
@@ -496,6 +533,9 @@
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    [self.customTableViewController.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    
     [self.view addSubview:self.searchResultViewController.view];
     
     return NO;

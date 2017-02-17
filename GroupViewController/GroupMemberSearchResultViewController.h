@@ -10,5 +10,6 @@
 
 @interface GroupMemberSearchResultViewController : UIViewController
 
+@property (nonatomic,copy)void (^searchBarCancelBlock)(void);
 
 @end

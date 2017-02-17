@@ -11,6 +11,8 @@
 #import <BJHL-Foundation-iOS/BJHL-Foundation-iOS.h>
 #import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 #import "GroupMemberSettingTableViewCell.h"
+#import "MBProgressHUD+IMKit.h"
+
 
 typedef enum : NSUInteger {
     ChatSection,//禁言信息
@@ -33,6 +35,10 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong)UILabel * idLabel;
 @property (nonatomic,strong)UILabel * nickNameLabel;
 @property (nonatomic,strong)NSString *tagString;
+@property (nonatomic,assign)BOOL isForbid;//设置禁言
+@property (nonatomic,assign)BOOL isAdmin;//设置管理员
+@property (nonatomic,strong)MemberProfile *memberProfile;
+
 
 
 @end
@@ -92,20 +98,25 @@ typedef enum : NSUInteger {
     [self setupBackBarButtonItem];
     [self.view addSubview:self.tableView];
     
-    if (![self isTeacher]) {
-        [self.view addSubview:self.footerView];
-        [self.footerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.and.right.equalTo(self.view);
-            make.height.mas_equalTo(44);
-            make.bottom.mas_equalTo(-20);
-        }];
-    }
+    [self.view addSubview:self.footerView];
+    [self.footerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.equalTo(self.view);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(-20);
+    }];
+    
+    [[BJIMManager shareInstance] getGroupMemberProfile:self.groupId user_number:self.user.userId userRole:self.user.userRole callback:^(NSError *error, MemberProfile *memberProfile) {
+        if (memberProfile)
+        {
+            self.memberProfile = memberProfile;
+            [self.tableView reloadData];
+        }
+    }];
 }
 - (UITableView *)tableView
 {
-    CGFloat height = [self isTeacher]?64:0;
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.current_w, self.view.current_h-height) style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.current_w, self.view.current_h) style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.backgroundView = nil;
@@ -249,7 +260,7 @@ typedef enum : NSUInteger {
             num = 1;
             break;
         case AdminSection:
-            num = 1;
+            num = _isOwner?1:0;
             break;
         default:
             break;
@@ -301,7 +312,9 @@ typedef enum : NSUInteger {
             UISwitch *switchControl =  [[UISwitch alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
             switchControl.onTintColor = [UIColor colorWithHexString:@"#44db5e"];
             [switchControl addTarget:self action:@selector(setChat:) forControlEvents:UIControlEventValueChanged];
-
+            
+            
+            
             cell.accessoryView = switchControl;
         }
             break;
@@ -322,29 +335,25 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - Inter
-- (BOOL)isTeacher
-{
-    return NO;
-}
 
 #pragma mark - Fun
 - (void)setChat:(UISwitch *)control
 {
     GroupMemberSettingTableViewCell *cell = (GroupMemberSettingTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:ChatSection]];
-    if (control.isOn)
+    if (cell)
     {
-        if (cell)
-        {
-            [cell.detailTextLabel setText:@"已禁言"];
-
-        }
+        [cell.detailTextLabel setText:control.isOn?@"已禁言":nil];
     }
-    else
-    {
-        if (cell)
-        {
-            [cell.detailTextLabel setText:nil];
-        }
+    if (control.isOn != _isForbid) {
+        _isForbid = control.isOn;
+        [[BJIMManager shareInstance] setGroupMemberForbid:self.groupId user_number:self.user.userId user_role:self.user.userRole status:control.isOn?1:0 callback:^(NSError *error) {
+            if (error) {
+                [MBProgressHUD imShowError:@"设置失败" toView:self.view];
+                _isForbid = !control.isOn;
+                control.on = !control.isOn;
+                [cell.detailTextLabel setText:control.isOn?@"已禁言":nil];
+            }
+        }];
     }
 }
 
@@ -358,10 +367,35 @@ typedef enum : NSUInteger {
             [control setOn:YES];
         }];
         [alertVC addButtonWithTitle:@"确定" block:^(NSUInteger index) {
-            
+            if (control.isOn != _isAdmin) {
+                _isAdmin = control.isOn;
+                [[BJIMManager shareInstance] setGroupAdmin:self.groupId user_number:self.user.userId user_role:self.user.userRole status:0 callback:^(NSError *error) {
+                    if (error) {
+                        [MBProgressHUD imShowError:@"设置失败" toView:self.view];
+                        _isAdmin = !control.isOn;
+                        control.on = !control.isOn;
+                    }
+                }];
+            }
+
         }];
         [alertVC setTitleColor:[UIColor bj_blue] forButton:TKAlertViewButtonTypeDefault];
         [alertVC show];
+    }
+    else
+    {
+        //设置管理员
+        if (control.isOn != _isAdmin) {
+            _isAdmin = control.isOn;
+            [[BJIMManager shareInstance] setGroupAdmin:self.groupId user_number:self.user.userId user_role:self.user.userRole status:1 callback:^(NSError *error) {
+                if (error) {
+                    [MBProgressHUD imShowError:@"设置失败" toView:self.view];
+                    _isAdmin = !control.isOn;
+                    control.on = !control.isOn;
+                }
+            }];
+        }
+
     }
 }
 - (void)removeGroup:(UIButton *)sender
@@ -369,7 +403,14 @@ typedef enum : NSUInteger {
     TKAlertViewController *alertVC = [[TKAlertViewController alloc] initWithTitle:nil message:@"确定将该用户移出？"];
     [alertVC addCancelButtonWithTitle:@"取消" block:nil];
     [alertVC addButtonWithTitle:@"确定" block:^(NSUInteger index) {
-        
+        [[BJIMManager shareInstance] removeGroupMember:self.groupId user_number:self.user.userId user_role:self.user.userRole callback:^(NSError *error) {
+            if (error) {
+                [MBProgressHUD imShowError:@"移除失败" toView:self.view];
+            }else
+            {
+                
+            }
+        }];
     }];
     [alertVC setTitleColor:[UIColor bj_blue] forButton:TKAlertViewButtonTypeDefault];
     [alertVC show];

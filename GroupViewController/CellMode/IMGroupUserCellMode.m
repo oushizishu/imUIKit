@@ -39,13 +39,13 @@
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         self.contentView.backgroundColor = [UIColor whiteColor];
         
-        UISwipeGestureRecognizer *lSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
-        [lSwipG setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-        [self addGestureRecognizer:lSwipG];
-        
-        UISwipeGestureRecognizer *rSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
-        [rSwipG setDirection:(UISwipeGestureRecognizerDirectionRight)];
-        [self addGestureRecognizer:rSwipG];
+//        UISwipeGestureRecognizer *lSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        [lSwipG setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+//        [self addGestureRecognizer:lSwipG];
+//        
+//        UISwipeGestureRecognizer *rSwipG = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        [rSwipG setDirection:(UISwipeGestureRecognizerDirectionRight)];
+//        [self addGestureRecognizer:rSwipG];
         
         CGRect sRect = [UIScreen mainScreen].bounds;
         
@@ -70,25 +70,25 @@
         self.userRoleL.textAlignment = NSTextAlignmentLeft;
         [self.cellView addSubview:self.userRoleL];
         
-        self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 75, 55)];
-        self.deleteView.backgroundColor = [UIColor bjck_colorWithHexString:@"#f95e5e"];
-        [self.cellView addSubview:self.deleteView];
-        self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
-        [self.deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
-        self.deleteBtn.backgroundColor = [UIColor clearColor];
-        [self.deleteBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.deleteBtn addTarget:self action:@selector(deleteAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.deleteView addSubview:self.deleteBtn];
-        
-        self.moreView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width+75, 0, 75, 55)];
-        self.moreView.backgroundColor = [UIColor bjck_colorWithHexString:@"#6d6d6e"];
-        [self.cellView addSubview:self.moreView];
-        self.moreBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
-        [self.moreBtn setTitle:@"更多" forState:UIControlStateNormal];
-        self.moreBtn.backgroundColor = [UIColor clearColor];
-        [self.moreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.moreBtn addTarget:self action:@selector(moreAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.moreView addSubview:self.moreBtn];
+//        self.deleteView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width, 0, 75, 55)];
+//        self.deleteView.backgroundColor = [UIColor bjck_colorWithHexString:@"#f95e5e"];
+//        [self.cellView addSubview:self.deleteView];
+//        self.deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
+//        [self.deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
+//        self.deleteBtn.backgroundColor = [UIColor clearColor];
+//        [self.deleteBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [self.deleteBtn addTarget:self action:@selector(deleteAction) forControlEvents:UIControlEventTouchUpInside];
+//        [self.deleteView addSubview:self.deleteBtn];
+//        
+//        self.moreView = [[UIView alloc] initWithFrame:CGRectMake(sRect.size.width+75, 0, 75, 55)];
+//        self.moreView.backgroundColor = [UIColor bjck_colorWithHexString:@"#6d6d6e"];
+//        [self.cellView addSubview:self.moreView];
+//        self.moreBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 18, 55, 20)];
+//        [self.moreBtn setTitle:@"更多" forState:UIControlStateNormal];
+//        self.moreBtn.backgroundColor = [UIColor clearColor];
+//        [self.moreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [self.moreBtn addTarget:self action:@selector(moreAction) forControlEvents:UIControlEventTouchUpInside];
+//        [self.moreView addSubview:self.moreBtn];
         
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 54.5, sRect.size.width, 0.5)];
         lineView.backgroundColor = [UIColor bjck_colorWithHexString:@"#dcddde"];

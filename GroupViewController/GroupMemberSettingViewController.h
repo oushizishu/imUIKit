@@ -9,8 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "BJChatInfo.h"
 
+
 @interface GroupMemberSettingViewController : UIViewController
 
+@property (nonatomic,assign)int64_t groupId;
+
 @property (nonatomic,strong)User *user;
+
+@property (nonatomic,assign)BOOL isOwner;//是否是群主
 
 @end

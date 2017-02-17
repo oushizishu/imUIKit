@@ -126,6 +126,7 @@
 {
     [self.searchBar resignFirstResponder];
 }
+
 #pragma mark - Search Delegate
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
@@ -134,6 +135,10 @@
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    if (_searchBarCancelBlock)
+    {
+        _searchBarCancelBlock();
+    }
     [self.view removeFromSuperview];
     [self performSelector:@selector(navbarHiddenAnimate) withObject:nil afterDelay:0.01];
 }

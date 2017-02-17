@@ -613,20 +613,24 @@ IMNewGRoupNoticeDelegate>
     }
     else
     {
-        if (1)
-        {
-            //群主/管理员点击
-            GroupMemberSettingViewController *settingVC = [[GroupMemberSettingViewController alloc] init];
-            settingVC.user = user;
-            [self.navigationController pushViewController:settingVC animated:YES];
-        }
-        else
-        {
-            //普通群成员点击
-            NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
-            vc.user = user;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
+        [[BJIMManager shareInstance] isAdmin:self.chatInfo.chatToGroup.groupId callback:^(NSError *error, IMGroupMemberRole groupMemberRole) {
+         
+            if (groupMemberRole == eIMGroupMemberRole_Normal) {
+                //普通群成员点击
+                NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
+                vc.user = user;
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            else
+            {
+                //群主/管理员点击
+                GroupMemberSettingViewController *settingVC = [[GroupMemberSettingViewController alloc] init];
+                settingVC.groupId = self.chatInfo.chatToGroup.groupId;
+                settingVC.user = user;
+                settingVC.isOwner = (groupMemberRole == eIMGroupMemberRole_Owner);
+                [self.navigationController pushViewController:settingVC animated:YES];
+            }
+        }];
     }
 }
 #pragma mark - 键盘相关

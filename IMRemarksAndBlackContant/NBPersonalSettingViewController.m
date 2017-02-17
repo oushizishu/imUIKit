@@ -11,6 +11,8 @@ NSString *const NBContactBlacklistNotification = @"NBContactBlacklistNotificatio
 #import "NSString+utils.h"
 #import "User+ViewModel.h"
 #import "NBRemarkNameViewController.h"
+#import "MyChatViewController.h"
+
 
 typedef enum : NSUInteger {
     BaseInfoSection,//基础信息
@@ -39,7 +41,7 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong)UILabel * nickNameLabel;
 @property (nonatomic,strong)NSString *tagString;
 @property (nonatomic,strong)NSString *detailString;
-
+@property (nonatomic,strong)NSString *subject;
 
 @end
 
@@ -180,6 +182,7 @@ typedef enum : NSUInteger {
         [_sendMessageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_sendMessageBtn.titleLabel setFont:[UIFont systemFontOfSize:17]];
         [_footerView addSubview:_sendMessageBtn];
+        [_sendMessageBtn addTarget:self action:@selector(sendBtnPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_sendMessageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
             make.right.mas_equalTo(-15);
@@ -188,6 +191,12 @@ typedef enum : NSUInteger {
         
     }
     return _footerView;
+}
+- (void)sendBtnPressed:(UIButton *)sender
+{
+    MyChatViewController *chat = [[MyChatViewController alloc] initWithUserId:self.user.userId userRole:self.user.userRole];
+    
+    [self.navigationController pushViewController:chat animated:YES];
 }
 - (NSMutableArray *)dataArray
 {
@@ -278,12 +287,48 @@ typedef enum : NSUInteger {
     
     if ([self isTeacher])
     {
-        
+        NSDictionary *dic = @{@"user_number":[NSNumber numberWithLongLong:self.user.userId]};
+        NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/teacher-contact-detail" parameters:dic];
+        request.requestType = QFNetworkRequestTypeGet;
+        [request nb_startWithSuccessCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response, NBNetworkCallback  _Nullable failure) {
+            strongifyself
+            [self hideLoading];
+            if (request.response.responseCode == NBRequestSucceeded)
+            {
+                self.subject = [[request.response.responseData valueForKey:@"teacher"] valueForKey:@"subject_name"];
+                [self.tableView reloadData];
+            }
+        } failureCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response) {
+            strongifyself
+            [self hideLoading];
+        }];
+
+    }
+    else if ([self isInstitution])
+    {
+        NSDictionary *dic = @{@"user_number":[NSNumber numberWithLongLong:self.user.userId]};
+        NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/org-contact-detail" parameters:dic];
+        request.requestType = QFNetworkRequestTypeGet;
+        [request nb_startWithSuccessCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response, NBNetworkCallback  _Nullable failure) {
+            strongifyself
+            [self hideLoading];
+            if (request.response.responseCode == NBRequestSucceeded)
+            {
+                self.detailString = [[request.response.responseData valueForKey:@"im"] valueForKey:@"remark_desc"];
+                
+                self.subject = [[request.response.responseData valueForKey:@"org"] valueForKey:@"subject_name"];
+                [self.tableView reloadData];
+            }
+        } failureCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response) {
+            strongifyself
+            [self hideLoading];
+        }];
+
     }
     else
     {
-        NSDictionary *dic = @{@"student_user_number":[NSNumber numberWithLongLong:self.user.userId]};
-        NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/student_contact_detail" parameters:dic];
+        NSDictionary *dic = @{@"user_number":[NSNumber numberWithLongLong:self.user.userId]};
+        NBNetworkRequest *request = [[NBNetworkRequest alloc] initWithOwner:self urlPath:@"/v1/im/student-contact-detail" parameters:dic];
         request.requestType = QFNetworkRequestTypeGet;
         [request nb_startWithSuccessCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response, NBNetworkCallback  _Nullable failure) {
             strongifyself
@@ -425,7 +470,7 @@ typedef enum : NSUInteger {
                 case CategoryCell:
                 {
                     cell.accessoryType = UITableViewCellAccessoryNone;
-                    [cell.detailTextLabel setText:@"高中数学>高二>数学"];
+                    [cell.detailTextLabel setText:self.subject];
                 }
                     break;
                 default:
@@ -477,19 +522,39 @@ typedef enum : NSUInteger {
     }
     return NO;
 }
+- (BOOL)isInstitution
+{
+    if (self.user.userRole == eUserRole_Institution)
+    {
+        return YES;
+    }
+    return NO;
+}
+- (BOOL)isContact
+{
+    User *owner = [[User alloc] init];
+    owner.userId = [CommonInstance.mainAccount personId];
+    owner.userRole = eUserRole_Teacher;
+
+    BOOL iSContact = [[BJIMManager shareInstance] hasContactOwner:owner contact:self.user];
+    return iSContact;
+}
 - (CGFloat)heightForBaseInfoCell:(NSIndexPath *)indexPath
 {
     CGFloat height = 0;
     switch (indexPath.row)
     {
         case RemarkCell:
-            height = [self isTeacher]?0:44;
+            //老师为0，学生和机构为联系人的情况为44，否则为0
+            height = [self isTeacher]?0:([self isContact]?44:0);
             break;
+            //老师、机构为0，否则为44
         case TagCell:
-            height = [self isTeacher]?0:44;
+            height = [self isTeacher] || [self isInstitution]?0:44;
             break;
+            //老师、机构为44，否则为0
         case CategoryCell:
-            height = [self isTeacher]?44:0;
+            height = [self isTeacher] || [self isInstitution]?44:0;
             break;
         default:
             break;
