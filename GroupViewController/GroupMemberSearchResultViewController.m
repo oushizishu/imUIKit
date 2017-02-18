@@ -175,13 +175,7 @@
         _searchBarCancelBlock();
     }
     [self.view removeFromSuperview];
-    
-    //清空数据
-    [self.groupUserArray removeAllObjects];
-    SectionMode *model = [[SectionMode alloc] init];
-    [model setRows:self.groupUserArray];
-    self.sectionModeArray = @[model];
-    [self.customTableViewController setSections:self.sectionModeArray];
+    [self.customTableViewController.view setHidden:YES];
     
     [self performSelector:@selector(navbarHiddenAnimate) withObject:nil afterDelay:0.01];
 }

@@ -143,6 +143,7 @@ typedef enum : NSUInteger {
         [_headerView addSubview:_nameLabel];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
+            make.right.lessThanOrEqualTo(_headerView).offset(-10);
             
         }];
         [_nameLabel setText:[self.user getContactName]];
@@ -162,6 +163,7 @@ typedef enum : NSUInteger {
         [_headerView addSubview:_nickNameLabel];
         [_nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
+            make.right.lessThanOrEqualTo(_headerView).offset(-10);
         }];
         [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",[self.user getContactNickName]]];
         
