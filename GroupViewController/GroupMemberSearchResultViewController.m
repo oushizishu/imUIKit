@@ -72,9 +72,7 @@
 //    WS(weakself);
 //    [MBProgressHUD imShowLoading:@"正在获取群组详情..." toView:self.view];
     
-    NSNumber *groupId = [NSNumber numberWithInt:79368];
-    
-    [[BJIMManager shareInstance] getSearchMemberList:groupId query:query callback:^(NSError *error, NSArray<SearchMember *> *memberList) {
+    [[BJIMManager shareInstance] getSearchMemberList:self.groupId query:query callback:^(NSError *error, NSArray<SearchMember *> *memberList) {
         if (error) {
             //            [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:weakself.view];
         }else

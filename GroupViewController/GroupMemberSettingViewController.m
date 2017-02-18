@@ -12,7 +12,7 @@
 #import <BJHL-Kit-iOS/BJHL-Kit-iOS.h>
 #import "GroupMemberSettingTableViewCell.h"
 #import "MBProgressHUD+IMKit.h"
-
+#import "MemberProfile.h"
 
 typedef enum : NSUInteger {
     ChatSection,//禁言信息
@@ -81,6 +81,17 @@ typedef enum : NSUInteger {
     
     [self setUpView];
     
+    [[BJIMManager shareInstance] getGroupMemberProfile:self.groupId user_number:self.user.userId userRole:self.user.userRole callback:^(NSError *error, MemberProfile *memberProfile) {
+        if (memberProfile)
+        {
+            self.memberProfile = memberProfile;
+            self.isForbid = memberProfile.isForbid;
+            self.isAdmin = memberProfile.isAdmin;
+            
+            [self.tableView reloadData];
+        }
+    }];
+    
 }
 
 - (void)backAction:(id)aciton
@@ -105,13 +116,7 @@ typedef enum : NSUInteger {
         make.bottom.mas_equalTo(-20);
     }];
     
-    [[BJIMManager shareInstance] getGroupMemberProfile:self.groupId user_number:self.user.userId userRole:self.user.userRole callback:^(NSError *error, MemberProfile *memberProfile) {
-        if (memberProfile)
-        {
-            self.memberProfile = memberProfile;
-            [self.tableView reloadData];
-        }
-    }];
+
 }
 - (UITableView *)tableView
 {
@@ -312,8 +317,7 @@ typedef enum : NSUInteger {
             UISwitch *switchControl =  [[UISwitch alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
             switchControl.onTintColor = [UIColor colorWithHexString:@"#44db5e"];
             [switchControl addTarget:self action:@selector(setChat:) forControlEvents:UIControlEventValueChanged];
-            
-            
+            switchControl.on = self.isForbid;
             
             cell.accessoryView = switchControl;
         }
@@ -324,6 +328,7 @@ typedef enum : NSUInteger {
 
             UISwitch *switchControl =  [[UISwitch alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
             switchControl.onTintColor = [UIColor colorWithHexString:@"#44db5e"];
+            switchControl.on = self.isAdmin;
             [switchControl addTarget:self action:@selector(setAdmin:) forControlEvents:UIControlEventValueChanged];
             
             cell.accessoryView = switchControl;

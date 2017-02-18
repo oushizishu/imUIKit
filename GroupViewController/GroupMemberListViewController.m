@@ -392,7 +392,8 @@
     GroupDetailMember *member = mode.GroupDetailMember;
     
     User *user = [[User alloc] init];
-    user.userId = member.user_id;
+    user.userId = member.user_number;
+    user.userRole = member.user_role;
     user.avatar = member.avatar;
     user.name = member.user_name;
         
@@ -515,6 +516,7 @@
     {
         weakifyself;
         _searchResultViewController = [[GroupMemberSearchResultViewController alloc] init];
+        _searchResultViewController.groupId = [self.im_group_id longLongValue];
         [_searchResultViewController setSearchBarCancelBlock:^{
             strongifyself;
             
