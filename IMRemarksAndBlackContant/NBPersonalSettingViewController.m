@@ -340,6 +340,10 @@ typedef enum : NSUInteger {
                 self.detailString = [[request.response.responseData valueForKey:@"im"] valueForKey:@"remark_desc"];
                 
                 self.tagString = [[request.response.responseData valueForKey:@"student"] valueForKey:@"prefer_string"];
+                if (!self.tagString || self.tagString.length == 0)
+                {
+                    self.tagString = @"暂无";
+                }
                 [self.tableView reloadData];
             }
         } failureCallback:^(__kindof NBNetworkRequest * _Nonnull request, __kindof NBResponse * _Nonnull response) {
@@ -460,15 +464,18 @@ typedef enum : NSUInteger {
                     break;
                     case TagCell:
                 {
-                    cell.textLabel.text = @"标签";
+                    cell.textLabel.text = @"兴趣标签";
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     
                     if (self.tagString.length > 13)
                     {
                         self.tagString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:12]];
                     }
+                    else
+                    {
+                        [cell.detailTextLabel setText:self.tagString];
+                    }
                     
-                    [cell.detailTextLabel setText:self.tagString];
                 }
                     break;
                 case CategoryCell:
