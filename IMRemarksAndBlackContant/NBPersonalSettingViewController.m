@@ -121,7 +121,7 @@ typedef enum : NSUInteger {
         _avtarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_avtarBtn.layer setCornerRadius:2];
         [_avtarBtn setClipsToBounds:YES];
-        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:self.user.avatar] forState:UIControlStateNormal placeholderImage:placeholderImage];
+        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",self.user.avatar,(int)[UIScreen mainScreen].scale*60,(int)[UIScreen mainScreen].scale*60]] forState:UIControlStateNormal placeholderImage:placeholderImage];
         [_headerView addSubview:_avtarBtn];
         weakifyself;
         [_avtarBtn handleControlEvent:UIControlEventTouchUpInside withBlock:^{
@@ -430,7 +430,7 @@ typedef enum : NSUInteger {
 }
 - (void)customCell:(UITableViewCell *)cell ForIndexpath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [[_dataArray[indexPath.section] objectForKey:@"title"] objectAtIndex:indexPath.row];
+//    cell.textLabel.text = [[_dataArray[indexPath.section] objectForKey:@"title"] objectAtIndex:indexPath.row];
     
     switch (indexPath.section)
     {
@@ -439,10 +439,11 @@ typedef enum : NSUInteger {
             switch (indexPath.row) {
                 case RemarkCell:
                 {
+                    cell.textLabel.text = @"备注及描述";
                     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                    if (self.detailString.length > 12)
+                    if (self.detailString.length > 13)
                     {
-                        self.detailString = [NSString stringWithFormat:@"%@...",[self.detailString substringToIndex:11]];
+                        self.detailString = [NSString stringWithFormat:@"%@...",[self.detailString substringToIndex:12]];
                         
                         [cell.detailTextLabel setText:self.detailString];
                     }
@@ -459,11 +460,12 @@ typedef enum : NSUInteger {
                     break;
                     case TagCell:
                 {
+                    cell.textLabel.text = @"标签";
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     
-                    if (self.tagString.length > 12)
+                    if (self.tagString.length > 13)
                     {
-                        self.tagString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:11]];
+                        self.tagString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:12]];
                     }
                     
                     [cell.detailTextLabel setText:self.tagString];
@@ -471,6 +473,8 @@ typedef enum : NSUInteger {
                     break;
                 case CategoryCell:
                 {
+                    cell.textLabel.text = [self isInstitution]?@"主营类目":@"主营科目";
+
                     cell.accessoryType = UITableViewCellAccessoryNone;
                     [cell.detailTextLabel setText:self.subject];
                 }
@@ -482,6 +486,7 @@ typedef enum : NSUInteger {
             break;
             case BlackSection:
         {
+            cell.textLabel.text = @"加入黑名单";
             cell.accessoryView = _switchBtn;
             IMUserRelation relation = self.user.relation;
             if (relation==eUserRelation_normal) {

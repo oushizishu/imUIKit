@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class BaseCellMode;
 @interface GroupMemberSearchResultViewController : UIViewController
 
 @property (nonatomic,assign) int64_t groupId;
 @property (nonatomic,copy)void (^searchBarCancelBlock)(void);
+@property (nonatomic,copy)void (^selectMemberBlock)(BaseCellMode *model);
+
 
 @end

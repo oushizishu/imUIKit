@@ -9,6 +9,8 @@
 #import "GroupMemberSearchResultViewController.h"
 #import "CustomTableViewController.h"
 #import "IMGroupUserCellMode.h"
+#import "NBPersonalSettingViewController.h"
+#import "GroupMemberSettingViewController.h"
 
 
 @interface GroupMemberSearchResultViewController ()<UISearchBarDelegate,CustomTableViewControllerDelegate,UIScrollViewDelegate>
@@ -28,6 +30,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     UINavigationBar *bar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.current_w, 64)];
+    [bar setTranslucent:YES];
     [self.view addSubview:bar];
     
     UIView *bgView = [[UIView alloc] init];
@@ -36,7 +39,7 @@
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 20, self.view.current_w-16, 44)];
     [_searchBar setPlaceholder:@"搜索"];
-    [_searchBar setBackgroundImage:[UIImage imageWithColor:[UIColor bj_gray_100]]];
+    [_searchBar setBackgroundImage:[UIImage imageWithColor:[UIColor clearColor]]];
     [_searchBar setDelegate:self];
     [_searchBar setTintColor:[UIColor bj_blue]];
     [_searchBar setShowsCancelButton:YES animated:NO];
@@ -129,11 +132,16 @@
 
 - (void)tableViewDidScroll:(UIScrollView *)scrollView
 {
-    
-//    [self.searchBar resignFirstResponder];
-    [self resignFirstResponder];
+        [self resignFirstResponder];
 }
-
+- (void)userHitCellMode:(BaseCellMode *)cellMode
+{
+    [self searchBarCancelButtonClicked:self.searchBar];
+    if (_selectMemberBlock)
+    {
+        _selectMemberBlock(cellMode);
+    }
+}
 #pragma mark - Search Delegate
 - (BOOL)resignFirstResponder
 {
@@ -165,6 +173,10 @@
     return YES;
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    [self requestGroupMembers:searchBar.text];
+}
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     [self requestGroupMembers:searchBar.text];
 }

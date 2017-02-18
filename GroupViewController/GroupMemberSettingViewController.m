@@ -21,7 +21,7 @@ typedef enum : NSUInteger {
 } TableViewSection;
 
 
-
+#define Maked0ImageUrl(oriUrl,w,h) (oriUrl?[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",oriUrl,(int)RetinaSize(w),(int)RetinaSize(h)]:oriUrl)
 
 @interface GroupMemberSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -143,7 +143,8 @@ typedef enum : NSUInteger {
         _avtarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_avtarBtn.layer setCornerRadius:2];
         [_avtarBtn setClipsToBounds:YES];
-        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:self.user.avatar] forState:UIControlStateNormal placeholderImage:placeholderImage];
+        
+        [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",self.user.avatar,(int)[UIScreen mainScreen].scale*60,(int)[UIScreen mainScreen].scale*60]] forState:UIControlStateNormal placeholderImage:placeholderImage];
         [_headerView addSubview:_avtarBtn];
         weakifyself;
         [_avtarBtn handleControlEvent:UIControlEventTouchUpInside withBlock:^{
@@ -165,6 +166,7 @@ typedef enum : NSUInteger {
         [_headerView addSubview:_nameLabel];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
+            make.right.lessThanOrEqualTo(_headerView).offset(-10);
             
         }];
         NSString *remarkName = self.user.remarkName;
@@ -185,6 +187,8 @@ typedef enum : NSUInteger {
         [_headerView addSubview:_nickNameLabel];
         [_nickNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_avtarBtn.mas_right).offset(15);
+            make.right.lessThanOrEqualTo(_headerView).offset(-10);
+
         }];
         [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",self.user.name]];
         
@@ -414,6 +418,7 @@ typedef enum : NSUInteger {
             }else
             {
                 
+                [self.navigationController popViewControllerAnimated:YES];
             }
         }];
     }];

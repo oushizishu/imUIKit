@@ -524,6 +524,13 @@
                 [self.customTableViewController.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64)];
             }];
         }];
+        [_searchResultViewController setSelectMemberBlock:^(BaseCellMode *cellModel) {
+            strongifyself;
+            [UIView animateWithDuration:.2 animations:^{
+                [self.customTableViewController.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64)];
+            }];
+            [self userHitCellMode:cellModel];
+        }];
         [self addChildViewController:_searchResultViewController];
         [self didMoveToParentViewController:_searchResultViewController];
         
