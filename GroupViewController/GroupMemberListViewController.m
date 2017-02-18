@@ -395,7 +395,7 @@
     user.userId = member.user_id;
     user.avatar = member.avatar;
     user.name = member.user_name;
-    
+        
 //    User *user = [[BJIMManager shareInstance] getUser:member.user_number role:member.user_role];
     
     [[BJIMManager shareInstance] isAdmin:[self.im_group_id longLongValue] callback:^(NSError *error, IMGroupMemberRole groupMemberRole) {

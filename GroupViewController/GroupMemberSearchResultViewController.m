@@ -67,25 +67,26 @@
     // Pass the selected object to the new view controller.
 }
 */
-- (void)requestGroupMembers
+- (void)requestGroupMembers:(NSString *)query
 {
 //    WS(weakself);
 //    [MBProgressHUD imShowLoading:@"正在获取群组详情..." toView:self.view];
     
     NSNumber *groupId = [NSNumber numberWithInt:79368];
     
-    [[BJIMManager shareInstance] getGroupMembers:[groupId longLongValue] page:1 pageSize:100 callback:^(NSError *error, NSArray *members, BOOL hasMore,BOOL is_admin,BOOL is_major) {
+    [[BJIMManager shareInstance] getSearchMemberList:groupId query:query callback:^(NSError *error, NSArray<SearchMember *> *memberList) {
         if (error) {
-//            [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:weakself.view];
+            //            [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:weakself.view];
         }else
         {
             
-//            [MBProgressHUD hideHUDForView:weakself.view animated:YES];
-//            weakself.pageIndex++;
-//
-//            weakself.hasMore = hasMore;
-            [self appendMoreMembers:members];
+            //            [MBProgressHUD hideHUDForView:weakself.view animated:YES];
+            //            weakself.pageIndex++;
+            //
+            //            weakself.hasMore = hasMore;
+            [self appendMoreMembers:memberList];
         }
+
     }];
     
 }
@@ -131,7 +132,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    [self requestGroupMembers];
+    [self requestGroupMembers:searchBar.text];
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {

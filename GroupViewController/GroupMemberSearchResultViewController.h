@@ -10,6 +10,7 @@
 
 @interface GroupMemberSearchResultViewController : UIViewController
 
+@property (nonatomic,assign) int64_t groupId;
 @property (nonatomic,copy)void (^searchBarCancelBlock)(void);
 
 @end
