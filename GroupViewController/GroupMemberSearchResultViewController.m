@@ -16,7 +16,9 @@
 @property (nonatomic,strong)UISearchBar *searchBar;
 @property (nonatomic,strong)CustomTableViewController *customTableViewController;
 @property (nonatomic,strong)NSMutableArray<IMGroupUserCellMode *> *groupUserArray;
-@property (strong ,nonatomic) NSArray<SectionMode *> *sectionModeArray;
+@property (nonatomic,strong) NSArray<SectionMode *> *sectionModeArray;
+@property (nonatomic,assign) BOOL isHideKeyboard;
+
 
 @end
 
@@ -69,42 +71,47 @@
 */
 - (void)requestGroupMembers:(NSString *)query
 {
-//    WS(weakself);
-//    [MBProgressHUD imShowLoading:@"正在获取群组详情..." toView:self.view];
-    
-    [[BJIMManager shareInstance] getSearchMemberList:self.groupId query:query callback:^(NSError *error, NSArray<SearchMember *> *memberList) {
-        if (error) {
-            //            [MBProgressHUD imShowMessageThenHide:@"获取失败" toView:weakself.view];
-        }else
+    [[BJIMManager shareInstance] getSearchMemberList:self.groupId query:query callback:^(NSError *error, NSArray<GroupDetailMember *> *memberList) {
+        if (!error)
         {
-            
-            //            [MBProgressHUD hideHUDForView:weakself.view animated:YES];
-            //            weakself.pageIndex++;
-            //
-            //            weakself.hasMore = hasMore;
             [self appendMoreMembers:memberList];
-        }
 
+        }
     }];
     
 }
 - (void)appendMoreMembers:(NSArray<GroupDetailMember *> *)array
 {
-    if (self.groupUserArray == nil) {
-        self.groupUserArray = [[NSMutableArray alloc] init];
+    if (array.count == 0)
+    {
+        //
+        [self.customTableViewController.view setHidden:YES];
     }
-    for (int i = 0; i < [array count];  i++) {
-        IMGroupUserCellMode *cellMode = [[IMGroupUserCellMode alloc] initWithGroupDetailMember:[array objectAtIndex:i]];
-        cellMode.groupUserDelegate = self;
-        [self.groupUserArray addObject:cellMode];
+    else
+    {
+        [self.customTableViewController.view setHidden:NO];
+        
+        if (self.groupUserArray == nil) {
+            self.groupUserArray = [[NSMutableArray alloc] init];
+        }
+        else
+        {
+            [self.groupUserArray removeAllObjects];
+        }
+        for (int i = 0; i < [array count];  i++) {
+            IMGroupUserCellMode *cellMode = [[IMGroupUserCellMode alloc] initWithGroupDetailMember:[array objectAtIndex:i]];
+            cellMode.groupUserDelegate = self;
+            [self.groupUserArray addObject:cellMode];
+        }
+        
+        SectionMode *model = [[SectionMode alloc] init];
+        [model setRows:self.groupUserArray];
+        self.sectionModeArray = @[model];
+        
+        [self.customTableViewController setSections:self.sectionModeArray];
     }
-//    [self refreshGroupMembers];
-    
-    SectionMode *model = [[SectionMode alloc] init];
-    [model setRows:self.groupUserArray];
-    self.sectionModeArray = @[model];
-    
-    [self.customTableViewController setSections:self.sectionModeArray];
+    [_customTableViewController.tableView setBackgroundColor:[UIColor whiteColor]];
+    [_customTableViewController.tableView setShowsVerticalScrollIndicator:YES];
 
 }
 #pragma mark - Setter
@@ -114,20 +121,49 @@
     {
         _customTableViewController = [[CustomTableViewController alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.current_h-64)];
         _customTableViewController.delegate = self;
-        
-        [_customTableViewController.tableView setShowsVerticalScrollIndicator:YES];
-        [self.view addSubview:self.customTableViewController.view];
+         [self.view addSubview:self.customTableViewController.view];
     }
     return _customTableViewController;
 }
 #pragma mark UITableView Delegate
+
 - (void)tableViewDidScroll:(UIScrollView *)scrollView
 {
-    [self.searchBar resignFirstResponder];
+    
+//    [self.searchBar resignFirstResponder];
+    [self resignFirstResponder];
 }
 
 #pragma mark - Search Delegate
-
+- (BOOL)resignFirstResponder
+{
+    if (!_isHideKeyboard)
+    {
+        for (UIView *v in self.searchBar.subviews) {
+            // Force the cancel button to stay enabled
+            for (UIView *tmp in v.subviews)
+            {
+                // Dismiss the keyboard
+                if ([tmp isKindOfClass:[UITextField class]]) {
+                    [(UITextField *)tmp resignFirstResponder];
+                }
+                if ([tmp isKindOfClass:[UIControl class]]) {
+                    ((UIControl *)tmp).enabled = YES;
+                    
+                }
+                
+            }
+        }
+        _isHideKeyboard = YES;
+    }
+    
+    return YES;
+}
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    _isHideKeyboard = NO;
+    return YES;
+}
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     [self requestGroupMembers:searchBar.text];
@@ -139,6 +175,14 @@
         _searchBarCancelBlock();
     }
     [self.view removeFromSuperview];
+    
+    //清空数据
+    [self.groupUserArray removeAllObjects];
+    SectionMode *model = [[SectionMode alloc] init];
+    [model setRows:self.groupUserArray];
+    self.sectionModeArray = @[model];
+    [self.customTableViewController setSections:self.sectionModeArray];
+    
     [self performSelector:@selector(navbarHiddenAnimate) withObject:nil afterDelay:0.01];
 }
 - (void)navbarHiddenAnimate
