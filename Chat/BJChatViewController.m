@@ -615,8 +615,8 @@ IMNewGRoupNoticeDelegate>
     {
         [[BJIMManager shareInstance] isAdmin:self.chatInfo.chatToGroup.groupId callback:^(NSError *error, IMGroupMemberRole groupMemberRole) {
          
-            if (groupMemberRole == eIMGroupMemberRole_Normal) {
-                //普通群成员点击
+            if (groupMemberRole == eIMGroupMemberRole_Normal || user.userId == [CommonInstance.mainAccount personId]) {
+                //普通群成员点击 || 自己点击自己的头像
                 NBPersonalSettingViewController *vc = [NBPersonalSettingViewController new];
                 vc.user = user;
                 [self.navigationController pushViewController:vc animated:YES];

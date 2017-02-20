@@ -13,6 +13,7 @@
 #import "GroupMemberSettingTableViewCell.h"
 #import "MBProgressHUD+IMKit.h"
 #import "MemberProfile.h"
+#import "NBPersonalSettingViewController.h"
 
 typedef enum : NSUInteger {
     ChatSection,//禁言信息
@@ -149,8 +150,9 @@ typedef enum : NSUInteger {
         weakifyself;
         [_avtarBtn handleControlEvent:UIControlEventTouchUpInside withBlock:^{
             strongifyself;
-            NSString *string = [NSString stringWithFormat:@"%@/x/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
-            [[BJActionManager sharedManager] sendTotarget:self handleWithUrl:string];
+            NBPersonalSettingViewController *settingVC = [[NBPersonalSettingViewController alloc] init];
+            settingVC.user = self.user;
+            [self.navigationController pushViewController:settingVC animated:YES];
         }];
         [_avtarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_offset(15);
