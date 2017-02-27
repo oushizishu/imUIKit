@@ -270,7 +270,7 @@ typedef enum : NSUInteger {
     switch (section)
     {
         case ChatSection:
-            num = self.isAdmin?0:1;
+            num = _isOwner?1:(self.isAdmin?0:1);
             break;
         case AdminSection:
             num = _isOwner?1:0;

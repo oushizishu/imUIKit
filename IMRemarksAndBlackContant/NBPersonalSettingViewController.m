@@ -484,10 +484,8 @@ typedef enum : NSUInteger {
                     {
                         self.tagString = [NSString stringWithFormat:@"%@...",[self.tagString substringToIndex:12]];
                     }
-                    else
-                    {
-                        [cell.detailTextLabel setText:self.tagString];
-                    }
+                    [cell.detailTextLabel setText:self.tagString];
+
                     
                 }
                     break;
