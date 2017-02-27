@@ -27,7 +27,7 @@ typedef enum : NSUInteger {
     BaseInfoSectionCellCount,
 } BaseInfoSectionCell;
 
-@interface NBPersonalSettingViewController () <UITableViewDelegate,UITableViewDataSource>
+@interface NBPersonalSettingViewController () <UITableViewDelegate,UITableViewDataSource,IMUserInfoChangedDelegate>
 
 @property (nonatomic,strong)UITableView * tableView;
 @property (nonatomic,strong)NSMutableArray * dataArray;
@@ -53,6 +53,9 @@ typedef enum : NSUInteger {
     [self.view setBackgroundColor:[UIColor bj_gray_100]];
     [self setUpData];
     [self setUpView];
+    
+    [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -185,6 +188,7 @@ typedef enum : NSUInteger {
     }
     return _headerView;
 }
+
 - (UIView *)footerView
 {
     if (!_footerView)
@@ -538,7 +542,26 @@ typedef enum : NSUInteger {
         }
     }
 }
-#pragma mark - Inter 
+#pragma mark - IM Delegate
+- (void)didUserInfoChanged:(User *)user
+{
+    self.user = user;
+    [self updateTitle];
+    [self reloadHeadView];
+}
+#pragma mark - Inter
+- (void)reloadHeadView
+{
+    UIImage *placeholderImage = [UIImage imageNamed:@"img_head_default"];
+    [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",self.user.avatar,(int)[UIScreen mainScreen].scale*60,(int)[UIScreen mainScreen].scale*60]] forState:UIControlStateNormal placeholderImage:placeholderImage];
+    
+    [_nameLabel setText:[self.user getContactName]];
+    
+    [_idLabel setText:[NSString stringWithFormat:@"ID:%lld",self.user.userId]];
+    
+    [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",self.user.name]];
+}
+
 - (BOOL)isTeacher
 {
     if (self.user.userRole == eUserRole_Teacher)

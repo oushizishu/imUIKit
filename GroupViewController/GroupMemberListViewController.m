@@ -391,13 +391,13 @@
     IMGroupUserCellMode *mode = (IMGroupUserCellMode *)cellMode;
     GroupDetailMember *member = mode.GroupDetailMember;
     
-    User *user = [[User alloc] init];
-    user.userId = member.user_number;
-    user.userRole = member.user_role;
-    user.avatar = member.avatar;
-    user.name = member.user_name;
-        
-//    User *user = [[BJIMManager shareInstance] getUser:member.user_number role:member.user_role];
+//    User *user = [[User alloc] init];
+////    user.userId = member.user_number;
+////    user.userRole = member.user_role;
+////    user.avatar = member.avatar;
+////    user.name = member.user_name;
+    
+    User *user = [[BJIMManager shareInstance] getUser:member.user_number role:member.user_role];
     
     [[BJIMManager shareInstance] isAdmin:[self.im_group_id longLongValue] callback:^(NSError *error, IMGroupMemberRole groupMemberRole) {
         

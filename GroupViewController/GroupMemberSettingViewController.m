@@ -14,6 +14,7 @@
 #import "MBProgressHUD+IMKit.h"
 #import "MemberProfile.h"
 #import "NBPersonalSettingViewController.h"
+#import "User+ViewModel.h"
 
 typedef enum : NSUInteger {
     ChatSection,//禁言信息
@@ -24,11 +25,12 @@ typedef enum : NSUInteger {
 
 #define Maked0ImageUrl(oriUrl,w,h) (oriUrl?[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",oriUrl,(int)RetinaSize(w),(int)RetinaSize(h)]:oriUrl)
 
-@interface GroupMemberSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface GroupMemberSettingViewController ()<UITableViewDelegate,UITableViewDataSource,IMUserInfoChangedDelegate>
 
 @property (nonatomic,strong)UITableView * tableView;
 @property (nonatomic,strong)NSMutableArray * dataArray;
 @property (nonatomic,strong)UIView * headerView;
+@property (nonatomic,strong)UILabel * noMemberLabel;
 @property (nonatomic,strong)UIView * footerView;
 @property (nonatomic,strong)UIButton * avtarBtn;
 @property (nonatomic,strong)UIButton * sendMessageBtn;
@@ -38,6 +40,7 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong)NSString *tagString;
 @property (nonatomic,assign)BOOL isForbid;//设置禁言
 @property (nonatomic,assign)BOOL isAdmin;//设置管理员
+@property (nonatomic,assign)BOOL isMember;//是否是群成员
 @property (nonatomic,strong)MemberProfile *memberProfile;
 
 
@@ -63,7 +66,7 @@ typedef enum : NSUInteger {
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    
+    self.isMember = YES;
     self.view.backgroundColor = [UIColor bjck_colorWithHexString:@"#ebeced"];
     
     UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 14, 22)];
@@ -75,7 +78,7 @@ typedef enum : NSUInteger {
     CGRect sRect = [UIScreen mainScreen].bounds;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
     label.font = [UIFont systemFontOfSize:18.0f];
-    label.text = self.user.remarkName?:self.user.name;
+    label.text = [self.user getContactName];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor blackColor];
     self.navigationItem.titleView = label;
@@ -88,11 +91,24 @@ typedef enum : NSUInteger {
             self.memberProfile = memberProfile;
             self.isForbid = memberProfile.isForbid;
             self.isAdmin = memberProfile.isAdmin;
+            self.isMember = memberProfile.isMember;
+            if (!self.isMember)
+            {
+                
+                [self.footerView setHidden:YES];
+                [self.headerView addSubview:self.noMemberLabel];
+                
+            }
+            else
+            {
+                [self.footerView setHidden:self.isAdmin];
+            }
             
-            [self.footerView setHidden:self.isAdmin];
             [self.tableView reloadData];
         }
     }];
+    
+    [[BJIMManager shareInstance] addUserInfoChangedDelegate:self];
     
 }
 
@@ -140,12 +156,12 @@ typedef enum : NSUInteger {
     {
         _headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.current_w,88)];
         [_headerView setBackgroundColor:[UIColor whiteColor]];
-        UIImage *placeholderImage = [UIImage imageNamed:@"img_head_default"];
         
         _avtarBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_avtarBtn.layer setCornerRadius:2];
         [_avtarBtn setClipsToBounds:YES];
         
+        UIImage *placeholderImage = [UIImage imageNamed:@"img_head_default"];
         [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",self.user.avatar,(int)[UIScreen mainScreen].scale*60,(int)[UIScreen mainScreen].scale*60]] forState:UIControlStateNormal placeholderImage:placeholderImage];
         [_headerView addSubview:_avtarBtn];
         weakifyself;
@@ -172,8 +188,7 @@ typedef enum : NSUInteger {
             make.right.lessThanOrEqualTo(_headerView).offset(-10);
             
         }];
-        NSString *remarkName = self.user.remarkName;
-        [_nameLabel setText:remarkName.length>0?remarkName:self.user.name];
+        [_nameLabel setText:[self.user getContactName]];
         
         _idLabel = [[UILabel alloc] init];
         [_idLabel setFont:[UIFont systemFontOfSize:13]];
@@ -200,6 +215,18 @@ typedef enum : NSUInteger {
         [array mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:5 leadSpacing:20 tailSpacing:9];
     }
     return _headerView;
+}
+- (UILabel *)noMemberLabel
+{
+    if (!_noMemberLabel)
+    {
+        _noMemberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 88, self.view.current_w, 44)];
+        [_noMemberLabel setText:@"该成员已不在本群"];
+        [_noMemberLabel setTextAlignment:NSTextAlignmentCenter];
+        [_noMemberLabel setTextColor:[UIColor bj_gray_400]];
+        [_noMemberLabel setFont:[UIFont systemFontOfSize:14]];
+    }
+    return _noMemberLabel;
 }
 - (UIView *)footerView
 {
@@ -267,16 +294,19 @@ typedef enum : NSUInteger {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger num = 0;
-    switch (section)
+    if(self.isMember)
     {
-        case ChatSection:
-            num = _isOwner?1:(self.isAdmin?0:1);
-            break;
-        case AdminSection:
-            num = _isOwner?1:0;
-            break;
-        default:
-            break;
+        switch (section)
+        {
+            case ChatSection:
+                num = _isOwner?1:(self.isAdmin?0:1);
+                break;
+            case AdminSection:
+                num = _isOwner?1:0;
+                break;
+            default:
+                break;
+        }
     }
     return num;
 }
@@ -348,7 +378,32 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - Inter
-
+- (void)reloadHeadView
+{
+    UIImage *placeholderImage = [UIImage imageNamed:@"img_head_default"];
+    [_avtarBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@@0e_%dw_%dh_1c_0i_1o_90Q_1x.png",self.user.avatar,(int)[UIScreen mainScreen].scale*60,(int)[UIScreen mainScreen].scale*60]] forState:UIControlStateNormal placeholderImage:placeholderImage];
+    
+    [_nameLabel setText:[self.user getContactName]];
+    
+    [_idLabel setText:[NSString stringWithFormat:@"ID:%lld",self.user.userId]];
+    
+    [_nickNameLabel setText:[NSString stringWithFormat:@"昵称：%@",self.user.name]];
+}
+#pragma mark - IM Delegate
+- (void)didUserInfoChanged:(User *)user
+{
+    self.user = user;
+    
+    CGRect sRect = [UIScreen mainScreen].bounds;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, sRect.size.width-160, 30)];
+    label.font = [UIFont systemFontOfSize:18.0f];
+    label.text = [self.user getContactName];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor blackColor];
+    self.navigationItem.titleView = label;
+    
+    [self reloadHeadView];
+}
 #pragma mark - Fun
 - (void)setChat:(UISwitch *)control
 {
