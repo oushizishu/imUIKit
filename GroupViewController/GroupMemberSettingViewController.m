@@ -89,6 +89,7 @@ typedef enum : NSUInteger {
             self.isForbid = memberProfile.isForbid;
             self.isAdmin = memberProfile.isAdmin;
             
+            [self.footerView setHidden:self.isAdmin];
             [self.tableView reloadData];
         }
     }];
@@ -213,6 +214,7 @@ typedef enum : NSUInteger {
         [_sendMessageBtn.titleLabel setFont:[UIFont systemFontOfSize:17]];
         [_sendMessageBtn addTarget:self action:@selector(removeGroup:) forControlEvents:UIControlEventTouchUpInside];
         [_footerView addSubview:_sendMessageBtn];
+        [_footerView setHidden:YES];
         [_sendMessageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_offset(144);
             make.centerX.equalTo(_footerView);
@@ -268,7 +270,7 @@ typedef enum : NSUInteger {
     switch (section)
     {
         case ChatSection:
-            num = 1;
+            num = self.isAdmin?0:1;
             break;
         case AdminSection:
             num = _isOwner?1:0;

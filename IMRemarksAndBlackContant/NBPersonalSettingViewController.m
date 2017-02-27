@@ -126,7 +126,20 @@ typedef enum : NSUInteger {
         weakifyself;
         [_avtarBtn handleControlEvent:UIControlEventTouchUpInside withBlock:^{
             strongifyself;
-            NSString *string = [NSString stringWithFormat:@"%@/x/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
+            NSString *string;
+            if ([self isInstitution])
+            {
+                string = [NSString stringWithFormat:@"%@/i/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
+            }
+            else if ([self isTeacher])
+            {
+                string = [NSString stringWithFormat:@"%@/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
+            }
+            else
+            {
+               string = [NSString stringWithFormat:@"%@/x/%lld",[BJDeployEnv sharedInstance].baseMAPIURLStr,self.user.userId];
+            }
+           
             [[BJActionManager sharedManager] sendTotarget:self handleWithUrl:string];
         }];
         [_avtarBtn mas_makeConstraints:^(MASConstraintMaker *make) {
