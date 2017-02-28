@@ -273,10 +273,12 @@ typedef enum : NSUInteger {
 - (void)addBlackContant
 {
     weakdef(self)
+    [self showLoading];
     [[BJIMManager shareInstance]addBlackContactId:self.user.userId
                                       contactRole:self.user.userRole
                                          callback:^(BaseResponse *response) {
                                              strongdef(self)
+                                             [self hideLoading];
                                              if (response.code==0) {
                                                  [self showHUDWithText:@"加入黑名单成功" animated:YES];
                                                  [[NSNotificationCenter defaultCenter] postNotificationName:NBContactBlacklistNotification object:@(YES)];
@@ -288,9 +290,13 @@ typedef enum : NSUInteger {
 }
 - (void)removeBlackContant
 {
+    weakdef(self)
+    [self showLoading];
     [[BJIMManager shareInstance] removeBlackContactId:self.user.userId
                                           contactRole:self.user.userRole
                                              callback:^(BaseResponse *reponse) {
+                                                 strongdef(self)
+                                                 [self hideLoading];
                                                  if (reponse.code==0) {
                                                      [self showHUDWithText:@"移除黑名单成功" animated:YES];
                                                      [[NSNotificationCenter defaultCenter] postNotificationName:NBContactBlacklistNotification object:@(NO)];
