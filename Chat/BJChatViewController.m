@@ -721,11 +721,10 @@ IMNewGRoupNoticeDelegate>
         [message isMySend] && errorCode == eError_suc) {
         [self scrollViewToBottom:YES needDelay:NO];
     }
-    if (errorCode != eError_suc &&  errorMessage.length > 0) {
-        [MBProgressHUD showWindowErrorThenHide:errorMessage];
-    }
-    
-    
+//    if (errorCode != eError_suc &&  errorMessage.length > 0) {
+//        [MBProgressHUD showWindowErrorThenHide:errorMessage];
+//    }
+//    
     if (errorCode != 0 && errorCode != 510007 && errorCode != 510008) { //发送失败，提醒
         [MBProgressHUD imShowError:errorMessage];
     }
