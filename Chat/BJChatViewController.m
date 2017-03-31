@@ -891,8 +891,10 @@ IMNewGRoupNoticeDelegate>
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(self.messageList.count <= indexPath.row){
+        return 0;
+    }
     IMMessage *message = [self.messageList objectAtIndex:indexPath.row];
-    
     if ([message isKindOfClass:[NSString class]]) {
         return 46;
     }
