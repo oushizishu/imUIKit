@@ -621,7 +621,7 @@ typedef enum : NSUInteger {
     switch (indexPath.row)
     {
         case 0:
-            height = [self isTeacher]?0:44;
+            height = ([self isTeacher] || ![self isContact])?0:44;
             break;
         default:
             break;
